@@ -1,4 +1,3 @@
 rootProject.name = 'de.feu.ps.bridges'
-include 'de.feu.ps.bridges.gui-application'
+include 'de.feu.ps.bridges.gui'
 include 'de.feu.ps.bridges.shared'
-

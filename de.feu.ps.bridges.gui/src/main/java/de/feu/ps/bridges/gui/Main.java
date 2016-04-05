@@ -1,4 +1,4 @@
-package de.feu.ps.bridges.guiapplication;
+package de.feu.ps.bridges.gui;
 
 /**
  * Created by tim on 05.04.16.
