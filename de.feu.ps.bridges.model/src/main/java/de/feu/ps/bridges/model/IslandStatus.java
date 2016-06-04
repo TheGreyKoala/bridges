@@ -1,3 +1,5 @@
+package de.feu.ps.bridges.model;
+
 /**
  * @author Tim Gremplewski
  */

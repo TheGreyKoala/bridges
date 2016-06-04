@@ -1,3 +1,5 @@
+package de.feu.ps.bridges.model;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,7 +46,7 @@ public class PuzzleImpl implements Puzzle {
 
     @Override
     public PuzzleStatus getStatus() {
-        //TODO Implement Puzzle.getStatus
+        //TODO Implement de.feu.ps.bridges.model.Puzzle.getStatus
         return null;
     }
 }

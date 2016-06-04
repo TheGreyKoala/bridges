@@ -1,3 +1,5 @@
+package de.feu.ps.bridges.model;
+
 import java.util.HashSet;
 import java.util.Set;
 

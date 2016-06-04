@@ -1,3 +1,5 @@
+package de.feu.ps.bridges.model;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +73,7 @@ public class IslandImpl implements Island {
 
     @Override
     public IslandStatus getStatus() {
-        //TODO: Implement Island.getStatus
+        //TODO: Implement de.feu.ps.bridges.model.Island.getStatus
         return null;
     }
 
