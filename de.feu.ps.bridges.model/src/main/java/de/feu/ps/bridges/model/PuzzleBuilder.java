@@ -5,15 +5,14 @@ package de.feu.ps.bridges.model;
  */
 public class PuzzleBuilder {
 
-    private Puzzle puzzle;
 
-    public static PuzzleBuilder initPuzzle(final int width, final int height) {
-        PuzzleBuilder puzzleBuilder = new PuzzleBuilder();
-        puzzleBuilder.puzzle = new PuzzleImpl(width, height);
-        return puzzleBuilder;
+    private int islandsCount;
+
+    public PuzzleBuilder setPuzzleDimensions(final int columns, final int rows) {
+        return this;
     }
 
-    public PuzzleBuilder addIsland(final int xPosition, final int yPosition, final int requiredBridges) {
+    public PuzzleBuilder addIsland(final int column, final int row, final int requiredBridges) {
         // TODO implement addIsland
         return this;
     }
@@ -24,6 +23,14 @@ public class PuzzleBuilder {
     }
 
     public Puzzle getResult() {
-        return puzzle;
+        return new PuzzleImpl(12, 23);
+    }
+
+    public void setIslandsCount(final int islandsCount) {
+        this.islandsCount = islandsCount;
+    }
+
+    public int getIslandsCount() {
+        return islandsCount;
     }
 }

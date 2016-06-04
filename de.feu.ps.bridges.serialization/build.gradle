@@ -1,0 +1,3 @@
+dependencies {
+    compile project(':de.feu.ps.bridges.model')
+}

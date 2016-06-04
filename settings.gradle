@@ -2,3 +2,5 @@ rootProject.name = 'de.feu.ps.bridges'
 include 'de.feu.ps.bridges.gui'
 include 'de.feu.ps.bridges.shared'
 include 'de.feu.ps.bridges.model'
+include 'de.feu.ps.bridges.serialization'
+
