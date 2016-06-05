@@ -84,7 +84,8 @@ public class PuzzleImpl implements Puzzle {
         // TODO validate bridge
 
         bridges.add(bridge);
-        bridge.getConnectedIslands().forEach(island -> island.addBridge(bridge));
+        bridge.getIsland1().addBridge(bridge);
+        bridge.getIsland2().addBridge(bridge);
     }
 
     @Override

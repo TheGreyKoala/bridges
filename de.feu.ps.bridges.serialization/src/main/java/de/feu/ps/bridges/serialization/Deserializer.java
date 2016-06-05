@@ -15,12 +15,6 @@ import java.util.regex.Pattern;
  */
 public class Deserializer {
 
-    private enum Keyword {
-        FIELD,
-        ISLANDS,
-        BRIDGES;
-    }
-
     private static final String END_OF_FILE = "EOF";
 
     public Puzzle loadPuzzle(final String filePath) throws Exception {
@@ -28,9 +22,7 @@ public class Deserializer {
 
         final PuzzleBuilder puzzleBuilder = new PuzzleBuilder();
 
-        FileReader t = new FileReader(filePath);
-
-        try (BufferedReader bufferedReader = new BufferedReader(t)) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath))) {
             String nextLine = getNextUncommentedLine(bufferedReader);
 
             while (!END_OF_FILE.equals(nextLine)) {
@@ -51,8 +43,6 @@ public class Deserializer {
                 nextLine = getNextUncommentedLine(bufferedReader);
             }
         }
-
-        t.close();
 
         return puzzleBuilder.getResult();
     }

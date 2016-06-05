@@ -1,7 +1,7 @@
 package de.feu.ps.bridges.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Tim Gremplewski
@@ -11,7 +11,7 @@ public class IslandImpl implements Island {
     private final int column;
     private final int row;
     private final int requiredBridges;
-    private final List<Bridge> bridges;
+    private final Set<Bridge> bridges;
 
     private Island northNeighbour;
     private Island eastNeighbour;
@@ -25,7 +25,7 @@ public class IslandImpl implements Island {
         this.column = column;
         this.row = row;
         this.requiredBridges = requiredBridges;
-        bridges = new ArrayList<>(requiredBridges);
+        bridges = new HashSet<>(requiredBridges);
     }
 
     @Override
@@ -102,5 +102,10 @@ public class IslandImpl implements Island {
     public void setWestNeighbour(Island westNeighbour) {
         // TODO validate island
         this.westNeighbour = westNeighbour;
+    }
+
+    @Override
+    public Set<Bridge> getBridges() {
+        return new HashSet<>(bridges);
     }
 }

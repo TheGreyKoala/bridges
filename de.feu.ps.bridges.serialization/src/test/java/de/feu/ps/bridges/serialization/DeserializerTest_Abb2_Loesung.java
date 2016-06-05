@@ -6,10 +6,12 @@ import de.feu.ps.bridges.model.IslandImpl;
 import de.feu.ps.bridges.model.Puzzle;
 import org.junit.Test;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Tim Gremplewski
@@ -114,7 +116,7 @@ public class DeserializerTest_Abb2_Loesung extends AbstractDeserializerTest {
 
 
         Set<Bridge> bridges = puzzle.getBridges();
-        assertEquals("Wrong number of bridges", 19, bridges.size());
+        assertEquals("Wrong number of bridges", 12, bridges.size());
 
         Island index0 = new IslandImpl(0, 0, 3);
         Island index1 = new IslandImpl(0, 3, 4);
@@ -145,18 +147,11 @@ public class DeserializerTest_Abb2_Loesung extends AbstractDeserializerTest {
 
     private void validateBridge(Set<Bridge> bridges, Island island1, Island island2, boolean doubleBridge) {
         Stream<Bridge> stream = bridges.stream();
-        long count = stream.filter(
-                bridge -> bridge.getConnectedIslands().stream().anyMatch(
-                        island -> island.getColumn() == island1.getColumn()
-                                && island.getRow() == island1.getRow()))
-                .filter(bridge -> bridge.getConnectedIslands().stream().anyMatch(
-                        island -> island.getColumn() == island2.getColumn()
-                                && island.getRow() == island2.getRow())).count();
+        Optional<Bridge> matchingBridge = stream.filter(bridge -> bridge.getIsland1().getColumn() == island1.getColumn() && bridge.getIsland1().getRow() == island1.getRow())
+                .filter(bridge -> bridge.getIsland2().getColumn() == island2.getColumn() && bridge.getIsland2().getRow() == island2.getRow())
+                .findFirst();
 
-        if (doubleBridge) {
-            assertEquals("Double bridge not found", 2, count);
-        } else {
-            assertEquals("Bridge not found", 1, count);
-        }
+        assertTrue("Bridge not found.", matchingBridge.isPresent());
+        assertEquals("Property doubleBridge is incorrect.", doubleBridge, matchingBridge.get().isDoubleBridge());
     }
 }

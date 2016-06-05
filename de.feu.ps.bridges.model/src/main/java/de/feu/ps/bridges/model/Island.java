@@ -1,5 +1,7 @@
 package de.feu.ps.bridges.model;
 
+import java.util.Set;
+
 /**
  * @author Tim Gremplewski
  */
@@ -18,4 +20,5 @@ public interface Island {
     void setNorthNeighbour(Island northNeighbour);
     void setEastNeighbour(Island island);
     void setWestNeighbour(Island westNeighbour);
+    Set<Bridge> getBridges();
 }

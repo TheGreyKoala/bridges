@@ -71,12 +71,8 @@ public class PuzzleBuilder {
         Island islandA = islands.get(islandAIndex);
         Island islandB = islands.get(islandBIndex);
 
-        Bridge bridge = new BridgeImpl(islandA, islandB);
+        Bridge bridge = new BridgeImpl(islandA, islandB, doubleBridge);
         bridges.add(bridge);
-        if (doubleBridge) {
-            Bridge doubledBridge = new BridgeImpl(islandA, islandB);
-            bridges.add(doubledBridge);
-        }
         return this;
     }
 }
