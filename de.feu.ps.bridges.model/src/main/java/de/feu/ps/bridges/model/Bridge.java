@@ -1,5 +1,7 @@
 package de.feu.ps.bridges.model;
 
+import java.util.Set;
+
 /**
  * Interface for bridges that connect two {@link Island}s.
  * A bridge can connect two islands two times.
@@ -7,6 +9,12 @@ package de.feu.ps.bridges.model;
  * @author Tim Gremplewski
  */
 public interface Bridge {
+
+    /**
+     * Get all {@link Island}s that are connected by this {@link Bridge}.
+     * @return {@link Set} of all {@link Island} that are connected by this {@link Bridge}.
+     */
+    Set<Island> getConnectedIslands();
 
     /**
      * The {@link Island} that is connected to the {@link Island} returned by {@link #getIsland2()}.
