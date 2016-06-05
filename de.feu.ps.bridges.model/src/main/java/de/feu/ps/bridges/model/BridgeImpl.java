@@ -1,12 +1,17 @@
 package de.feu.ps.bridges.model;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
+ * Default implementation of {@link Bridge}.
+ *
  * @author Tim Gremplewski
  */
 public class BridgeImpl implements Bridge {
+
+    // TODO Test
 
     private final Island island1;
     private final Island island2;
@@ -14,19 +19,20 @@ public class BridgeImpl implements Bridge {
     private final boolean doubleBridge;
 
     protected BridgeImpl(final Island island1, final Island island2, final boolean doubleBridge) {
-        // TODO Validate parameters
+        this.island1 = Objects.requireNonNull(island1, "Parameter 'island1' must not be null.");
+        this.island2 = Objects.requireNonNull(island2, "Parameter 'island2' must not be null.");
 
-        if (island1 == null || island2 == null) {
-            throw new IllegalArgumentException("None of the connected islands may be null.");
+        if (island1 == island2) {
+            throw new IllegalArgumentException("Can not build a bridge from an island to itself.");
         }
 
-        this.island1 = island1;
-        this.island2 = island2;
+        if (!canBeConnected(island1, island2)) {
+            throw new IllegalArgumentException("Islands must either be on the same row or the same column");
+        }
 
         islands = new HashSet<>(2);
         islands.add(island1);
         islands.add(island2);
-
         this.doubleBridge = doubleBridge;
     }
 
@@ -48,5 +54,9 @@ public class BridgeImpl implements Bridge {
     @Override
     public Set<Island> getConnectedIslands() {
         return new HashSet<>(islands);
+    }
+
+    private boolean canBeConnected(final Island island1, final Island island2) {
+        return island1.getRow() == island2.getRow() || island1.getColumn() == island2.getColumn();
     }
 }
