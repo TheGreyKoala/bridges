@@ -2,7 +2,6 @@ package de.feu.ps.bridges.serialization;
 
 import de.feu.ps.bridges.model.Puzzle;
 import de.feu.ps.bridges.model.PuzzleBuilder;
-import de.feu.ps.bridges.model.PuzzleImpl;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -55,7 +54,7 @@ public class Deserializer {
 
         t.close();
 
-        return new PuzzleImpl(12, 123);
+        return puzzleBuilder.getResult();
     }
 
     private String getNextUncommentedLine(BufferedReader reader) throws IOException {
@@ -122,11 +121,11 @@ public class Deserializer {
             scanner.findInLine(bridgePattern);
             MatchResult match = scanner.match();
 
-            int startIslandIndex = Integer.parseInt(match.group(1));
-            int endIslandIndex = Integer.parseInt(match.group(2));
+            int islandAIndex = Integer.parseInt(match.group(1));
+            int islandBIndex = Integer.parseInt(match.group(2));
             boolean doubleBridge = Boolean.parseBoolean(match.group(3));
 
-            System.out.println(startIslandIndex + "," + endIslandIndex + "," + doubleBridge);
+            puzzleBuilder.addBridge(islandAIndex, islandBIndex, doubleBridge);
         }
     }
 }

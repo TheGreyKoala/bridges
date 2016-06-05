@@ -6,9 +6,12 @@ import java.util.Set;
  * @author Tim Gremplewski
  */
 public interface Puzzle {
-    int getWidth();
-    int getHeight();
+    int getColumnsCount();
+    int getRowsCount();
     Set<Island> getIslands();
     Set<Bridge> getBridges();
+    void addIsland(Island island);
+    void addBridge(Bridge bridge);
     PuzzleStatus getStatus();
+    Island getIslandAt(int column, int row);
 }

@@ -8,37 +8,34 @@ import java.util.List;
  */
 public class IslandImpl implements Island {
 
-    private final int xPosition;
-    private final int yPosition;
+    private final int column;
+    private final int row;
     private final int requiredBridges;
     private final List<Bridge> bridges;
 
     private Island northNeighbour;
-    private Island easthNeighbour;
+    private Island eastNeighbour;
     private Island southNeighbour;
     private Island westNeighbour;
 
-    public IslandImpl(
-        final int xPosition,
-        final int yPosition,
-        final int requiredBridges) {
+    public IslandImpl(final int column, final int row, final int requiredBridges) {
 
         // TODO: Parameter validation
 
-        this.xPosition = xPosition;
-        this.yPosition = yPosition;
+        this.column = column;
+        this.row = row;
         this.requiredBridges = requiredBridges;
         bridges = new ArrayList<>(requiredBridges);
     }
 
     @Override
-    public int getXPosition() {
-        return xPosition;
+    public int getColumn() {
+        return column;
     }
 
     @Override
-    public int getYPosition() {
-        return yPosition;
+    public int getRow() {
+        return row;
     }
 
     @Override
@@ -58,7 +55,7 @@ public class IslandImpl implements Island {
 
     @Override
     public Island getEastNeighbour() {
-        return easthNeighbour;
+        return eastNeighbour;
     }
 
     @Override
@@ -78,16 +75,32 @@ public class IslandImpl implements Island {
     }
 
     @Override
-    public void addBridge(Island island) {
-        //TODO Parameter validation
-        final Bridge bridge = new BridgeImpl(this, island);
-        addBridge(bridge);
-        island.addBridge(bridge);
-    }
-
-    @Override
     public void addBridge(Bridge bridge) {
         //TODO Parameter validation
         bridges.add(bridge);
+    }
+
+    @Override
+    public void setSouthNeighbour(Island southNeighbour) {
+        // TODO validate island
+        this.southNeighbour = southNeighbour;
+    }
+
+    @Override
+    public void setNorthNeighbour(Island northNeighbour) {
+        // TODO validate island
+        this.northNeighbour = northNeighbour;
+    }
+
+    @Override
+    public void setEastNeighbour(Island eastNeighbour) {
+        // TODO validate island
+        this.eastNeighbour = eastNeighbour;
+    }
+
+    @Override
+    public void setWestNeighbour(Island westNeighbour) {
+        // TODO validate island
+        this.westNeighbour = westNeighbour;
     }
 }

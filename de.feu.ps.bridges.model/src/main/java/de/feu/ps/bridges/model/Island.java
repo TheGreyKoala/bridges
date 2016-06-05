@@ -4,8 +4,8 @@ package de.feu.ps.bridges.model;
  * @author Tim Gremplewski
  */
 public interface Island {
-    int getXPosition();
-    int getYPosition();
+    int getColumn();
+    int getRow();
     int getRequiredBridges();
     int getRemainingBridges();
     Island getNorthNeighbour();
@@ -13,6 +13,9 @@ public interface Island {
     Island getSouthNeighbour();
     Island getWestNeighbour();
     IslandStatus getStatus();
-    void addBridge(Island island);
     void addBridge(Bridge bridge);
+    void setSouthNeighbour(Island island);
+    void setNorthNeighbour(Island northNeighbour);
+    void setEastNeighbour(Island island);
+    void setWestNeighbour(Island westNeighbour);
 }

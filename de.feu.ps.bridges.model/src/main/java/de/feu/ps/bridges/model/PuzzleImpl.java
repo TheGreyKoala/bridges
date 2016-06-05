@@ -1,6 +1,8 @@
 package de.feu.ps.bridges.model;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -8,35 +10,42 @@ import java.util.Set;
  */
 public class PuzzleImpl implements Puzzle {
 
-    private final int width;
-    private final int height;
+    private int columnsCount;
+    private final int rowsCount;
 
-    private final Set<Island> islands;
-    private final Set<Bridge> bridges;
+    private Map<Integer, Column> columns;
+    private Map<Integer, Row> rows;
 
-    public PuzzleImpl(final int width, final int height) {
+    private Set<Bridge> bridges;
+
+    public PuzzleImpl(final int columns, final int rows) {
 
         //TODO Parameter validation
 
-        this.width = width;
-        this.height = height;
-        islands = new HashSet<>();
+        columnsCount = columns;
+        rowsCount = rows;
+
+        this.columns = new HashMap<>(columns);
+        this.rows = new HashMap<>(rows);
+
         bridges = new HashSet<>();
     }
 
     @Override
-    public int getWidth() {
-        return width;
+    public int getColumnsCount() {
+        return columnsCount;
     }
 
     @Override
-    public int getHeight() {
-        return height;
+    public int getRowsCount() {
+        return rowsCount;
     }
 
     @Override
     public Set<Island> getIslands() {
-        return new HashSet<>(islands);
+        Set<Island> islands = new HashSet<>();
+        columns.forEach((integer, column) -> islands.addAll(column.getIslands()));
+        return islands;
     }
 
     @Override
@@ -45,8 +54,47 @@ public class PuzzleImpl implements Puzzle {
     }
 
     @Override
+    public void addIsland(Island island) {
+        int columnIndex = island.getColumn();
+        int rowIndex = island.getRow();
+
+        Column column;
+        if (columns.containsKey(columnIndex)) {
+            column = columns.get(columnIndex);
+        } else {
+            column = new Column(columnIndex);
+            columns.put(columnIndex, column);
+        }
+
+        column.addIsland(island);
+
+        Row row;
+        if (rows.containsKey(rowIndex)) {
+            row = rows.get(rowIndex);
+        } else {
+            row = new Row(rowIndex);
+            rows.put(rowIndex, row);
+        }
+
+        row.addIsland(island);
+    }
+
+    @Override
+    public void addBridge(Bridge bridge) {
+        // TODO validate bridge
+
+        bridges.add(bridge);
+        bridge.getConnectedIslands().forEach(island -> island.addBridge(bridge));
+    }
+
+    @Override
     public PuzzleStatus getStatus() {
         //TODO Implement de.feu.ps.bridges.model.Puzzle.getStatus
         return null;
+    }
+
+    @Override
+    public Island getIslandAt(int column, int row) {
+        return columns.get(column).getIslandAtRow(row);
     }
 }

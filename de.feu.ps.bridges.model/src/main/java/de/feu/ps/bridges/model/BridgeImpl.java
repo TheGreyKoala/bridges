@@ -10,14 +10,14 @@ public class BridgeImpl implements Bridge {
 
     private final Set<Island> connectedIslands;
 
-    public BridgeImpl(final Island islandA, final Island islandB) {
-        if (islandA == null || islandB == null) {
+    protected BridgeImpl(final Island island1, final Island island2) {
+        if (island1 == null || island2 == null) {
             throw new IllegalArgumentException("None of the connected islands may be null.");
         }
 
         connectedIslands = new HashSet<>(2);
-        connectedIslands.add(islandA);
-        connectedIslands.add(islandB);
+        connectedIslands.add(island1);
+        connectedIslands.add(island2);
     }
 
     @Override
