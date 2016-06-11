@@ -98,4 +98,10 @@ public class PuzzleImpl implements Puzzle {
     public Island getIslandAt(int column, int row) {
         return columns.get(column).getIslandAtRow(row);
     }
+
+    @Override
+    public void removeAllBridges() {
+        bridges.forEach(bridge -> bridge.getConnectedIslands().forEach(Island::removeAllBridges));
+        bridges.clear();
+    }
 }

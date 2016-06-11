@@ -10,7 +10,7 @@ public class IslandImpl implements Island {
 
     private final int column;
     private final int row;
-    private final int requiredBridges;
+    private int requiredBridges;
     private final Set<Bridge> bridges;
 
     private Island northNeighbour;
@@ -107,5 +107,92 @@ public class IslandImpl implements Island {
     @Override
     public Set<Bridge> getBridges() {
         return new HashSet<>(bridges);
+    }
+
+    @Override
+    public boolean hasNorthNeighbour() {
+        return getNorthNeighbour() != null;
+    }
+
+    @Override
+    public boolean hasEastNeighbour() {
+        return getEastNeighbour() != null;
+    }
+
+    @Override
+    public boolean hasSouthNeighbour() {
+        return getSouthNeighbour() != null;
+    }
+
+    @Override
+    public boolean hasWestNeighbour() {
+        return getWestNeighbour() != null;
+    }
+
+    @Override
+    public Position getPosition() {
+        return new Position(column, row);
+    }
+
+    @Override
+    public int getDistanceToNorthNeighbour() {
+        if (hasNorthNeighbour()) {
+            return row - northNeighbour.getRow();
+        } else {
+            throw new UnsupportedOperationException("Island has no north neighbour");
+        }
+    }
+
+    @Override
+    public int getDistanceToEastNeighbour() {
+        if (hasEastNeighbour()) {
+            return eastNeighbour.getColumn() - column;
+        } else {
+            throw new UnsupportedOperationException("Island has no east neighbour");
+        }
+    }
+
+    @Override
+    public int getDistanceToSouthNeighbour() {
+        if (hasSouthNeighbour()) {
+            return southNeighbour.getRow() - row;
+        } else {
+            throw new UnsupportedOperationException("Island has no south neighbour");
+        }
+    }
+
+    @Override
+    public int getDistanceToWestNeighbour() {
+        if (hasWestNeighbour()) {
+            return column - westNeighbour.getColumn();
+        } else {
+            throw new UnsupportedOperationException("Island has no west neighbour");
+        }
+    }
+
+    @Override
+    public boolean isBridgedToNeighbour(Direction direction) {
+        switch (direction) {
+            case NORTH:
+                return hasNorthNeighbour() && bridges.stream().anyMatch(bridge -> bridge.getConnectedIslands().contains(northNeighbour));
+            case EAST:
+                return hasEastNeighbour() && bridges.stream().anyMatch(bridge -> bridge.getConnectedIslands().contains(eastNeighbour));
+            case SOUTH:
+                return hasSouthNeighbour() && bridges.stream().anyMatch(bridge -> bridge.getConnectedIslands().contains(southNeighbour));
+            case WEST:
+                return hasWestNeighbour() && bridges.stream().anyMatch(bridge -> bridge.getConnectedIslands().contains(westNeighbour));
+            default:
+                return false;
+        }
+    }
+
+    @Override
+    public void removeAllBridges() {
+        bridges.clear();
+    }
+
+    @Override
+    public void setRequiredBridges(final int requiredBridges) {
+        this.requiredBridges = requiredBridges;
     }
 }

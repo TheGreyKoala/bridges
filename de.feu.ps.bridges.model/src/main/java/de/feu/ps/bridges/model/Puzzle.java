@@ -14,4 +14,5 @@ public interface Puzzle {
     void addBridge(Bridge bridge);
     PuzzleStatus getStatus();
     Island getIslandAt(int column, int row);
+    void removeAllBridges();
 }
