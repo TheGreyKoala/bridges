@@ -1,6 +1,5 @@
 package de.feu.ps.bridges.model;
 
-import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,31 +96,7 @@ public class PuzzleBuilder {
     }
 
     public boolean isAnyBridgeCrossing(final Position otherBridgeStart, final Position otherBridgeEnd) {
-
-        // TODO: TEST!
-
-        return bridges.stream().anyMatch(bridge -> {
-            Position bridgeStart = bridge.getIsland1().getPosition();
-            Position bridgeEnd = bridge.getIsland2().getPosition();
-
-            boolean linesIntersect = Line2D.linesIntersect(
-                    bridgeStart.getColumn(),
-                    bridgeStart.getRow(),
-                    bridgeEnd.getColumn(),
-                    bridgeEnd.getRow(),
-                    otherBridgeStart.getColumn(),
-                    otherBridgeStart.getRow(),
-                    otherBridgeEnd.getColumn(),
-                    otherBridgeEnd.getRow());
-
-            boolean bridgesShareSingeIsland =
-                bridgeStart.equals(otherBridgeStart)
-                ^ bridgeStart.equals(otherBridgeEnd)
-                ^ bridgeEnd.equals(otherBridgeStart)
-                ^ bridgeEnd.equals(otherBridgeEnd);
-
-            return linesIntersect && !bridgesShareSingeIsland;
-        });
+        return puzzle.isAnyBridgeCrossing(otherBridgeStart, otherBridgeEnd);
     }
 
     public void clearBridges() {
@@ -130,6 +105,6 @@ public class PuzzleBuilder {
     }
 
     public void setRequiredBridgesToCurrentCountOfBridges() {
-        islands.forEach(island -> island.setRequiredBridges(island.getBridges().size()));
+        islands.forEach(island -> island.setRequiredBridges(island.getActualBridgesCount()));
     }
 }

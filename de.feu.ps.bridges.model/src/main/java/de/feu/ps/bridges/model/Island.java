@@ -14,6 +14,7 @@ public interface Island {
     Island getEastNeighbour();
     Island getSouthNeighbour();
     Island getWestNeighbour();
+    Island getNeighbour(Direction direction);
     IslandStatus getStatus();
     void addBridge(Bridge bridge);
     void setSouthNeighbour(Island island);
@@ -33,4 +34,10 @@ public interface Island {
     boolean isBridgedToNeighbour(Direction direction);
     void removeAllBridges();
     void setRequiredBridges(int requiredBridges);
+//    Set<Island> getUnconnectedNeighbours();
+    Set<Island> getNeighbours();
+    boolean hasNeighbour(Direction direction);
+    boolean isBridgedTo(Island island);
+    Bridge getBridgeTo(Island island);
+    int getActualBridgesCount();
 }

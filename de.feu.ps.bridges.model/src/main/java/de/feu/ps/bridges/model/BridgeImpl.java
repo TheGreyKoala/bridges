@@ -16,9 +16,9 @@ public class BridgeImpl implements Bridge {
     private final Island island1;
     private final Island island2;
     private final Set<Island> islands;
-    private final boolean doubleBridge;
+    private boolean doubleBridge;
 
-    protected BridgeImpl(final Island island1, final Island island2, final boolean doubleBridge) {
+    public BridgeImpl(final Island island1, final Island island2, final boolean doubleBridge) {
         this.island1 = Objects.requireNonNull(island1, "Parameter 'island1' must not be null.");
         this.island2 = Objects.requireNonNull(island2, "Parameter 'island2' must not be null.");
 
@@ -58,5 +58,10 @@ public class BridgeImpl implements Bridge {
 
     private boolean canBeConnected(final Island island1, final Island island2) {
         return island1.getRow() == island2.getRow() || island1.getColumn() == island2.getColumn();
+    }
+
+    @Override
+    public void setDoubleBridge(boolean doubleBridge) {
+        this.doubleBridge = doubleBridge;
     }
 }

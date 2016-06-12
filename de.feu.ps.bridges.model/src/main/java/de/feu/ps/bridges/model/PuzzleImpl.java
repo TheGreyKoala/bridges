@@ -1,9 +1,7 @@
 package de.feu.ps.bridges.model;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.awt.geom.Line2D;
+import java.util.*;
 
 /**
  * @author Tim Gremplewski
@@ -83,9 +81,18 @@ public class PuzzleImpl implements Puzzle {
     public void addBridge(Bridge bridge) {
         // TODO validate bridge
 
-        bridges.add(bridge);
-        bridge.getIsland1().addBridge(bridge);
-        bridge.getIsland2().addBridge(bridge);
+        Optional<Bridge> possibleDuplicate =
+            bridges.stream()
+                .filter(bridge1 -> bridge1.getConnectedIslands().containsAll(
+                    bridge.getConnectedIslands())).findFirst();
+
+        if (possibleDuplicate.isPresent()) {
+            possibleDuplicate.get().setDoubleBridge(true);
+        } else {
+            bridges.add(bridge);
+            bridge.getIsland1().addBridge(bridge);
+            bridge.getIsland2().addBridge(bridge);
+        }
     }
 
     @Override
@@ -103,5 +110,39 @@ public class PuzzleImpl implements Puzzle {
     public void removeAllBridges() {
         bridges.forEach(bridge -> bridge.getConnectedIslands().forEach(Island::removeAllBridges));
         bridges.clear();
+    }
+
+    @Override
+    public boolean isAnyBridgeCrossing(final Position otherBridgeStart, final Position otherBridgeEnd) {
+
+        // TODO: TEST!
+
+        return bridges.stream().anyMatch(bridge -> {
+            Position bridgeStart = bridge.getIsland1().getPosition();
+            Position bridgeEnd = bridge.getIsland2().getPosition();
+
+            boolean linesIntersect = Line2D.linesIntersect(
+                bridgeStart.getColumn(),
+                bridgeStart.getRow(),
+                bridgeEnd.getColumn(),
+                bridgeEnd.getRow(),
+                otherBridgeStart.getColumn(),
+                otherBridgeStart.getRow(),
+                otherBridgeEnd.getColumn(),
+                otherBridgeEnd.getRow());
+
+            boolean bridgesShareSingeIsland =
+                bridgeStart.equals(otherBridgeStart)
+                    ^ bridgeStart.equals(otherBridgeEnd)
+                    ^ bridgeEnd.equals(otherBridgeStart)
+                    ^ bridgeEnd.equals(otherBridgeEnd);
+
+            boolean bridgesConnectTheSameIsland =
+                (bridgeStart.equals(otherBridgeStart) || bridgeStart.equals(otherBridgeEnd))
+                    && (bridgeEnd.equals(otherBridgeEnd) || bridgeEnd.equals(otherBridgeStart))
+                    && !bridge.isDoubleBridge();
+
+            return linesIntersect && !(bridgesShareSingeIsland || bridgesConnectTheSameIsland);
+        });
     }
 }

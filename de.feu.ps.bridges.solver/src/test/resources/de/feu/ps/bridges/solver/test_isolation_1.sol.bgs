@@ -1,0 +1,9 @@
+FIELD
+5 x 5 | 2
+
+ISLANDS
+( 2, 0 | 1 )
+( 2, 4 | 1 )
+
+BRIDGES
+( 0, 1 | false )

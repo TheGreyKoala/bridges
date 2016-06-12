@@ -1,7 +1,10 @@
 package de.feu.ps.bridges.model;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Tim Gremplewski
@@ -45,7 +48,7 @@ public class IslandImpl implements Island {
 
     @Override
     public int getRemainingBridges() {
-        return requiredBridges - bridges.size();
+        return requiredBridges - getActualBridgesCount();
     }
 
     @Override
@@ -66,6 +69,26 @@ public class IslandImpl implements Island {
     @Override
     public Island getWestNeighbour() {
         return westNeighbour;
+    }
+
+    @Override
+    public Island getNeighbour(Direction direction) {
+        if (hasNeighbour(direction)) {
+            switch (direction) {
+                case NORTH:
+                    return getNorthNeighbour();
+                case EAST:
+                    return getEastNeighbour();
+                case SOUTH:
+                    return getSouthNeighbour();
+                case WEST:
+                    return getWestNeighbour();
+                default:
+                    return null;
+            }
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -194,5 +217,64 @@ public class IslandImpl implements Island {
     @Override
     public void setRequiredBridges(final int requiredBridges) {
         this.requiredBridges = requiredBridges;
+    }
+
+    @Override
+    public Set<Island> getNeighbours() {
+        return Arrays.stream(Direction.values())
+            .filter(this::hasNeighbour)
+            .map(this::getNeighbour)
+            .collect(Collectors.toSet());
+    }
+
+    /*@Override
+    public Set<Island> getUnconnectedNeighbours() {
+        return Arrays.stream(Direction.values())
+            .filter(this::hasNeighbour)
+            .filter(direction -> !isBridgedToNeighbour(direction))
+            .map(this::getNeighbour)
+            .collect(Collectors.toSet());
+    }*/
+
+    @Override
+    public boolean hasNeighbour(Direction direction) {
+        switch (direction) {
+            case NORTH:
+                return hasNorthNeighbour();
+            case EAST:
+                return hasEastNeighbour();
+            case SOUTH:
+                return hasSouthNeighbour();
+            case WEST:
+                return hasWestNeighbour();
+            default:
+                return false;
+        }
+    }
+
+    @Override
+    public boolean isBridgedTo(Island island) {
+        return bridges.stream().anyMatch(bridge -> bridge.getConnectedIslands().contains(island));
+    }
+
+    @Override
+    public Bridge getBridgeTo(Island island) {
+        Optional<Bridge> optionalBridge = bridges.stream().filter(bridge -> bridge.getConnectedIslands().contains(island)).findFirst();
+        return optionalBridge.isPresent() ? optionalBridge.get() : null;
+    }
+
+    @Override
+    public int getActualBridgesCount() {
+        int doubleBridges = (int) bridges.stream().filter(Bridge::isDoubleBridge).count();
+        int singleBridges = bridges.size() - doubleBridges;
+        return singleBridges + doubleBridges * 2;
+    }
+
+    @Override
+    public String toString() {
+        return "IslandImpl{" +
+                "column=" + column +
+                ", row=" + row +
+                '}';
     }
 }

@@ -15,4 +15,5 @@ public interface Puzzle {
     PuzzleStatus getStatus();
     Island getIslandAt(int column, int row);
     void removeAllBridges();
+    boolean isAnyBridgeCrossing(final Position otherBridgeStart, final Position otherBridgeEnd);
 }
