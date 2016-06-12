@@ -40,12 +40,10 @@ public class PuzzleGeneratorImpl {
         int lowerLimit = Math.min(columns, rows);
         int upperLimit = columns * rows / 5;
 
-        if (lowerLimit > upperLimit) {
-            // Swap lower and upper limits; See newsgroup for this valid workaround
-            lowerLimit += upperLimit;
-            upperLimit = lowerLimit - upperLimit;
-            lowerLimit -= upperLimit;
-        }
+        // Lower limit might be less than upper limit in some cases.
+        // Swap lower and upper limits. See newsgroup for this valid workaround
+        lowerLimit = Math.min(lowerLimit, upperLimit);
+        upperLimit = Math.max(lowerLimit, upperLimit);
 
         int islands = randomIntBetween(lowerLimit, upperLimit);
         if (islands < 2) {
