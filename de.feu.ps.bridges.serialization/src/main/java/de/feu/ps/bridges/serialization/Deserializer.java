@@ -101,12 +101,12 @@ public class Deserializer {
     }
 
     private void parseBridgesSection(BufferedReader bufferedReader, PuzzleBuilder puzzleBuilder) throws IOException {
-        final int islandsCount = puzzleBuilder.getIslandsCount();
         final Pattern bridgePattern = Pattern.compile("^\\([ ]*(\\d+)[ ]*,[ ]*(\\d+)[ ]*\\|[ ]*(true|false)[ ]*\\)$");
 
-        for (int i = 0; i < islandsCount; i++) {
-            String line = getNextUncommentedLine(bufferedReader);
+        // TODO: Test islandsCount != bridgesCount
 
+        String line = getNextUncommentedLine(bufferedReader);
+        while (!END_OF_FILE.equals(line)) {
             Scanner scanner = new Scanner(line);
             scanner.findInLine(bridgePattern);
             MatchResult match = scanner.match();
@@ -116,6 +116,7 @@ public class Deserializer {
             boolean doubleBridge = Boolean.parseBoolean(match.group(3));
 
             puzzleBuilder.addBridge(islandAIndex, islandBIndex, doubleBridge);
+            line = getNextUncommentedLine(bufferedReader);
         }
     }
 }
