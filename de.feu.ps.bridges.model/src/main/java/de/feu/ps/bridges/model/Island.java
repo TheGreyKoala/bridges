@@ -34,10 +34,10 @@ public interface Island {
     boolean isBridgedToNeighbour(Direction direction);
     void removeAllBridges();
     void setRequiredBridges(int requiredBridges);
-//    Set<Island> getUnconnectedNeighbours();
     Set<Island> getNeighbours();
     boolean hasNeighbour(Direction direction);
     boolean isBridgedTo(Island island);
     Bridge getBridgeTo(Island island);
     int getActualBridgesCount();
+    Set<Island> getBridgedNeighbours();
 }

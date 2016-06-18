@@ -5,10 +5,7 @@ import de.feu.ps.bridges.model.BridgeImpl;
 import de.feu.ps.bridges.model.Island;
 import de.feu.ps.bridges.model.Puzzle;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -56,12 +53,14 @@ public class Solver {
 
             // Some islands may have no other option than bridge to the current island
             // These islands need to be looked at first, otherwise all reachable neighbours are possible destinations
-            final Set<Island> possibleDestinations;
+            Set<Island> possibleDestinations;
             if (islandsThatNeedToConnectTo.isEmpty()) {
                 possibleDestinations = reachableUnfinishedNeighbours;
             } else {
                 possibleDestinations = islandsThatNeedToConnectTo;
             }
+
+            possibleDestinations = possibleDestinations.stream().filter(island1 -> causesNoIsolation(puzzle, island, island1)).collect(Collectors.toSet());
 
             if (!possibleDestinations.isEmpty()) {
                 int remainingBridges = island.getRemainingBridges();
@@ -132,6 +131,43 @@ public class Solver {
         }
 
         return safeMove;
+    }
+
+    private boolean causesNoIsolation(Puzzle puzzle, Island island1, Island island2) {
+
+        Set<Island> visitedIslands = new HashSet<>();
+        Queue<Island> islandsToVisit = new LinkedList<>();
+
+        if (island1.getRemainingBridges() > 1) {
+            // If remainingBridges == 1, island1 will only be able to reach island2
+            Set<Island> reachable = getReachableUnfinishedNeighbours(puzzle, island1);
+            islandsToVisit.addAll(reachable);
+        }
+
+        islandsToVisit.addAll(island1.getBridgedNeighbours());
+        visitedIslands.add(island1);
+
+        if (island2.getRemainingBridges() > 1) {
+            // If remainingBridges == 1, island2 will only be able to reach island1
+            Set<Island> reachable = getReachableUnfinishedNeighbours(puzzle, island2);
+            islandsToVisit.addAll(reachable);
+        }
+
+        islandsToVisit.addAll(island2.getBridgedNeighbours());
+        visitedIslands.add(island2);
+
+        while (!islandsToVisit.isEmpty()) {
+            Island island = islandsToVisit.remove();
+            if (!visitedIslands.contains(island)) {
+                if (island.getRemainingBridges() > 0) {
+                    islandsToVisit.addAll(getReachableUnfinishedNeighbours(puzzle, island));
+                }
+                islandsToVisit.addAll(island.getBridgedNeighbours());
+            }
+            visitedIslands.add(island);
+        }
+
+        return visitedIslands.containsAll(puzzle.getIslands());
     }
 
     private boolean isSave(int requiredBridges, int possibleDestinations, int existingInDirection) {

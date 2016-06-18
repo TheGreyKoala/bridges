@@ -271,6 +271,14 @@ public class IslandImpl implements Island {
     }
 
     @Override
+    public Set<Island> getBridgedNeighbours() {
+        return Arrays.stream(Direction.values())
+                .filter(this::isBridgedToNeighbour)
+                .map(this::getNeighbour)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
     public String toString() {
         return "IslandImpl{" +
                 "column=" + column +
