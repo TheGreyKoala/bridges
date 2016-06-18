@@ -4,7 +4,6 @@ import de.feu.ps.bridges.model.Bridge;
 import de.feu.ps.bridges.model.Position;
 import de.feu.ps.bridges.model.Puzzle;
 import de.feu.ps.bridges.serialization.Deserializer;
-import de.feu.ps.bridges.serialization.Serializer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -68,9 +67,6 @@ public class SolverTest {
 
         final Set<Bridge> expectedBridges = solution.getBridges();
         final Set<Bridge> actualBridges = puzzle.getBridges();
-
-        Serializer s = new Serializer();
-        s.storePuzzle(puzzle, "/home/tim/solutions/" + puzzleFile);
 
         assertEquals("Unexpected number of bridges", expectedBridges.size(), actualBridges.size());
 
