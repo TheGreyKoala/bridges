@@ -60,7 +60,7 @@ public class Solver {
                 possibleDestinations = islandsThatNeedToConnectTo;
             }
 
-            possibleDestinations = possibleDestinations.stream().filter(island1 -> causesNoIsolation(puzzle, island, island1)).collect(Collectors.toSet());
+            possibleDestinations = possibleDestinations.parallelStream().filter(island1 -> causesNoIsolation(puzzle, island, island1)).collect(Collectors.toSet());
 
             if (!possibleDestinations.isEmpty()) {
                 int remainingBridges = island.getRemainingBridges();
