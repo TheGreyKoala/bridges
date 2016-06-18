@@ -5,13 +5,19 @@ import de.feu.ps.bridges.model.BridgeImpl;
 import de.feu.ps.bridges.model.Island;
 import de.feu.ps.bridges.model.Puzzle;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
  * @author Tim Gremplewski
  */
 public class Solver {
+
+    private static final Logger LOGGER = Logger.getLogger(Solver.class.getName());
 
     private Map<Island, Set<Bridge>> saveMoves;
 
@@ -28,18 +34,18 @@ public class Solver {
                 puzzle.addBridge(addedBridge);
             }
         } while (/*puzzle.getStatus() != PuzzleStatus.SOLVED &&*/ addedBridge != null);
-
-        int i = 5;
     }
 
     public Bridge getSafeMove(Puzzle puzzle) {
         // TODO check if already solved
 
-        Set<Island> islands = puzzle.getIslands();
+        // TODO: Same sort is done in Serializer
+        //List<Island> islands = puzzle.getIslands().stream().sorted(comparingInt(Island::getColumn).thenComparing(Island::getRow)).collect(Collectors.toList());
 
         Bridge safeMove = null;
 
-        for (Island island : islands) {
+        for (Island island : puzzle.getIslands()) {
+            //LOGGER.log(Level.INFO, island.toString());
             if (island.getRemainingBridges() == 0) {
                 continue;
             }
@@ -59,8 +65,33 @@ public class Solver {
 
             if (!possibleDestinations.isEmpty()) {
                 int remainingBridges = island.getRemainingBridges();
+                int existingBridgesToPossibleDestinations = 0;
 
-                int saveBridgesToEveryPossibleDestination = 0;
+                for (Island destination : possibleDestinations) {
+                    if (island.isBridgedTo(destination)) {
+                        existingBridgesToPossibleDestinations++;
+                    }
+                }
+
+                //List<Island> sortedPossibleDestinations = possibleDestinations.stream().sorted(comparingInt(Island::getColumn).thenComparing(Island::getRow)).collect(Collectors.toList());
+
+                for (Island destination : possibleDestinations) {
+                    int existingToDestination = 0;
+                    if (island.isBridgedTo(destination)) {
+                        existingToDestination = 1;
+                    }
+
+                    if (isSave(remainingBridges + existingBridgesToPossibleDestinations, possibleDestinations.size(), existingToDestination)) {
+                        safeMove = new BridgeImpl(island, destination, false);
+                        break;
+                    }
+                }
+
+                if (safeMove != null) {
+                    break;
+                }
+
+                /*int saveBridgesToEveryPossibleDestination = 0;
 
                 if (remainingBridges == 2 * possibleDestinations.size()) {
                     saveBridgesToEveryPossibleDestination = 2;
@@ -68,7 +99,7 @@ public class Solver {
                     saveBridgesToEveryPossibleDestination = 1;
                 }
 
-                if (saveBridgesToEveryPossibleDestination > 0 && island.getRemainingBridges() > 0) {
+                if (saveBridgesToEveryPossibleDestination > 0) {
 
                     Island finalDestination = null;
                     boolean createDoubleBridge = false;
@@ -96,17 +127,28 @@ public class Solver {
                         safeMove = new BridgeImpl(island, finalDestination, createDoubleBridge);
                         break;
                     }
-                }
+                }*/
             }
         }
 
         return safeMove;
     }
 
+    private boolean isSave(int requiredBridges, int possibleDestinations, int existingInDirection) {
+        int saveBridgesInEveryDirection = 0;
+        if (requiredBridges == 2 * possibleDestinations) {
+            saveBridgesInEveryDirection = 2;
+        } else if (requiredBridges == 2 * possibleDestinations - 1) {
+            saveBridgesInEveryDirection = 1;
+        }
+
+        return existingInDirection < saveBridgesInEveryDirection;
+    }
+
     private Set<Island> getReachableUnfinishedNeighbours(Puzzle puzzle, final Island island) {
         return island
             .getNeighbours().stream()
-            .filter(neighbour -> !island.isBridgedTo(neighbour) || !island.getBridgeTo(island).isDoubleBridge())
+            .filter(neighbour -> !island.isBridgedTo(neighbour) || !island.getBridgeTo(neighbour).isDoubleBridge())
             .filter(neighbour -> noIntersectingBridge(puzzle, island, neighbour))
             .filter(this::islandNeedsMoreBridges)
             .collect(Collectors.toSet());

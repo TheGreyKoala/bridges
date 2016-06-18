@@ -64,4 +64,13 @@ public class BridgeImpl implements Bridge {
     public void setDoubleBridge(boolean doubleBridge) {
         this.doubleBridge = doubleBridge;
     }
+
+    @Override
+    public String toString() {
+        return "BridgeImpl{" +
+                "[" + island1.getPosition().getColumn() + ", " + island1.getPosition().getRow() + "] - " +
+                "[" + island2.getPosition().getColumn() + ", " + island2.getPosition().getRow() + "]" +
+                ", doubleBridge=" + doubleBridge +
+                '}';
+    }
 }
