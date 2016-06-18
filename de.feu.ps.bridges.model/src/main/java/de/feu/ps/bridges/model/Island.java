@@ -40,4 +40,5 @@ public interface Island {
     Bridge getBridgeTo(Island island);
     int getActualBridgesCount();
     Set<Island> getBridgedNeighbours();
+    void removeBridge(Bridge bridge);
 }

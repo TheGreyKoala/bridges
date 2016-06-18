@@ -27,10 +27,67 @@ public class Solver {
         do {
             addedBridge = getSafeMove(puzzle);
 
+            if (addedBridge == null && puzzle.getColumnsCount() == 25) {
+                addedBridge = tryAndError(puzzle);
+            }
+
             if (addedBridge != null) {
                 puzzle.addBridge(addedBridge);
             }
         } while (/*puzzle.getStatus() != PuzzleStatus.SOLVED &&*/ addedBridge != null);
+    }
+
+    public Bridge tryAndError(Puzzle puzzle) {
+        Set<Island> islands = puzzle.getIslands();
+
+        Bridge nextMove = null;
+
+        for (Island island : islands) {
+            if (island.getRemainingBridges() == 0) {
+                continue;
+            }
+
+            Set<Island> reachableUnfinishedNeighbours = getReachableUnfinishedNeighbours(puzzle, island);
+            Set<Island> destinations = reachableUnfinishedNeighbours.parallelStream().filter(island1 -> causesNoIsolation(puzzle, island, island1)).collect(Collectors.toSet());
+
+            for (Island destination : destinations) {
+                Bridge tryBridge = new BridgeImpl(island, destination, false);
+                puzzle.addBridge(tryBridge);
+
+                boolean causesConflict = false;
+
+                Set<Island> islands1 = puzzle.getIslands();
+                for (Island island1 : islands1) {
+                    if (island1.getRemainingBridges() == 0) {
+                        continue;
+                    }
+
+                    Set<Island> reachableTest = getReachableUnfinishedNeighbours(puzzle, island1);
+                    Set<Island> destinationsTest = reachableTest.parallelStream().filter(island_1 -> causesNoIsolation(puzzle, island1, island_1)).collect(Collectors.toSet());
+                    if (destinationsTest.isEmpty()) {
+                        causesConflict = true;
+                        break;
+                    }
+                }
+
+                puzzle.removeBridge(tryBridge);
+                if (!causesConflict) {
+                    if (nextMove == null) {
+                        nextMove = tryBridge;
+                    } else {
+                        // Island has more than one destination that do not lead to a direct conflict
+                        nextMove = null;
+                        break;
+                    }
+                }
+            }
+
+            if (nextMove != null) {
+                break;
+            }
+        }
+
+        return nextMove;
     }
 
     public Bridge getSafeMove(Puzzle puzzle) {

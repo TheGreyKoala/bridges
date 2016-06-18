@@ -279,6 +279,11 @@ public class IslandImpl implements Island {
     }
 
     @Override
+    public void removeBridge(Bridge bridge) {
+        bridges.remove(bridge);
+    }
+
+    @Override
     public String toString() {
         return "IslandImpl{" +
                 "column=" + column +

@@ -145,4 +145,23 @@ public class PuzzleImpl implements Puzzle {
             return linesIntersect && !(bridgesShareSingeIsland || bridgesConnectTheSameIsland);
         });
     }
+
+    @Override
+    public void removeBridge(Bridge bridge) {
+        Optional<Bridge> possibleDuplicate =
+                bridges.stream()
+                        .filter(bridge1 -> bridge1.getConnectedIslands().containsAll(
+                                bridge.getConnectedIslands())).findFirst();
+
+        if (possibleDuplicate.isPresent()) {
+            Bridge duplicate = possibleDuplicate.get();
+            if (duplicate.isDoubleBridge()) {
+                duplicate.setDoubleBridge(false);
+            } else {
+                bridges.remove(duplicate);
+                duplicate.getConnectedIslands().forEach(island -> island.removeBridge(bridge));
+            }
+            possibleDuplicate.get().setDoubleBridge(false);
+        }
+    }
 }
