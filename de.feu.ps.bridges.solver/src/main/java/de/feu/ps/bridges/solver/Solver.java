@@ -184,9 +184,9 @@ public class Solver {
     private Set<Island> getReachableUnfinishedNeighbours(Puzzle puzzle, final Island island) {
         return island
             .getNeighbours().stream()
+            .filter(this::islandNeedsMoreBridges)
             .filter(neighbour -> !island.isBridgedTo(neighbour) || !island.getBridgeTo(neighbour).isDoubleBridge())
             .filter(neighbour -> noIntersectingBridge(puzzle, island, neighbour))
-            .filter(this::islandNeedsMoreBridges)
             .collect(Collectors.toSet());
     }
 
