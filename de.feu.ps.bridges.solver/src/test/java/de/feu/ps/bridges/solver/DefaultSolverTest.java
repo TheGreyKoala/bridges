@@ -21,9 +21,9 @@ import static org.junit.Assert.assertTrue;
  * @author Tim Gremplewski
  */
 @RunWith(Parameterized.class)
-public class SolverTest {
+public class DefaultSolverTest {
 
-    private static final Logger LOGGER = Logger.getLogger(SolverTest.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DefaultSolverTest.class.getName());
 
     private final String puzzleFile;
     private final String solutionFile;
@@ -46,7 +46,7 @@ public class SolverTest {
         });
     }
 
-    public SolverTest(final String puzzleFile, final String solutionFile) {
+    public DefaultSolverTest(final String puzzleFile, final String solutionFile) {
         LOGGER.log(Level.INFO, "puzzleFile=" + puzzleFile + ", solutionFile=" + solutionFile);
         this.puzzleFile = puzzleFile;
         this.solutionFile = solutionFile;
@@ -59,8 +59,8 @@ public class SolverTest {
         final String puzzlePath = getClass().getResource(puzzleFile).toURI().getPath();
         final Puzzle puzzle = deserializer.loadPuzzle(puzzlePath);
 
-        final Solver solver = new Solver();
-        solver.solve(puzzle);
+        final Solver solver = DefaultSolver.createSolverFor(puzzle);
+        solver.solve();
 
         final String solutionPath = getClass().getResource(solutionFile).toURI().getPath();
         final Puzzle solution = deserializer.loadPuzzle(solutionPath);
