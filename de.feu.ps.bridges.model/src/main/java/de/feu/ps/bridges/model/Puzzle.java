@@ -12,7 +12,6 @@ public interface Puzzle {
     Set<Bridge> getBridges();
     void addIsland(Island island);
     void addBridge(Bridge bridge);
-    PuzzleStatus getStatus();
     Island getIslandAt(int column, int row);
     void removeAllBridges();
     boolean isAnyBridgeCrossing(final Position otherBridgeStart, final Position otherBridgeEnd);

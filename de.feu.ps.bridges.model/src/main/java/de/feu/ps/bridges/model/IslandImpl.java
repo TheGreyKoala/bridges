@@ -99,7 +99,7 @@ public class IslandImpl implements Island {
 
     @Override
     public void addBridge(Bridge bridge) {
-        //TODO Parameter validation
+        //TODO Parameter validation and reject if already enough bridges
         bridges.add(bridge);
     }
 

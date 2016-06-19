@@ -80,7 +80,7 @@ public class PuzzleImpl implements Puzzle {
 
     @Override
     public void addBridge(Bridge bridge) {
-        // TODO validate bridge
+        // TODO validate bridge and reject
 
         Optional<Bridge> possibleDuplicate =
             bridges.stream()
@@ -90,16 +90,11 @@ public class PuzzleImpl implements Puzzle {
         if (possibleDuplicate.isPresent()) {
             possibleDuplicate.get().setDoubleBridge(true);
         } else {
+            // TODO What if island already has enough islands
             bridges.add(bridge);
             bridge.getIsland1().addBridge(bridge);
             bridge.getIsland2().addBridge(bridge);
         }
-    }
-
-    @Override
-    public PuzzleStatus getStatus() {
-        //TODO Implement de.feu.ps.bridges.model.Puzzle.getStatus
-        return null;
     }
 
     @Override
