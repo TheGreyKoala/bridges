@@ -17,4 +17,5 @@ public interface Puzzle {
     void removeAllBridges();
     boolean isAnyBridgeCrossing(final Position otherBridgeStart, final Position otherBridgeEnd);
     void removeBridge(Bridge bridge);
+    Set<Island> getUnfinishedIslands();
 }

@@ -39,15 +39,11 @@ public class DefaultSolver implements Solver {
     }
 
     private Optional<Bridge> findSoleNonErrorCausingMove() {
-        Set<Island> islands = puzzle.getIslands();
+        Set<Island> islands = puzzle.getUnfinishedIslands();
 
         Bridge nextMove = null;
 
         for (Island island : islands) {
-            if (island.getRemainingBridges() == 0) {
-                continue;
-            }
-
             Set<Island> reachableUnfinishedNeighbours = getReachableUnfinishedNeighbours(puzzle, island);
             Set<Island> destinations = reachableUnfinishedNeighbours.parallelStream().filter(island1 -> causesNoIsolation(puzzle, island, island1)).collect(Collectors.toSet());
 
@@ -57,12 +53,8 @@ public class DefaultSolver implements Solver {
 
                 boolean causesConflict = false;
 
-                Set<Island> islands1 = puzzle.getIslands();
+                Set<Island> islands1 = puzzle.getUnfinishedIslands();
                 for (Island island1 : islands1) {
-                    if (island1.getRemainingBridges() == 0) {
-                        continue;
-                    }
-
                     Set<Island> reachableTest = getReachableUnfinishedNeighbours(puzzle, island1);
                     Set<Island> destinationsTest = reachableTest.parallelStream().filter(island_1 -> causesNoIsolation(puzzle, island1, island_1)).collect(Collectors.toSet());
                     if (destinationsTest.isEmpty()) {
@@ -96,11 +88,7 @@ public class DefaultSolver implements Solver {
 
         Bridge safeMove = null;
 
-        for (Island island : puzzle.getIslands()) {
-            if (island.getRemainingBridges() == 0) {
-                continue;
-            }
-
+        for (Island island : puzzle.getUnfinishedIslands()) {
             final Set<Island> reachableUnfinishedNeighbours = getReachableUnfinishedNeighbours(puzzle, island);
             final Set<Island>possibleDestinations = reachableUnfinishedNeighbours.parallelStream().filter(island1 -> causesNoIsolation(puzzle, island, island1)).collect(Collectors.toSet());
 
