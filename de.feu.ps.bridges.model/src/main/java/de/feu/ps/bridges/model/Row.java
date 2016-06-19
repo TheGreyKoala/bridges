@@ -5,10 +5,10 @@ import java.util.*;
 /**
  * @author Tim Gremplewski
  */
-public class Row {
+class Row {
 
     private final int index;
-    private final TreeSet<Island> islands;
+    private final TreeSet<ModifiableIsland> islands;
 
     public Row(final int index) {
         // TODO validate index
@@ -16,20 +16,20 @@ public class Row {
         islands = new TreeSet<>((o1, o2) -> o1.getColumn() - o2.getColumn());
     }
 
-    public void addIsland(final Island island) {
+    public void addIsland(final ModifiableIsland island) {
         // TODO validate island
 
         islands.add(island);
-        SortedSet<Island> precedingIslands = this.islands.headSet(island);
+        SortedSet<ModifiableIsland> precedingIslands = this.islands.headSet(island);
         if (!precedingIslands.isEmpty()) {
-            Island westNeighbour = precedingIslands.last();
+            ModifiableIsland westNeighbour = precedingIslands.last();
             westNeighbour.setEastNeighbour(island);
             island.setWestNeighbour(westNeighbour);
         }
 
-        NavigableSet<Island> followingIslands = this.islands.tailSet(island, false);
+        NavigableSet<ModifiableIsland> followingIslands = this.islands.tailSet(island, false);
         if (!followingIslands.isEmpty()) {
-            Island eastNeighbour = followingIslands.first();
+            ModifiableIsland eastNeighbour = followingIslands.first();
             eastNeighbour.setWestNeighbour(island);
             island.setEastNeighbour(eastNeighbour);
         }

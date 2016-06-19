@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 /**
  * @author Tim Gremplewski
  */
-public class DefaultPuzzle implements ModifiablePuzzle {
+class DefaultPuzzle implements ModifiablePuzzle {
 
     private int columnsCount;
     private final int rowsCount;
@@ -15,7 +15,7 @@ public class DefaultPuzzle implements ModifiablePuzzle {
     private Map<Integer, Column> columns;
     private Map<Integer, Row> rows;
 
-    private Set<Bridge> bridges;
+    private Set<ModifiableBridge> bridges;
 
     public DefaultPuzzle(final int columns, final int rows) {
 
@@ -53,11 +53,10 @@ public class DefaultPuzzle implements ModifiablePuzzle {
     }
 
     @Override
-    public void addIsland(Island island) {
-        int columnIndex = island.getColumn();
-        int rowIndex = island.getRow();
+    public Island buildIsland(final int columnIndex, final int rowIndex, final int requiredBridges) {
+        final ModifiableIsland island = new DefaultIsland(columnIndex, rowIndex, requiredBridges);
 
-        Column column;
+        final Column column;
         if (columns.containsKey(columnIndex)) {
             column = columns.get(columnIndex);
         } else {
@@ -67,7 +66,7 @@ public class DefaultPuzzle implements ModifiablePuzzle {
 
         column.addIsland(island);
 
-        Row row;
+        final Row row;
         if (rows.containsKey(rowIndex)) {
             row = rows.get(rowIndex);
         } else {
@@ -76,30 +75,35 @@ public class DefaultPuzzle implements ModifiablePuzzle {
         }
 
         row.addIsland(island);
+
+        return island;
     }
 
     @Override
     public Bridge buildBridge(final Island island1, final Island island2, final boolean doubleBridge) {
         // TODO validate bridge and reject
 
-        Bridge bridge;
-        Optional<Bridge> possibleDuplicate = findBridge(island1, island2);
+        ModifiableBridge bridge;
+        Optional<ModifiableBridge> possibleDuplicate = findBridge(island1, island2);
 
         if (possibleDuplicate.isPresent()) {
             bridge = possibleDuplicate.get();
             bridge.setDoubleBridge(true);
         } else {
             // TODO What if island already has enough islands
-            bridge = BridgeBuilder.buildBridge(island1, island2, doubleBridge);
+            bridge = new DefaultBridge(island1, island2, doubleBridge);
             bridges.add(bridge);
-            bridge.getIsland1().addBridge(bridge);
-            bridge.getIsland2().addBridge(bridge);
+
+            // TODO: This is ugly but we need to verify if the islands are in this puzzle anyway.
+            // If we check, we know that this implementation only uses ModifiableIslands
+            ((ModifiableIsland) bridge.getIsland1()).addBridge(bridge);
+            ((ModifiableIsland) bridge.getIsland2()).addBridge(bridge);
         }
 
         return bridge;
     }
 
-    private Optional<Bridge> findBridge(final Island island1, final Island island2) {
+    private Optional<ModifiableBridge> findBridge(final Island island1, final Island island2) {
         return bridges.stream()
                 .filter(bridge1 -> bridge1.getConnectedIslands().containsAll(
                         Arrays.asList(island1, island2))).findFirst();
@@ -112,7 +116,8 @@ public class DefaultPuzzle implements ModifiablePuzzle {
 
     @Override
     public void removeAllBridges() {
-        bridges.forEach(bridge -> bridge.getConnectedIslands().forEach(Island::removeAllBridges));
+        // TODO the cast is ugly
+        bridges.forEach(bridge -> bridge.getConnectedIslands().forEach(island -> ((ModifiableIsland)island).removeAllBridges()));
         bridges.clear();
     }
 
@@ -171,13 +176,14 @@ public class DefaultPuzzle implements ModifiablePuzzle {
 
     @Override
     public void tearDownBridge(final Island island1, final Island island2) {
-        Optional<Bridge> optionalBridge = findBridge(island1, island2);
+        Optional<ModifiableBridge> optionalBridge = findBridge(island1, island2);
         if (optionalBridge.isPresent()) {
-            Bridge bridge = optionalBridge.get();
+            ModifiableBridge bridge = optionalBridge.get();
             if (bridge.isDoubleBridge()) {
                 bridge.setDoubleBridge(false);
             } else {
-                bridge.getConnectedIslands().forEach(island -> island.removeBridge(bridge));
+                // TODO The cast is ugly
+                bridge.getConnectedIslands().forEach(island -> ((ModifiableIsland) island).removeBridge(bridge));
                 bridges.remove(bridge);
             }
         }

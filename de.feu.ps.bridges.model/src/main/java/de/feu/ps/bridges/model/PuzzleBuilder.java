@@ -11,7 +11,7 @@ public class PuzzleBuilder {
     private int islandsCount;
     private int columns;
     private int rows;
-    private List<Island> islands;
+    private List<ModifiableIsland> islands;
     private List<Bridge> bridges;
     private ModifiablePuzzle puzzle;
 
@@ -44,9 +44,9 @@ public class PuzzleBuilder {
             // TODO throw error if illegal row
         }
 
-        final Island island = new DefaultIsland(column, row, requiredBridges);
+        // TODO This cast is ugly
+        final ModifiableIsland island = ((ModifiableIsland) puzzle.buildIsland(column, row, requiredBridges));
         islands.add(island);
-        puzzle.addIsland(island);
         return island;
     }
 

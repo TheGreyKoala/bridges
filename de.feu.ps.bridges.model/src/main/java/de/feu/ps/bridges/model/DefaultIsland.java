@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 /**
  * @author Tim Gremplewski
  */
-public class DefaultIsland implements Island {
+class DefaultIsland implements ModifiableIsland {
 
     private final int column;
     private final int row;

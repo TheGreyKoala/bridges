@@ -9,7 +9,7 @@ import java.util.Set;
  *
  * @author Tim Gremplewski
  */
-public class DefaultBridge implements Bridge {
+class DefaultBridge implements ModifiableBridge {
 
     // TODO Test
 
