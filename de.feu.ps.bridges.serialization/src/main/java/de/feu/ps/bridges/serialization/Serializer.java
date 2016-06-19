@@ -21,6 +21,8 @@ public class Serializer {
 
     public void storePuzzle(Puzzle puzzle, String destination) throws FileNotFoundException {
 
+        // TODO throw runtime exception -> Also see BridgesTesterImpl
+
         // TODO I think the file must not exist and be created?
 
         if (!destination.endsWith(".bgs")) {
