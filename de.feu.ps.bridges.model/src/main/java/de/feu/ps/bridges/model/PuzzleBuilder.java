@@ -13,7 +13,7 @@ public class PuzzleBuilder {
     private int rows;
     private List<Island> islands;
     private List<Bridge> bridges;
-    private Puzzle puzzle;
+    private ModifiablePuzzle puzzle;
 
     public PuzzleBuilder() {
         islands = new ArrayList<>();
@@ -26,7 +26,7 @@ public class PuzzleBuilder {
 
         this.columns = columns;
         this.rows = rows;
-        puzzle = new PuzzleImpl(columns, rows);
+        puzzle = new DefaultPuzzle(columns, rows);
 
         return this;
     }
@@ -44,7 +44,7 @@ public class PuzzleBuilder {
             // TODO throw error if illegal row
         }
 
-        final Island island = new IslandImpl(column, row, requiredBridges);
+        final Island island = new DefaultIsland(column, row, requiredBridges);
         islands.add(island);
         puzzle.addIsland(island);
         return island;
@@ -77,9 +77,8 @@ public class PuzzleBuilder {
 
     public PuzzleBuilder addBridge(final Island island1, final Island island2, final boolean doubleBridge) {
         // TODO: Validate islands
-        Bridge bridge = new BridgeImpl(island1, island2, doubleBridge);
+        Bridge bridge = puzzle.buildBridge(island1, island2, doubleBridge);
         bridges.add(bridge);
-        puzzle.addBridge(bridge);
         return this;
     }
 

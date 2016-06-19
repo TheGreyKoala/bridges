@@ -1,7 +1,7 @@
 package de.feu.ps.bridges.serialization;
 
+import de.feu.ps.bridges.model.DefaultIsland;
 import de.feu.ps.bridges.model.Island;
-import de.feu.ps.bridges.model.IslandImpl;
 import de.feu.ps.bridges.model.Puzzle;
 import org.junit.Test;
 
@@ -29,35 +29,35 @@ public class DeserializerTest_5x5 extends AbstractDeserializerTest {
         validateIsland(
             puzzle, 0, 0, 3,
             null,
-            new IslandImpl(2, 0, 3),
-            new IslandImpl(0, 2, 4),
+            new DefaultIsland(2, 0, 3),
+            new DefaultIsland(0, 2, 4),
             null);
 
         validateIsland(
             puzzle, 0, 2, 4,
-            new IslandImpl(0, 0, 3),
-            new IslandImpl(3, 2, 1),
-            new IslandImpl(0, 4, 2),
+            new DefaultIsland(0, 0, 3),
+            new DefaultIsland(3, 2, 1),
+            new DefaultIsland(0, 4, 2),
             null);
 
         validateIsland(
             puzzle, 0, 4, 2,
-            new IslandImpl(0, 2, 4),
-            new IslandImpl(3, 4, 1),
+            new DefaultIsland(0, 2, 4),
+            new DefaultIsland(3, 4, 1),
             null,
             null);
 
         validateIsland(
             puzzle, 2, 0, 3,
             null,
-            new IslandImpl(4, 0, 3),
-            new IslandImpl(2, 3, 2),
-            new IslandImpl(0, 0, 3));
+            new DefaultIsland(4, 0, 3),
+            new DefaultIsland(2, 3, 2),
+            new DefaultIsland(0, 0, 3));
 
         validateIsland(
             puzzle, 2, 3, 2,
-            new IslandImpl(2, 0, 3),
-            new IslandImpl(4, 3, 3),
+            new DefaultIsland(2, 0, 3),
+            new DefaultIsland(4, 3, 3),
             null,
             null);
 
@@ -65,28 +65,28 @@ public class DeserializerTest_5x5 extends AbstractDeserializerTest {
             puzzle, 3, 2, 1,
             null,
             null,
-            new IslandImpl(3, 4, 1),
-            new IslandImpl(0, 2, 4));
+            new DefaultIsland(3, 4, 1),
+            new DefaultIsland(0, 2, 4));
 
         validateIsland(
             puzzle, 3, 4, 1,
-            new IslandImpl(3, 2, 1),
+            new DefaultIsland(3, 2, 1),
             null,
             null,
-            new IslandImpl(0, 4, 2));
+            new DefaultIsland(0, 4, 2));
 
         validateIsland(
             puzzle, 4, 0, 3,
             null,
             null,
-            new IslandImpl(4, 3, 3),
-            new IslandImpl(2, 0, 3));
+            new DefaultIsland(4, 3, 3),
+            new DefaultIsland(2, 0, 3));
 
         validateIsland(
             puzzle, 4, 3, 3,
-            new IslandImpl(4, 0, 3),
+            new DefaultIsland(4, 0, 3),
             null,
             null,
-            new IslandImpl(2, 3, 2));
+            new DefaultIsland(2, 3, 2));
     }
 }

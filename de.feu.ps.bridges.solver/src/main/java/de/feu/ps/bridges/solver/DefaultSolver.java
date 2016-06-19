@@ -2,10 +2,7 @@ package de.feu.ps.bridges.solver;
 
 import de.feu.ps.bridges.analyser.Analyser;
 import de.feu.ps.bridges.analyser.DefaultAnalyser;
-import de.feu.ps.bridges.model.Bridge;
-import de.feu.ps.bridges.model.BridgeImpl;
-import de.feu.ps.bridges.model.Island;
-import de.feu.ps.bridges.model.Puzzle;
+import de.feu.ps.bridges.model.*;
 
 import java.util.Optional;
 import java.util.Set;
@@ -32,7 +29,8 @@ public class DefaultSolver implements Solver {
         do {
             nextMove = getNextMove();
             if (nextMove.isPresent()) {
-                puzzle.addBridge(nextMove.get());
+                Bridge nextBridge = nextMove.get();
+                puzzle.buildBridge(nextBridge.getIsland1(), nextBridge.getIsland2(), nextBridge.isDoubleBridge());
             }
         } while (nextMove.isPresent());
     }
@@ -51,8 +49,7 @@ public class DefaultSolver implements Solver {
             Set<Island> destinations = analyser.getValidBridgeDestinations(island);
 
             for (Island destination : destinations) {
-                Bridge tryBridge = new BridgeImpl(island, destination, false);
-                puzzle.addBridge(tryBridge);
+                Bridge tryBridge = puzzle.buildBridge(island, destination, false);
 
                 boolean causesConflict = false;
 
@@ -65,7 +62,7 @@ public class DefaultSolver implements Solver {
                     }
                 }
 
-                puzzle.removeBridge(tryBridge);
+                puzzle.tearDownBridge(island, destination);
                 if (!causesConflict) {
                     if (nextMove == null) {
                         nextMove = tryBridge;
@@ -110,7 +107,7 @@ public class DefaultSolver implements Solver {
                     }
 
                     if (isSave(remainingBridges + existingBridgesToPossibleDestinations, possibleDestinations.size(), existingToDestination)) {
-                        safeMove = new BridgeImpl(island, destination, false);
+                        safeMove = BridgeBuilder.buildBridge(island, destination, false);
                         break;
                     }
                 }

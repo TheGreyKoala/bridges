@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 /**
  * @author Tim Gremplewski
  */
-public class PuzzleImpl implements Puzzle {
+public class DefaultPuzzle implements ModifiablePuzzle {
 
     private int columnsCount;
     private final int rowsCount;
@@ -17,7 +17,7 @@ public class PuzzleImpl implements Puzzle {
 
     private Set<Bridge> bridges;
 
-    public PuzzleImpl(final int columns, final int rows) {
+    public DefaultPuzzle(final int columns, final int rows) {
 
         //TODO Parameter validation
 
@@ -79,22 +79,30 @@ public class PuzzleImpl implements Puzzle {
     }
 
     @Override
-    public void addBridge(Bridge bridge) {
+    public Bridge buildBridge(final Island island1, final Island island2, final boolean doubleBridge) {
         // TODO validate bridge and reject
 
-        Optional<Bridge> possibleDuplicate =
-            bridges.stream()
-                .filter(bridge1 -> bridge1.getConnectedIslands().containsAll(
-                    bridge.getConnectedIslands())).findFirst();
+        Bridge bridge;
+        Optional<Bridge> possibleDuplicate = findBridge(island1, island2);
 
         if (possibleDuplicate.isPresent()) {
-            possibleDuplicate.get().setDoubleBridge(true);
+            bridge = possibleDuplicate.get();
+            bridge.setDoubleBridge(true);
         } else {
             // TODO What if island already has enough islands
+            bridge = BridgeBuilder.buildBridge(island1, island2, doubleBridge);
             bridges.add(bridge);
             bridge.getIsland1().addBridge(bridge);
             bridge.getIsland2().addBridge(bridge);
         }
+
+        return bridge;
+    }
+
+    private Optional<Bridge> findBridge(final Island island1, final Island island2) {
+        return bridges.stream()
+                .filter(bridge1 -> bridge1.getConnectedIslands().containsAll(
+                        Arrays.asList(island1, island2))).findFirst();
     }
 
     @Override
@@ -142,7 +150,7 @@ public class PuzzleImpl implements Puzzle {
         });
     }
 
-    @Override
+    /*@Override
     public void removeBridge(Bridge bridge) {
         Optional<Bridge> possibleDuplicate =
                 bridges.stream()
@@ -158,6 +166,20 @@ public class PuzzleImpl implements Puzzle {
                 duplicate.getConnectedIslands().forEach(island -> island.removeBridge(bridge));
             }
             possibleDuplicate.get().setDoubleBridge(false);
+        }
+    }*/
+
+    @Override
+    public void tearDownBridge(final Island island1, final Island island2) {
+        Optional<Bridge> optionalBridge = findBridge(island1, island2);
+        if (optionalBridge.isPresent()) {
+            Bridge bridge = optionalBridge.get();
+            if (bridge.isDoubleBridge()) {
+                bridge.setDoubleBridge(false);
+            } else {
+                bridge.getConnectedIslands().forEach(island -> island.removeBridge(bridge));
+                bridges.remove(bridge);
+            }
         }
     }
 

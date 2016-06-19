@@ -1,8 +1,8 @@
 package de.feu.ps.bridges.serialization;
 
 import de.feu.ps.bridges.model.Bridge;
+import de.feu.ps.bridges.model.DefaultIsland;
 import de.feu.ps.bridges.model.Island;
-import de.feu.ps.bridges.model.IslandImpl;
 import de.feu.ps.bridges.model.Puzzle;
 import org.junit.Test;
 
@@ -33,35 +33,35 @@ public class DeserializerTest_Abb2_Loesung extends AbstractDeserializerTest {
         validateIsland(
             puzzle, 0, 0, 3,
             null,
-            new IslandImpl(4, 0, 5),
-            new IslandImpl(0, 3, 4),
+            new DefaultIsland(4, 0, 5),
+            new DefaultIsland(0, 3, 4),
             null);
 
         validateIsland(
             puzzle, 0, 3, 4,
-            new IslandImpl(0, 0, 3),
-            new IslandImpl(3, 3, 3),
-            new IslandImpl(0, 5, 2),
+            new DefaultIsland(0, 0, 3),
+            new DefaultIsland(3, 3, 3),
+            new DefaultIsland(0, 5, 2),
             null);
 
         validateIsland(
                 puzzle, 0, 5, 2,
-                new IslandImpl(0, 3, 4),
-                new IslandImpl(3, 5, 1),
+                new DefaultIsland(0, 3, 4),
+                new DefaultIsland(3, 5, 1),
                 null,
                 null);
 
         validateIsland(
                 puzzle, 1, 1, 2,
                 null,
-                new IslandImpl(3, 1, 3),
-                new IslandImpl(1, 6, 3),
+                new DefaultIsland(3, 1, 3),
+                new DefaultIsland(1, 6, 3),
                 null);
 
         validateIsland(
                 puzzle, 1, 6, 3,
-                new IslandImpl(1, 1, 2),
-                new IslandImpl(4, 6, 5),
+                new DefaultIsland(1, 1, 2),
+                new DefaultIsland(4, 6, 5),
                 null,
                 null);
 
@@ -69,67 +69,67 @@ public class DeserializerTest_Abb2_Loesung extends AbstractDeserializerTest {
                 puzzle, 3, 1, 3,
                 null,
                 null,
-                new IslandImpl(3, 3, 3),
-                new IslandImpl(1, 1, 2));
+                new DefaultIsland(3, 3, 3),
+                new DefaultIsland(1, 1, 2));
 
         validateIsland(
                 puzzle, 3, 3, 3,
-                new IslandImpl(3, 1, 3),
+                new DefaultIsland(3, 1, 3),
                 null,
-                new IslandImpl(3, 5, 1),
-                new IslandImpl(0, 3, 4));
+                new DefaultIsland(3, 5, 1),
+                new DefaultIsland(0, 3, 4));
 
         validateIsland(
                 puzzle, 3, 5, 1,
-                new IslandImpl(3, 3, 3),
+                new DefaultIsland(3, 3, 3),
                 null,
                 null,
-                new IslandImpl(0, 5, 2));
+                new DefaultIsland(0, 5, 2));
 
         validateIsland(
                 puzzle, 4, 0, 5,
                 null,
-                new IslandImpl(6, 0, 4),
-                new IslandImpl(4, 6, 5),
-                new IslandImpl(0, 0, 3));
+                new DefaultIsland(6, 0, 4),
+                new DefaultIsland(4, 6, 5),
+                new DefaultIsland(0, 0, 3));
 
         validateIsland(
                 puzzle, 4, 6, 5,
-                new IslandImpl(4, 0, 5),
-                new IslandImpl(6, 6, 3),
+                new DefaultIsland(4, 0, 5),
+                new DefaultIsland(6, 6, 3),
                 null,
-                new IslandImpl(1, 6, 3));
+                new DefaultIsland(1, 6, 3));
 
         validateIsland(
                 puzzle, 6, 0, 4,
                 null,
                 null,
-                new IslandImpl(6, 6, 3),
-                new IslandImpl(4, 0, 5));
+                new DefaultIsland(6, 6, 3),
+                new DefaultIsland(4, 0, 5));
 
         validateIsland(
                 puzzle, 6, 6, 3,
-                new IslandImpl(6, 0, 4),
+                new DefaultIsland(6, 0, 4),
                 null,
                 null,
-                new IslandImpl(4, 6, 5));
+                new DefaultIsland(4, 6, 5));
 
 
         Set<Bridge> bridges = puzzle.getBridges();
         assertEquals("Wrong number of bridges", 12, bridges.size());
 
-        Island index0 = new IslandImpl(0, 0, 3);
-        Island index1 = new IslandImpl(0, 3, 4);
-        Island index2 = new IslandImpl(0, 5, 2);
-        Island index3 = new IslandImpl(1, 1, 2);
-        Island index4 = new IslandImpl(1, 6, 3);
-        Island index5 = new IslandImpl(3, 1, 3);
-        Island index6 = new IslandImpl(3, 3, 3);
-        Island index7 = new IslandImpl(3, 5, 1);
-        Island index8 = new IslandImpl(4, 0, 5);
-        Island index9 = new IslandImpl(4, 6, 5);
-        Island index10 = new IslandImpl(6, 0, 4);
-        Island index11 = new IslandImpl(6, 6, 3);
+        Island index0 = new DefaultIsland(0, 0, 3);
+        Island index1 = new DefaultIsland(0, 3, 4);
+        Island index2 = new DefaultIsland(0, 5, 2);
+        Island index3 = new DefaultIsland(1, 1, 2);
+        Island index4 = new DefaultIsland(1, 6, 3);
+        Island index5 = new DefaultIsland(3, 1, 3);
+        Island index6 = new DefaultIsland(3, 3, 3);
+        Island index7 = new DefaultIsland(3, 5, 1);
+        Island index8 = new DefaultIsland(4, 0, 5);
+        Island index9 = new DefaultIsland(4, 6, 5);
+        Island index10 = new DefaultIsland(6, 0, 4);
+        Island index11 = new DefaultIsland(6, 6, 3);
 
         validateBridge(bridges, index0, index1, true);
         validateBridge(bridges, index0, index8, false);

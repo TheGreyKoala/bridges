@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 /**
  * @author Tim Gremplewski
  */
-public class IslandImpl implements Island {
+public class DefaultIsland implements Island {
 
     private final int column;
     private final int row;
@@ -21,7 +21,7 @@ public class IslandImpl implements Island {
     private Island southNeighbour;
     private Island westNeighbour;
 
-    public IslandImpl(final int column, final int row, final int requiredBridges) {
+    public DefaultIsland(final int column, final int row, final int requiredBridges) {
 
         // TODO: Parameter validation
 
@@ -285,7 +285,7 @@ public class IslandImpl implements Island {
 
     @Override
     public String toString() {
-        return "IslandImpl{" +
+        return "DefaultIsland{" +
                 "column=" + column +
                 ", row=" + row +
                 '}';

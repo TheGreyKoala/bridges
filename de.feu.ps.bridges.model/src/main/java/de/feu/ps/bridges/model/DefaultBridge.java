@@ -9,7 +9,7 @@ import java.util.Set;
  *
  * @author Tim Gremplewski
  */
-public class BridgeImpl implements Bridge {
+public class DefaultBridge implements Bridge {
 
     // TODO Test
 
@@ -18,7 +18,7 @@ public class BridgeImpl implements Bridge {
     private final Set<Island> islands;
     private boolean doubleBridge;
 
-    public BridgeImpl(final Island island1, final Island island2, final boolean doubleBridge) {
+    DefaultBridge(final Island island1, final Island island2, final boolean doubleBridge) {
         this.island1 = Objects.requireNonNull(island1, "Parameter 'island1' must not be null.");
         this.island2 = Objects.requireNonNull(island2, "Parameter 'island2' must not be null.");
 
@@ -67,7 +67,7 @@ public class BridgeImpl implements Bridge {
 
     @Override
     public String toString() {
-        return "BridgeImpl{" +
+        return "DefaultBridge{" +
                 "[" + island1.getPosition().getColumn() + ", " + island1.getPosition().getRow() + "] - " +
                 "[" + island2.getPosition().getColumn() + ", " + island2.getPosition().getRow() + "]" +
                 ", doubleBridge=" + doubleBridge +

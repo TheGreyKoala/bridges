@@ -10,11 +10,11 @@ public interface Puzzle {
     int getRowsCount();
     Set<Island> getIslands();
     Set<Bridge> getBridges();
-    void addIsland(Island island);
-    void addBridge(Bridge bridge);
+    Bridge buildBridge(Island island1, Island island2, boolean doubleBridge);
     Island getIslandAt(int column, int row);
     void removeAllBridges();
     boolean isAnyBridgeCrossing(final Position otherBridgeStart, final Position otherBridgeEnd);
-    void removeBridge(Bridge bridge);
+    //void removeBridge(Bridge bridge);
+    void tearDownBridge(Island island1, Island island2);
     Set<Island> getUnfinishedIslands();
 }
