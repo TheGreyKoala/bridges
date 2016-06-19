@@ -31,7 +31,7 @@ public abstract class BridgesTest {
 
     private static String getDataDir() {
         try {
-            return BridgesTest.class.getResource(".").toURI().getPath();
+            return BridgesTest.class.getResource("data").toURI().getPath();
         } catch (URISyntaxException e) {
             return "";
         }
