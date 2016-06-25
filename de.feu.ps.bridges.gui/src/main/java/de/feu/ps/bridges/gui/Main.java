@@ -30,7 +30,7 @@ public class Main extends Application {
         ResourceBundle bundle = ResourceBundle.getBundle("de.feu.ps.bridges.gui.bundles.Bridges");
         Parent root = FXMLLoader.load(getClass().getResource("MainFrame.fxml"), bundle);
         primaryStage.setTitle(bundle.getString("mainFrame.title"));
-        primaryStage.setScene(new Scene(root, 400, 350));
+        primaryStage.setScene(new Scene(root, 600, 500));
         primaryStage.show();
     }
 }

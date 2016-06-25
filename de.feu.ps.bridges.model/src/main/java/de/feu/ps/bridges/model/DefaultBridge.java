@@ -52,6 +52,16 @@ class DefaultBridge implements ModifiableBridge {
     }
 
     @Override
+    public boolean isHorizontal() {
+        return island1.getRow() == island2.getRow();
+    }
+
+    @Override
+    public boolean isVertical() {
+        return island1.getColumn() == island2.getColumn();
+    }
+
+    @Override
     public Set<Island> getConnectedIslands() {
         return new HashSet<>(islands);
     }

@@ -6,3 +6,5 @@ include 'de.feu.ps.bridges.model'
 include 'de.feu.ps.bridges.serialization'
 include 'de.feu.ps.bridges.shared'
 include 'de.feu.ps.bridges.solver'
+include 'de.feu.ps.bridges.facade'
+

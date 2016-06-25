@@ -32,9 +32,9 @@
         </MenuBar>
     </top>
     <center>
-        <ScrollPane fitToHeight="true" fitToWidth="true" BorderPane.alignment="CENTER">
+        <ScrollPane fitToHeight="false" fitToWidth="false" BorderPane.alignment="CENTER">
             <content>
-                <Pane fx:id="mainPanel" onMouseClicked="#addCircle"/>
+                <Pane fx:id="mainPanel"/>
             </content>
         </ScrollPane>
     </center>

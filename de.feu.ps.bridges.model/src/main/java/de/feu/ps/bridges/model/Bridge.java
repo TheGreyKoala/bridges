@@ -33,4 +33,8 @@ public interface Bridge {
      * @return <code>true</code> if this {@link Bridge} connects its {@link Island}s two times.
      */
     boolean isDoubleBridge();
+
+    boolean isHorizontal();
+
+    boolean isVertical();
 }
