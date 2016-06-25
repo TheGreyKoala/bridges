@@ -13,47 +13,49 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.feu.ps.bridges.gui.Controller">
-   <top>
-      <MenuBar BorderPane.alignment="CENTER">
-        <menus>
-          <Menu mnemonicParsing="false" text="%menus.file">
-            <items>
-              <MenuItem mnemonicParsing="false" text="%menus.file.newPuzzle" />
-              <MenuItem mnemonicParsing="false" text="%menus.file.restartPuzzle" />
-              <MenuItem mnemonicParsing="false" text="%menus.file.loadPuzzle" />
-              <MenuItem mnemonicParsing="false" text="%menus.file.savePuzzle" />
-              <MenuItem mnemonicParsing="false" text="%menus.file.savePuzzleAs" />
-              <MenuItem mnemonicParsing="false" text="%menus.file.exit" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-   </top>
-   <center>
-      <ScrollPane fitToHeight="true" fitToWidth="true" BorderPane.alignment="CENTER">
-         <content>
-            <Pane fx:id="mainPanel" onMouseClicked="#addCircle" />
-         </content></ScrollPane>
-   </center>
-   <bottom>
-      <VBox prefHeight="72.0" prefWidth="600.0" spacing="10.0" BorderPane.alignment="CENTER">
-         <children>
-            <CheckBox mnemonicParsing="false" text="%controls.showRemainingBridges" />
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-               <children>
-                  <Button mnemonicParsing="false" prefWidth="1000.0" text="%controls.solve" />
-                  <Button mnemonicParsing="false" prefWidth="1000.0" text="%controls.nextMove" />
-               </children>
-            </HBox>
-            <Label text="Status" />
-         </children>
-         <BorderPane.margin>
-            <Insets />
-         </BorderPane.margin>
-         <padding>
-            <Insets bottom="5.0" left="10.0" right="10.0" top="10.0" />
-         </padding>
-      </VBox>
-   </bottom>
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.72"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.feu.ps.bridges.gui.Controller">
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+            <menus>
+                <Menu mnemonicParsing="false" text="%menus.file">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="%menus.file.newPuzzle" onAction="#newPuzzle"/>
+                        <MenuItem mnemonicParsing="false" text="%menus.file.restartPuzzle"/>
+                        <MenuItem mnemonicParsing="false" text="%menus.file.loadPuzzle" onAction="#loadPuzzle"/>
+                        <MenuItem mnemonicParsing="false" text="%menus.file.savePuzzle"/>
+                        <MenuItem mnemonicParsing="false" text="%menus.file.savePuzzleAs" onAction="#savePuzzleAs"/>
+                        <MenuItem mnemonicParsing="false" text="%menus.file.exit" onAction="#exit"/>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+    <center>
+        <ScrollPane fitToHeight="true" fitToWidth="true" BorderPane.alignment="CENTER">
+            <content>
+                <Pane fx:id="mainPanel" onMouseClicked="#addCircle"/>
+            </content>
+        </ScrollPane>
+    </center>
+    <bottom>
+        <VBox prefHeight="72.0" prefWidth="600.0" spacing="10.0" BorderPane.alignment="CENTER">
+            <children>
+                <CheckBox mnemonicParsing="false" text="%controls.showRemainingBridges"/>
+                <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                    <children>
+                        <Button mnemonicParsing="false" prefWidth="1000.0" text="%controls.solve"/>
+                        <Button mnemonicParsing="false" prefWidth="1000.0" text="%controls.nextMove"/>
+                    </children>
+                </HBox>
+                <Label text="Status"/>
+            </children>
+            <BorderPane.margin>
+                <Insets/>
+            </BorderPane.margin>
+            <padding>
+                <Insets bottom="5.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+        </VBox>
+    </bottom>
 </BorderPane>
