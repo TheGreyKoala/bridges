@@ -25,31 +25,31 @@ public class DefaultSolver implements Solver {
     }
 
     public void solve() {
-        Optional<Bridge> nextMove;
+        Optional<Move> nextMove;
         do {
             nextMove = getNextMove();
             if (nextMove.isPresent()) {
-                Bridge nextBridge = nextMove.get();
-                puzzle.buildBridge(nextBridge.getIsland1(), nextBridge.getIsland2(), nextBridge.isDoubleBridge());
+                Move nextBridge = nextMove.get();
+                nextBridge.apply();
             }
         } while (nextMove.isPresent());
     }
 
-    public Optional<Bridge> getNextMove() {
-        Optional<Bridge> bridge = getSafeMove();
-        return bridge.isPresent() ? bridge : findSoleNonErrorCausingMove();
+    public Optional<Move> getNextMove() {
+        Optional<Move> safeMove = getSafeMove();
+        return safeMove.isPresent() ? safeMove : findSoleNonErrorCausingMove();
     }
 
-    private Optional<Bridge> findSoleNonErrorCausingMove() {
+    private Optional<Move> findSoleNonErrorCausingMove() {
         Set<Island> islands = puzzle.getUnfinishedIslands();
 
-        Bridge nextMove = null;
+        Move nextMove =null;
 
         for (Island island : islands) {
             Set<Island> destinations = analyser.getValidBridgeDestinations(island);
 
             for (Island destination : destinations) {
-                Bridge tryBridge = puzzle.buildBridge(island, destination, false);
+                puzzle.buildBridge(island, destination, false);
 
                 boolean causesConflict = false;
 
@@ -65,7 +65,7 @@ public class DefaultSolver implements Solver {
                 puzzle.tearDownBridge(island, destination);
                 if (!causesConflict) {
                     if (nextMove == null) {
-                        nextMove = tryBridge;
+                        nextMove = Move.create(puzzle, island, destination);
                     } else {
                         // Island has more than one destination that do not lead to a direct conflict
                         nextMove = null;
@@ -82,10 +82,10 @@ public class DefaultSolver implements Solver {
         return Optional.ofNullable(nextMove);
     }
 
-    private Optional<Bridge> getSafeMove() {
+    private Optional<Move> getSafeMove() {
         // TODO check if already solved
 
-        Bridge safeMove = null;
+        Move safeMove = null;
 
         for (Island island : puzzle.getUnfinishedIslands()) {
             final Set<Island> possibleDestinations = analyser.getValidBridgeDestinations(island);
@@ -107,7 +107,7 @@ public class DefaultSolver implements Solver {
                     }
 
                     if (isSave(remainingBridges + existingBridgesToPossibleDestinations, possibleDestinations.size(), existingToDestination)) {
-                        safeMove = BridgeBuilder.buildBridge(island, destination, false);
+                        safeMove = Move.create(puzzle, island, destination);
                         break;
                     }
                 }
