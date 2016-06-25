@@ -3,7 +3,7 @@ package de.feu.ps.bridges.model;
 /**
  * @author Tim Gremplewski
  */
-public class BridgeBuilder {
+class BridgeBuilder {
 
     private Island island1;
     private Island island2;
@@ -16,7 +16,7 @@ public class BridgeBuilder {
         return new BridgeBuilder();
     }
 
-    public static Bridge buildBridge(final Island island1, final Island island2, final boolean doubleBridge) {
+    public static ModifiableBridge buildBridge(final Island island1, final Island island2, final boolean doubleBridge) {
         return createBuilder()
                 .setIsland1(island1)
                 .setIsland2(island2)
@@ -39,7 +39,7 @@ public class BridgeBuilder {
         return this;
     }
 
-    public Bridge getResult() {
+    public ModifiableBridge getResult() {
         return new DefaultBridge(island1, island2, doubleBridge);
     }
 }

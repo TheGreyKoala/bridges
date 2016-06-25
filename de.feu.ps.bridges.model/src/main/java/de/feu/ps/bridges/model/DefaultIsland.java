@@ -21,7 +21,7 @@ class DefaultIsland implements ModifiableIsland {
     private Island southNeighbour;
     private Island westNeighbour;
 
-    public DefaultIsland(final int column, final int row, final int requiredBridges) {
+    DefaultIsland(final int column, final int row, final int requiredBridges) {
 
         // TODO: Parameter validation
 

@@ -54,6 +54,7 @@ class DefaultPuzzle implements ModifiablePuzzle {
 
     @Override
     public Island buildIsland(final int columnIndex, final int rowIndex, final int requiredBridges) {
+        // TODO Create Builder?
         final ModifiableIsland island = new DefaultIsland(columnIndex, rowIndex, requiredBridges);
 
         final Column column;
@@ -91,7 +92,7 @@ class DefaultPuzzle implements ModifiablePuzzle {
             bridge.setDoubleBridge(true);
         } else {
             // TODO What if island already has enough islands
-            bridge = new DefaultBridge(island1, island2, doubleBridge);
+            bridge = BridgeBuilder.buildBridge(island1, island2, doubleBridge);
             bridges.add(bridge);
 
             // TODO: This is ugly but we need to verify if the islands are in this puzzle anyway.
