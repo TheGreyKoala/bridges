@@ -36,6 +36,7 @@ public class PuzzleDrawer {
         Set<Island> islands = puzzle.getIslands();
 
         GridPane gridPane = new GridPane();
+        gridPane.setGridLinesVisible(true);
 
         ColumnConstraints columnConstraints = new ColumnConstraints(CELL_SIZE);
         RowConstraints rowConstraints = new RowConstraints(CELL_SIZE);

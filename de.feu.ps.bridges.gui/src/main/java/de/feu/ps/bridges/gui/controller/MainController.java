@@ -1,6 +1,6 @@
 package de.feu.ps.bridges.gui.controller;
 
-import de.feu.ps.bridges.gui.*;
+import de.feu.ps.bridges.gui.PuzzleDrawer;
 import de.feu.ps.bridges.gui.gamestate.GameState;
 import de.feu.ps.bridges.gui.gamestate.GameStateEvent;
 import de.feu.ps.bridges.gui.gamestate.GameStateListener;
@@ -50,14 +50,15 @@ public class MainController implements Initializable, GameStateListener {
     }
 
     public void newPuzzle(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/de/feu/ps/bridges/gui/NewPuzzleDialog.fxml"), bundle);
         Stage dialogStage = new Stage();
         dialogStage.setTitle(bundle.getString("newPuzzleDialog.title"));
         dialogStage.initModality(Modality.WINDOW_MODAL);
         dialogStage.setResizable(false);
         dialogStage.initOwner(stage);
 
-        // TODO Get controller from loader?
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/de/feu/ps/bridges/gui/NewPuzzleDialog.fxml"), bundle);
+        fxmlLoader.setControllerFactory(param -> new NewPuzzleController(gameState, dialogStage));
+        Parent root = fxmlLoader.load();
 
         Scene scene = new Scene(root);
         dialogStage.setScene(scene);

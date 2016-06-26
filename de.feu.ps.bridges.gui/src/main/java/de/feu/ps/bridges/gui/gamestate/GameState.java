@@ -29,6 +29,21 @@ public class GameState {
         return instance;
     }
 
+    public void newPuzzle() {
+        puzzle = Facade.newPuzzle();
+        fireGameStateEvent(GameStateEventType.NEW_PUZZLE_LOADED);
+    }
+
+    public void newPuzzle(final int columns, final int rows) {
+        puzzle = Facade.newPuzzle(columns, rows);
+        fireGameStateEvent(GameStateEventType.NEW_PUZZLE_LOADED);
+    }
+
+    public void newPuzzle(final int columns, final int rows, final int islands) {
+        puzzle = Facade.newPuzzle(columns, rows, islands);
+        fireGameStateEvent(GameStateEventType.NEW_PUZZLE_LOADED);
+    }
+
     public void loadPuzzle(final File sourceFile) {
         puzzle = Facade.loadPuzzle(sourceFile);
         this.sourceFile = sourceFile;

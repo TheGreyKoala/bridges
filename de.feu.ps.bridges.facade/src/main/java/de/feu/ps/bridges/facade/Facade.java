@@ -1,5 +1,6 @@
 package de.feu.ps.bridges.facade;
 
+import de.feu.ps.bridges.generator.PuzzleGenerator;
 import de.feu.ps.bridges.model.Puzzle;
 import de.feu.ps.bridges.serialization.Deserializer;
 import de.feu.ps.bridges.serialization.Serializer;
@@ -37,5 +38,17 @@ public class Facade {
     public static void solvePuzzle(final Puzzle puzzle) {
         Solver solver = DefaultSolver.createSolverFor(puzzle);
         solver.solve();
+    }
+
+    public static Puzzle newPuzzle() {
+        return PuzzleGenerator.generatePuzzle();
+    }
+
+    public static Puzzle newPuzzle(final int columns, final int rows) {
+        return PuzzleGenerator.generatePuzzle(columns, rows);
+    }
+
+    public static Puzzle newPuzzle(final int columns, final int rows, final int islands) {
+        return PuzzleGenerator.generatePuzzle(columns, rows, islands);
     }
 }

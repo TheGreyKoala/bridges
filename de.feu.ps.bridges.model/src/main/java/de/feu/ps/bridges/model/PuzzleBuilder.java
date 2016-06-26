@@ -36,11 +36,11 @@ public class PuzzleBuilder {
             // TODO throw error if already all islands
         }
 
-        if (column < 0 || column > columns) {
+        if (column < 0 || column >= columns) {
             // TODO throw error if illegal column
         }
 
-        if (row < 0 || row > rows) {
+        if (row < 0 || row >= rows) {
             // TODO throw error if illegal row
         }
 

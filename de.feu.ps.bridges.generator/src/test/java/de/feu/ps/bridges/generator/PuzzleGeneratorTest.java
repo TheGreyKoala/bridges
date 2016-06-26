@@ -37,7 +37,7 @@ public class PuzzleGeneratorTest {
     @Test
     public void testGenerate() throws Exception {
         for (int i = 0; i < 1024; i++) {
-            final Puzzle puzzle = PuzzleGeneratorImpl.generatePuzzle();
+            final Puzzle puzzle = PuzzleGenerator.generatePuzzle();
             assertNotNull("Puzzle is null.", puzzle);
 
             int columnsCount = puzzle.getColumnsCount();
@@ -64,7 +64,7 @@ public class PuzzleGeneratorTest {
         for (int j = 0; j < availableProcessors; j++) {
             executorService.submit(() -> {
                 for (int i = 0; i < loadPerProcessor; i++) {
-                    final Puzzle puzzle = PuzzleGeneratorImpl.generatePuzzle(columns, rows);
+                    final Puzzle puzzle = PuzzleGenerator.generatePuzzle(columns, rows);
                     assertValidPuzzle(columns, rows, puzzle);
                 }
             });
@@ -88,7 +88,7 @@ public class PuzzleGeneratorTest {
         for (int p = 0; p < 4; p++) {
             executorService.submit(() -> {
                 for (int islands : validIslands) {
-                    Puzzle puzzle = PuzzleGeneratorImpl.generatePuzzle(columns, rows, islands);
+                    Puzzle puzzle = PuzzleGenerator.generatePuzzle(columns, rows, islands);
                     assertValidPuzzle(columns, rows, puzzle);
                 }
             });
