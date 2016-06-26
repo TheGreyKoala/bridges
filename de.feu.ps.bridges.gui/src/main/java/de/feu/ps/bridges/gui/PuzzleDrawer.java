@@ -57,7 +57,8 @@ public class PuzzleDrawer {
         }
 
         for (Island island : islands) {
-            Circle circle = new Circle(ISLAND_RADIUS, Color.BLACK);
+            Color color = island.getRemainingBridges() == 0 ? Color.GREEN : Color.BLACK;
+            Circle circle = new Circle(ISLAND_RADIUS, color);
 
             int displayedNumber = showRemainingBridges ? island.getRemainingBridges() : island.getRequiredBridges();
 
