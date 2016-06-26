@@ -1,0 +1,16 @@
+buildscript {
+	repositories {
+		jcenter()
+	}
+
+	dependencies {
+		classpath "org.asciidoctor:asciidoctor-gradle-plugin:1.5.3"
+		classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.11'
+	}
+}
+
+apply plugin: "org.asciidoctor.convert"
+
+asciidoctor {
+	backends 'pdf'
+}

@@ -1,0 +1,7 @@
+= Dokumentation
+Tim Gremplewski <tim.gremplewski@gmail.com>
+:notitle:
+
+== Architektur
+
+Hier steht ganz viel tolles zur Architektur, mit einem kleinen schönen Bild!
