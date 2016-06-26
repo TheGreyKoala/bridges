@@ -61,7 +61,7 @@ public class MainController implements Initializable, GameStateListener {
         fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(bundle.getString("puzzleExtensionFilter.description"), "*.bgs"));
         gameState.addGameStateListener(this);
-        puzzleDrawer = new PuzzleDrawer();
+        puzzleDrawer = new PuzzleDrawer(gameState);
     }
 
     public void newPuzzle(ActionEvent actionEvent) throws IOException {

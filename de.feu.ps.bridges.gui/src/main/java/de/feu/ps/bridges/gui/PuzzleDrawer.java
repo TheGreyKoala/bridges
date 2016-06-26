@@ -1,8 +1,11 @@
 package de.feu.ps.bridges.gui;
 
+import de.feu.ps.bridges.gui.gamestate.GameState;
 import de.feu.ps.bridges.model.Bridge;
+import de.feu.ps.bridges.model.Direction;
 import de.feu.ps.bridges.model.Island;
 import de.feu.ps.bridges.model.Puzzle;
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -28,9 +31,14 @@ public class PuzzleDrawer {
     private static final int CELL_SIZE = 50;
     private static final int HALF_CELL_SIZE = CELL_SIZE / 2;
     private static final int ISLAND_RADIUS = 15;
+    private final GameState gameState;
 
     private Rotate rotate = Transform.rotate(45, 0, 0);
     private Translate translate = Transform.translate(-HALF_CELL_SIZE, -HALF_CELL_SIZE);
+
+    public PuzzleDrawer(final GameState gameState) {
+        this.gameState = gameState;
+    }
 
     public void drawPuzzle(final Puzzle puzzle, final Pane pane) {
         Set<Island> islands = puzzle.getIslands();
@@ -57,7 +65,7 @@ public class PuzzleDrawer {
             text.setFill(Color.WHITE);
 
             StackPane stackPane = new StackPane(circle, text);
-            stackPane.setOnMouseClicked(this::handleClickEvent);
+            stackPane.setOnMouseClicked(createClickHandler(island, gameState));
 
             gridPane.add(stackPane, island.getColumn(), island.getRow());
         }
@@ -107,27 +115,29 @@ public class PuzzleDrawer {
         pane.getChildren().add(gridPane);
     }
 
-    private void handleClickEvent(MouseEvent event) {
-        Point2D pointWhenCircleCenterOrigin = translate.transform(event.getX(), event.getY());
-        Point2D pointOnCartesianSystem = rotate.transform(pointWhenCircleCenterOrigin);
+    private EventHandler<MouseEvent> createClickHandler(final Island island, final GameState gameState) {
+        return (event -> {
+            Point2D pointWhenCircleCenterOrigin = translate.transform(event.getX(), event.getY());
+            Point2D pointOnCartesianSystem = rotate.transform(pointWhenCircleCenterOrigin);
 
-        String action = "";
-        if (event.getButton() == MouseButton.PRIMARY) {
-            action = "bauen";
-        } else if (event.getButton() == MouseButton.SECONDARY) {
-            action = "abreißen";
-        }
+            if (event.getButton() == MouseButton.PRIMARY || event.getButton() == MouseButton.SECONDARY) {
+                boolean addBridge = event.getButton() == MouseButton.PRIMARY;
+                Direction direction = getDirection(pointOnCartesianSystem.getX(), pointOnCartesianSystem.getY());
 
-        if (action != "") {
-            if (pointOnCartesianSystem.getX() >= 0 && pointOnCartesianSystem.getY() >= 0) {
-                System.out.println("Brücke nach rechts " + action);
-            } else if (pointOnCartesianSystem.getX() < 0 && pointOnCartesianSystem.getY() >= 0) {
-                System.out.println("Brücke nach unten " + action);
-            } else if (pointOnCartesianSystem.getX() < 0 && pointOnCartesianSystem.getY() < 0) {
-                System.out.println("Brücke nach links " + action);
-            } else {
-                System.out.println("Brücke nach oben " + action);
+                if (addBridge) {
+                    gameState.addBridge(island, direction);
+                } else {
+                    gameState.removeBridge(island, direction);
+                }
             }
-        }
+        });
+    }
+
+    private Direction getDirection(final double x, final double y) {
+        return
+            x >= 0 && y >= 0 ? Direction.EAST :
+            x < 0 && y >= 0 ? Direction.SOUTH :
+            x < 0 && y < 0 ? Direction.WEST :
+            Direction.NORTH;
     }
 }

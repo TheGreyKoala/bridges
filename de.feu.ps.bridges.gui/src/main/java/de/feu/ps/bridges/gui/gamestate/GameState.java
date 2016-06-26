@@ -1,6 +1,8 @@
 package de.feu.ps.bridges.gui.gamestate;
 
 import de.feu.ps.bridges.facade.Facade;
+import de.feu.ps.bridges.model.Direction;
+import de.feu.ps.bridges.model.Island;
 import de.feu.ps.bridges.model.Puzzle;
 import javafx.application.Platform;
 
@@ -113,5 +115,15 @@ public class GameState {
         } else {
             currentTask.cancel(true);
         }
+    }
+
+    public void addBridge(final Island island, final Direction direction) {
+        Facade.addBridge(puzzle, island, direction);
+        fireGameStateEvent(GameStateEventType.NEW_PUZZLE_LOADED);
+    }
+
+    public void removeBridge(final Island island, final Direction direction) {
+        Facade.removeBridge(puzzle, island, direction);
+        fireGameStateEvent(GameStateEventType.NEW_PUZZLE_LOADED);
     }
 }

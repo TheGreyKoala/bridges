@@ -1,6 +1,8 @@
 package de.feu.ps.bridges.facade;
 
 import de.feu.ps.bridges.generator.PuzzleGenerator;
+import de.feu.ps.bridges.model.Direction;
+import de.feu.ps.bridges.model.Island;
 import de.feu.ps.bridges.model.Puzzle;
 import de.feu.ps.bridges.serialization.Deserializer;
 import de.feu.ps.bridges.serialization.Serializer;
@@ -61,5 +63,13 @@ public class Facade {
             nextMove.get().apply();
         }
         return nextMove.isPresent();
+    }
+
+    public static void addBridge(Puzzle puzzle, Island island, Direction direction) {
+        puzzle.buildBridge(island, island.getNeighbour(direction), false);
+    }
+
+    public static void removeBridge(Puzzle puzzle, Island island, Direction direction) {
+        puzzle.tearDownBridge(island, island.getNeighbour(direction));
     }
 }
