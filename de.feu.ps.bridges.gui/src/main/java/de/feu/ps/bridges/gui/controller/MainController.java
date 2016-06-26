@@ -12,10 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuBar;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -127,9 +124,28 @@ public class MainController implements Initializable, GameStateListener {
                 break;
             case AUTOMATIC_SOLVING_STOPPED:
                 getNodesToLock().forEach(node -> node.setDisable(false));
+                showInfoAfterAutomaticPuzzleSolving();
                 break;
         }
         updateStatus();
+    }
+
+    private void showInfoAfterAutomaticPuzzleSolving() {
+        PuzzleStatus puzzleStatus = gameState.getPuzzleStatus();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(bundle.getString("autoSolveDialog.title"));
+        switch (puzzleStatus) {
+            case SOLVED:
+                alert.setContentText(bundle.getString("autoSolveDialog.solved.contentText"));
+                break;
+            case UNSOLVED:
+                alert.setContentText(bundle.getString("autoSolveDialog.unsolved.contentText"));
+                break;
+            case UNSOLVABLE:
+                alert.setContentText(bundle.getString("autoSolveDialog.unsolvable.contentText"));
+                break;
+        }
+        alert.showAndWait();
     }
 
     private void updateStatus() {
