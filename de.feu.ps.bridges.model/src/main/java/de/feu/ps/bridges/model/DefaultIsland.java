@@ -130,22 +130,22 @@ class DefaultIsland implements ModifiableIsland {
 
     @Override
     public boolean hasNorthNeighbour() {
-        return getNorthNeighbour() != null;
+        return getNorthNeighbour().isPresent();
     }
 
     @Override
     public boolean hasEastNeighbour() {
-        return getEastNeighbour() != null;
+        return getEastNeighbour().isPresent();
     }
 
     @Override
     public boolean hasSouthNeighbour() {
-        return getSouthNeighbour() != null;
+        return getSouthNeighbour().isPresent();
     }
 
     @Override
     public boolean hasWestNeighbour() {
-        return getWestNeighbour() != null;
+        return getWestNeighbour().isPresent();
     }
 
     @Override
