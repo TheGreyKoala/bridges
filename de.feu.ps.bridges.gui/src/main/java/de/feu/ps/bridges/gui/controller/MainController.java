@@ -8,8 +8,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.MenuBar;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -18,6 +22,8 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -28,6 +34,15 @@ public class MainController implements Initializable, GameStateListener {
 
     @FXML
     private Pane mainPanel;
+
+    @FXML
+    private MenuBar menuBar;
+
+    @FXML
+    private CheckBox showRemainingBridgesCheckBox;
+
+    @FXML
+    private Button nextMoveButton;
 
     private ResourceBundle bundle;
     private FileChooser fileChooser;
@@ -105,6 +120,24 @@ public class MainController implements Initializable, GameStateListener {
                 mainPanel.getChildren().clear();
                 puzzleDrawer.drawPuzzle(gameState.getPuzzle(), mainPanel);
                 break;
+            case AUTOMATIC_SOLVING_STARTED:
+                getNodesToLock().forEach(node -> node.setDisable(true));
+                break;
+            case AUTOMATIC_SOLVING_STOPPED:
+                getNodesToLock().forEach(node -> node.setDisable(false));
+                break;
         }
+    }
+
+    private List<Node> getNodesToLock() {
+        return Arrays.asList(menuBar, showRemainingBridgesCheckBox, nextMoveButton);
+    }
+
+    public void nextMove(ActionEvent actionEvent) {
+        gameState.nextMove();
+    }
+
+    public void solve(ActionEvent actionEvent) {
+        gameState.solve();
     }
 }

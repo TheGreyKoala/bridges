@@ -5,5 +5,5 @@ package de.feu.ps.bridges.gui.gamestate;
  */
 public enum GameStateEventType {
     NEW_PUZZLE_LOADED,
-    PUZZLE_RESTARTED
+    AUTOMATIC_SOLVING_STARTED, AUTOMATIC_SOLVING_STOPPED, PUZZLE_RESTARTED
 }

@@ -5,10 +5,12 @@ import de.feu.ps.bridges.model.Puzzle;
 import de.feu.ps.bridges.serialization.Deserializer;
 import de.feu.ps.bridges.serialization.Serializer;
 import de.feu.ps.bridges.solver.DefaultSolver;
+import de.feu.ps.bridges.solver.Move;
 import de.feu.ps.bridges.solver.Solver;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Optional;
 
 /**
  * @author Tim Gremplewski
@@ -50,5 +52,14 @@ public class Facade {
 
     public static Puzzle newPuzzle(final int columns, final int rows, final int islands) {
         return PuzzleGenerator.generatePuzzle(columns, rows, islands);
+    }
+
+    public static boolean nextMove(final Puzzle puzzle) {
+        Solver solver = DefaultSolver.createSolverFor(puzzle);
+        Optional<Move> nextMove = solver.getNextMove();
+        if (nextMove.isPresent()) {
+            nextMove.get().apply();
+        }
+        return nextMove.isPresent();
     }
 }

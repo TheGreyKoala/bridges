@@ -2,10 +2,14 @@ package de.feu.ps.bridges.gui.gamestate;
 
 import de.feu.ps.bridges.facade.Facade;
 import de.feu.ps.bridges.model.Puzzle;
+import javafx.application.Platform;
 
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * @author Tim Gremplewski
@@ -13,13 +17,16 @@ import java.util.Set;
 public class GameState {
 
     private static GameState instance;
+    private final ExecutorService executorService;
 
     private Puzzle puzzle;
     private File sourceFile;
     private final Set<GameStateListener> gameStateListeners;
+    private Future<?> currentTask;
 
     private GameState() {
         this.gameStateListeners = new HashSet<>();
+        executorService = Executors.newWorkStealingPool();
     }
 
     public static synchronized GameState getInstance() {
@@ -78,5 +85,33 @@ public class GameState {
     public void restartPuzzle() {
         puzzle.removeAllBridges();
         fireGameStateEvent(GameStateEventType.PUZZLE_RESTARTED);
+    }
+
+    public void nextMove() {
+        Facade.nextMove(puzzle);
+        fireGameStateEvent(GameStateEventType.NEW_PUZZLE_LOADED);
+    }
+
+    public void solve() {
+        if (currentTask == null || currentTask.isDone()) {
+            Platform.runLater(() -> fireGameStateEvent(GameStateEventType.AUTOMATIC_SOLVING_STARTED));
+            currentTask = executorService.submit(() -> {
+                boolean stop = false;
+                do {
+                    stop = !Facade.nextMove(puzzle);
+                    Platform.runLater(() -> fireGameStateEvent(GameStateEventType.NEW_PUZZLE_LOADED));
+                    try {
+                        if (!stop) {
+                            Thread.sleep(5000);
+                        }
+                    } catch (InterruptedException e) {
+                        stop = true;
+                    }
+                } while (!stop && !currentTask.isCancelled());
+                Platform.runLater(() -> fireGameStateEvent(GameStateEventType.AUTOMATIC_SOLVING_STOPPED));
+            });
+        } else {
+            currentTask.cancel(true);
+        }
     }
 }

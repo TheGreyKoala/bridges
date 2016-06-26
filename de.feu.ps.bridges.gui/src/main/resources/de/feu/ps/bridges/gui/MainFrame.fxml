@@ -16,7 +16,7 @@
 <BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.72"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.feu.ps.bridges.gui.controller.MainController">
     <top>
-        <MenuBar BorderPane.alignment="CENTER">
+        <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
             <menus>
                 <Menu mnemonicParsing="false" text="%menus.file">
                     <items>
@@ -41,11 +41,11 @@
     <bottom>
         <VBox prefHeight="72.0" prefWidth="600.0" spacing="10.0" BorderPane.alignment="CENTER">
             <children>
-                <CheckBox mnemonicParsing="false" text="%controls.showRemainingBridges"/>
+                <CheckBox fx:id="showRemainingBridgesCheckBox" mnemonicParsing="false" text="%controls.showRemainingBridges"/>
                 <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <Button mnemonicParsing="false" prefWidth="1000.0" text="%controls.solve"/>
-                        <Button mnemonicParsing="false" prefWidth="1000.0" text="%controls.nextMove"/>
+                        <Button mnemonicParsing="false" prefWidth="1000.0" text="%controls.solve" onAction="#solve"/>
+                        <Button fx:id="nextMoveButton" mnemonicParsing="false" prefWidth="1000.0" text="%controls.nextMove" onAction="#nextMove"/>
                     </children>
                 </HBox>
                 <Label text="Status"/>
