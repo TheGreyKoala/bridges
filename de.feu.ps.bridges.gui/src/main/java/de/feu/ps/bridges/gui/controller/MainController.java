@@ -1,7 +1,7 @@
 package de.feu.ps.bridges.gui.controller;
 
 import de.feu.ps.bridges.analyser.PuzzleStatus;
-import de.feu.ps.bridges.gui.PuzzleDrawer;
+import de.feu.ps.bridges.gui.components.GraphicalPuzzle;
 import de.feu.ps.bridges.gui.gamestate.GameState;
 import de.feu.ps.bridges.gui.gamestate.GameStateEvent;
 import de.feu.ps.bridges.gui.gamestate.GameStateListener;
@@ -53,7 +53,6 @@ public class MainController implements Initializable, GameStateListener {
     private FileChooser fileChooser;
     private final GameState gameState;
     private final Stage stage;
-    private PuzzleDrawer puzzleDrawer;
 
     public MainController(final GameState gameState, final Stage stage) {
         this.gameState = Objects.requireNonNull(gameState, "Parameter 'gameState' must not be null.");
@@ -66,7 +65,6 @@ public class MainController implements Initializable, GameStateListener {
         fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(bundle.getString("puzzleExtensionFilter.description"), "*.bgs"));
         gameState.addGameStateListener(this);
-        puzzleDrawer = new PuzzleDrawer(gameState);
     }
 
     public void newPuzzle(ActionEvent actionEvent) throws IOException {
@@ -153,7 +151,8 @@ public class MainController implements Initializable, GameStateListener {
 
     private void drawPuzzle() {
         mainPanel.getChildren().clear();
-        puzzleDrawer.drawPuzzle(gameState.getPuzzle(), mainPanel, showRemainingBridgesCheckBox.isSelected());
+        Node puzzleNode = GraphicalPuzzle.createPuzzle(gameState.getPuzzle(), gameState, showRemainingBridgesCheckBox.isSelected());
+        mainPanel.getChildren().addAll(puzzleNode);
     }
 
     private List<Node> getNodesToLock() {
