@@ -176,7 +176,7 @@ class DefaultPuzzle implements ModifiablePuzzle {
     }*/
 
     @Override
-    public void tearDownBridge(final Island island1, final Island island2) {
+    public Optional<Bridge> tearDownBridge(final Island island1, final Island island2) {
         Optional<ModifiableBridge> optionalBridge = findBridge(island1, island2);
         if (optionalBridge.isPresent()) {
             ModifiableBridge bridge = optionalBridge.get();
@@ -187,7 +187,9 @@ class DefaultPuzzle implements ModifiablePuzzle {
                 bridge.getConnectedIslands().forEach(island -> ((ModifiableIsland) island).removeBridge(bridge));
                 bridges.remove(bridge);
             }
+            return Optional.of(bridge);
         }
+        return Optional.empty();
     }
 
     @Override

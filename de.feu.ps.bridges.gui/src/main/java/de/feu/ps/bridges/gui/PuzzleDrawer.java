@@ -81,6 +81,8 @@ public class PuzzleDrawer {
             int endColumn = bridge.getIsland2().getColumn();
             int endRow = bridge.getIsland2().getRow();
 
+            boolean latestBridge = gameState.isLatestBridge(bridge);
+
             if (bridge.isDoubleBridge()) {
                 Line line1;
                 Line line2;
@@ -103,12 +105,21 @@ public class PuzzleDrawer {
                             endColumn * CELL_SIZE + HALF_CELL_SIZE + ISLAND_RADIUS / 2,
                             endRow * CELL_SIZE + HALF_CELL_SIZE);
                 }
+
+                if (latestBridge) {
+                    line1.setStroke(Color.BLUE);
+                }
+
                 pane.getChildren().addAll(line1, line2);
             } else {
                 Line line = new Line(startColumn * CELL_SIZE + HALF_CELL_SIZE,
                         startRow * CELL_SIZE + HALF_CELL_SIZE,
                         endColumn * CELL_SIZE + HALF_CELL_SIZE,
                         endRow * CELL_SIZE + HALF_CELL_SIZE);
+
+                if (latestBridge) {
+                    line.setStroke(Color.BLUE);
+                }
 
                 pane.getChildren().add(line);
             }

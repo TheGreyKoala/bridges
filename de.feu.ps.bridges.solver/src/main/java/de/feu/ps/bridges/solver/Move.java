@@ -1,5 +1,6 @@
 package de.feu.ps.bridges.solver;
 
+import de.feu.ps.bridges.model.Bridge;
 import de.feu.ps.bridges.model.Island;
 import de.feu.ps.bridges.model.Puzzle;
 
@@ -23,7 +24,7 @@ public class Move {
         return new Move(puzzle, island1, island2);
     }
 
-    public void apply() {
-        puzzle.buildBridge(island1, island2, false);
+    public Bridge apply() {
+        return puzzle.buildBridge(island1, island2, false);
     }
 }

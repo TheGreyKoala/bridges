@@ -3,6 +3,7 @@ package de.feu.ps.bridges.facade;
 import de.feu.ps.bridges.analyser.DefaultAnalyser;
 import de.feu.ps.bridges.analyser.PuzzleStatus;
 import de.feu.ps.bridges.generator.PuzzleGenerator;
+import de.feu.ps.bridges.model.Bridge;
 import de.feu.ps.bridges.model.Direction;
 import de.feu.ps.bridges.model.Island;
 import de.feu.ps.bridges.model.Puzzle;
@@ -58,21 +59,24 @@ public class Facade {
         return PuzzleGenerator.generatePuzzle(columns, rows, islands);
     }
 
-    public static boolean nextMove(final Puzzle puzzle) {
+    public static Optional<Bridge> nextMove(final Puzzle puzzle) {
         Solver solver = DefaultSolver.createSolverFor(puzzle);
         Optional<Move> nextMove = solver.getNextMove();
+        Optional<Bridge> optionalBridge;
         if (nextMove.isPresent()) {
-            nextMove.get().apply();
+            optionalBridge = Optional.of(nextMove.get().apply());
+        } else {
+            optionalBridge = Optional.empty();
         }
-        return nextMove.isPresent();
+        return optionalBridge;
     }
 
-    public static void addBridge(Puzzle puzzle, Island island, Direction direction) {
-        puzzle.buildBridge(island, island.getNeighbour(direction), false);
+    public static Bridge addBridge(Puzzle puzzle, Island island, Direction direction) {
+        return puzzle.buildBridge(island, island.getNeighbour(direction), false);
     }
 
-    public static void removeBridge(Puzzle puzzle, Island island, Direction direction) {
-        puzzle.tearDownBridge(island, island.getNeighbour(direction));
+    public static Optional<Bridge> removeBridge(Puzzle puzzle, Island island, Direction direction) {
+        return puzzle.tearDownBridge(island, island.getNeighbour(direction));
     }
 
     public static PuzzleStatus getPuzzleStatus(Puzzle puzzle) {

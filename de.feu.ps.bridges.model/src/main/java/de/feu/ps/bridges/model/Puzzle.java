@@ -1,5 +1,6 @@
 package de.feu.ps.bridges.model;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -14,6 +15,6 @@ public interface Puzzle {
     Island getIslandAt(int column, int row);
     void removeAllBridges();
     boolean isAnyBridgeCrossing(final Position otherBridgeStart, final Position otherBridgeEnd);
-    void tearDownBridge(Island island1, Island island2);
+    Optional<Bridge> tearDownBridge(Island island1, Island island2);
     Set<Island> getUnfinishedIslands();
 }
