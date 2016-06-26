@@ -27,7 +27,7 @@ public class BridgesTesterImpl implements BridgesTester {
 
     private void generatePuzzle(String filePath, int width, int height, int isles) throws FileNotFoundException {
         Puzzle puzzle = PuzzleGeneratorImpl.generatePuzzle(width, height, isles);
-        Facade.storePuzzle(puzzle, new File(filePath));
+        Facade.savePuzzle(puzzle, new File(filePath));
     }
 
     @Override
@@ -42,6 +42,6 @@ public class BridgesTesterImpl implements BridgesTester {
     private void solvePuzzle(String puzzlePath, String solutionPath) throws Exception {
         Puzzle puzzle = Facade.loadPuzzle(new File(puzzlePath));
         Facade.solvePuzzle(puzzle);
-        Facade.storePuzzle(puzzle, new File(solutionPath));
+        Facade.savePuzzle(puzzle, new File(solutionPath));
     }
 }

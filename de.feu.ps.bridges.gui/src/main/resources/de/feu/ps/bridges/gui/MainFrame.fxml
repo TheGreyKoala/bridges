@@ -14,16 +14,16 @@
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.72"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.feu.ps.bridges.gui.Controller">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.feu.ps.bridges.gui.controller.MainController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
                 <Menu mnemonicParsing="false" text="%menus.file">
                     <items>
                         <MenuItem mnemonicParsing="false" text="%menus.file.newPuzzle" onAction="#newPuzzle"/>
-                        <MenuItem mnemonicParsing="false" text="%menus.file.restartPuzzle"/>
+                        <MenuItem mnemonicParsing="false" text="%menus.file.restartPuzzle" onAction="#restartPuzzle"/>
                         <MenuItem mnemonicParsing="false" text="%menus.file.loadPuzzle" onAction="#loadPuzzle"/>
-                        <MenuItem mnemonicParsing="false" text="%menus.file.savePuzzle"/>
+                        <MenuItem mnemonicParsing="false" text="%menus.file.savePuzzle" onAction="#savePuzzle"/>
                         <MenuItem mnemonicParsing="false" text="%menus.file.savePuzzleAs" onAction="#savePuzzleAs"/>
                         <MenuItem mnemonicParsing="false" text="%menus.file.exit" onAction="#exit"/>
                     </items>

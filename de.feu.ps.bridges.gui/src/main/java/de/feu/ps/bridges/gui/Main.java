@@ -1,5 +1,7 @@
 package de.feu.ps.bridges.gui;
 
+import de.feu.ps.bridges.gui.controller.MainController;
+import de.feu.ps.bridges.gui.gamestate.GameState;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -28,7 +30,11 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         ResourceBundle bundle = ResourceBundle.getBundle("de.feu.ps.bridges.gui.bundles.Bridges");
-        Parent root = FXMLLoader.load(getClass().getResource("MainFrame.fxml"), bundle);
+
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MainFrame.fxml"), bundle);
+        fxmlLoader.<MainController>setControllerFactory(param -> new MainController(GameState.getInstance(), primaryStage));
+
+        Parent root = fxmlLoader.load();
         primaryStage.setTitle(bundle.getString("mainFrame.title"));
         primaryStage.setScene(new Scene(root, 600, 500));
         primaryStage.show();

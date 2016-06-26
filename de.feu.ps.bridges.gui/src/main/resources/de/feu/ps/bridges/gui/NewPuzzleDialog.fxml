@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox prefHeight="271.0" prefWidth="373.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.72"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.feu.ps.bridges.gui.NewPuzzleController">
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.feu.ps.bridges.gui.controller.NewPuzzleController">
     <children>
         <RadioButton mnemonicParsing="false" text="%controls.newPuzzle.autoGenerate">
             <toggleGroup>

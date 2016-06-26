@@ -1,4 +1,4 @@
-package de.feu.ps.bridges.gui;
+package de.feu.ps.bridges.gui.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

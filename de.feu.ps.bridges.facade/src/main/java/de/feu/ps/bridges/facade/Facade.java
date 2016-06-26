@@ -25,7 +25,7 @@ public class Facade {
         }
     }
 
-    public static void storePuzzle(final Puzzle puzzle, final File destinationFile) {
+    public static void savePuzzle(final Puzzle puzzle, final File destinationFile) {
         Serializer serializer = new Serializer();
         try {
             serializer.storePuzzle(puzzle, destinationFile.getPath());
