@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 /**
  * @author Tim Gremplewski
  */
-public class PuzzleGeneratorImpl {
+public class PuzzleGenerator {
 
     private final int columns;
     private final int rows;
@@ -20,7 +20,7 @@ public class PuzzleGeneratorImpl {
         random = new Random();
     }
 
-    private PuzzleGeneratorImpl(final int columns, final int rows, final int islands) {
+    private PuzzleGenerator(final int columns, final int rows, final int islands) {
         this.columns = columns;
         this.rows = rows;
         this.islands = islands;
@@ -54,7 +54,7 @@ public class PuzzleGeneratorImpl {
     }
 
     public static Puzzle generatePuzzle(final int columns, final int rows, final int islands) {
-        return new PuzzleGeneratorImpl(columns, rows, islands).generate();
+        return new PuzzleGenerator(columns, rows, islands).generate();
     }
 
     private Puzzle generate() {
@@ -101,7 +101,7 @@ public class PuzzleGeneratorImpl {
     }
 
     private void buildInitialIsland(PuzzleBuilder puzzleBuilder) {
-        Island island = puzzleBuilder.addIsland(randomIntBetweenZeroAnd(columns), randomIntBetweenZeroAnd(rows), 8);
+        Island island = puzzleBuilder.addIsland(randomIntBetweenZeroAnd(columns - 1), randomIntBetweenZeroAnd(rows - 1), 8);
         startPoints.add(island);
     }
 
