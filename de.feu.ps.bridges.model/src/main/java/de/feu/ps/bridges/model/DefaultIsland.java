@@ -52,42 +52,38 @@ class DefaultIsland implements ModifiableIsland {
     }
 
     @Override
-    public Island getNorthNeighbour() {
-        return northNeighbour;
+    public Optional<Island> getNorthNeighbour() {
+        return Optional.ofNullable(northNeighbour);
     }
 
     @Override
-    public Island getEastNeighbour() {
-        return eastNeighbour;
+    public Optional<Island> getEastNeighbour() {
+        return Optional.ofNullable(eastNeighbour);
     }
 
     @Override
-    public Island getSouthNeighbour() {
-        return southNeighbour;
+    public Optional<Island> getSouthNeighbour() {
+        return Optional.ofNullable(southNeighbour);
     }
 
     @Override
-    public Island getWestNeighbour() {
-        return westNeighbour;
+    public Optional<Island> getWestNeighbour() {
+        return Optional.ofNullable(westNeighbour);
     }
 
     @Override
-    public Island getNeighbour(Direction direction) {
-        if (hasNeighbour(direction)) {
-            switch (direction) {
-                case NORTH:
-                    return getNorthNeighbour();
-                case EAST:
-                    return getEastNeighbour();
-                case SOUTH:
-                    return getSouthNeighbour();
-                case WEST:
-                    return getWestNeighbour();
-                default:
-                    return null;
-            }
-        } else {
-            return null;
+    public Optional<Island> getNeighbour(Direction direction) {
+        switch (direction) {
+            case NORTH:
+                return getNorthNeighbour();
+            case EAST:
+                return getEastNeighbour();
+            case SOUTH:
+                return getSouthNeighbour();
+            case WEST:
+                return getWestNeighbour();
+            default:
+                return Optional.empty();
         }
     }
 
@@ -222,19 +218,11 @@ class DefaultIsland implements ModifiableIsland {
     @Override
     public Set<Island> getNeighbours() {
         return Arrays.stream(Direction.values())
-            .filter(this::hasNeighbour)
             .map(this::getNeighbour)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
             .collect(Collectors.toSet());
     }
-
-    /*@Override
-    public Set<Island> getUnconnectedNeighbours() {
-        return Arrays.stream(Direction.values())
-            .filter(this::hasNeighbour)
-            .filter(direction -> !isBridgedToNeighbour(direction))
-            .map(this::getNeighbour)
-            .collect(Collectors.toSet());
-    }*/
 
     @Override
     public boolean hasNeighbour(Direction direction) {
@@ -258,9 +246,8 @@ class DefaultIsland implements ModifiableIsland {
     }
 
     @Override
-    public Bridge getBridgeTo(Island island) {
-        Optional<Bridge> optionalBridge = bridges.stream().filter(bridge -> bridge.getConnectedIslands().contains(island)).findFirst();
-        return optionalBridge.isPresent() ? optionalBridge.get() : null;
+    public Optional<Bridge> getBridgeTo(Island island) {
+        return bridges.stream().filter(bridge -> bridge.getConnectedIslands().contains(island)).findFirst();
     }
 
     @Override
@@ -275,6 +262,7 @@ class DefaultIsland implements ModifiableIsland {
         return Arrays.stream(Direction.values())
                 .filter(this::isBridgedToNeighbour)
                 .map(this::getNeighbour)
+                .map(Optional::get)
                 .collect(Collectors.toSet());
     }
 

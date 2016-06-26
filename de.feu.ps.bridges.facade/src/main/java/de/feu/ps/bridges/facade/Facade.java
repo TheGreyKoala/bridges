@@ -1,5 +1,6 @@
 package de.feu.ps.bridges.facade;
 
+import de.feu.ps.bridges.analyser.Analyser;
 import de.feu.ps.bridges.analyser.DefaultAnalyser;
 import de.feu.ps.bridges.analyser.PuzzleStatus;
 import de.feu.ps.bridges.generator.PuzzleGenerator;
@@ -71,12 +72,20 @@ public class Facade {
         return optionalBridge;
     }
 
-    public static Bridge addBridge(Puzzle puzzle, Island island, Direction direction) {
-        return puzzle.buildBridge(island, island.getNeighbour(direction), false);
+    public static Optional<Bridge> tryAddBridge(Puzzle puzzle, Island island, Direction direction) {
+        Optional<Bridge> optionalBridge;
+        Analyser analyser = DefaultAnalyser.createAnalyserFor(puzzle);
+        if (analyser.isValidMove(island, direction)) {
+            Bridge bridge = puzzle.buildBridge(island, island.getNeighbour(direction).get(), false);
+            optionalBridge = Optional.of(bridge);
+        } else {
+            optionalBridge = Optional.empty();
+        }
+        return  optionalBridge;
     }
 
     public static Optional<Bridge> removeBridge(Puzzle puzzle, Island island, Direction direction) {
-        return puzzle.tearDownBridge(island, island.getNeighbour(direction));
+        return puzzle.tearDownBridge(island, island.getNeighbour(direction).get());
     }
 
     public static PuzzleStatus getPuzzleStatus(Puzzle puzzle) {

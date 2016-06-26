@@ -1,5 +1,6 @@
 package de.feu.ps.bridges.model;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -10,11 +11,11 @@ public interface Island {
     int getRow();
     int getRequiredBridges();
     int getRemainingBridges();
-    Island getNorthNeighbour();
-    Island getEastNeighbour();
-    Island getSouthNeighbour();
-    Island getWestNeighbour();
-    Island getNeighbour(Direction direction);
+    Optional<Island> getNorthNeighbour();
+    Optional<Island> getEastNeighbour();
+    Optional<Island> getSouthNeighbour();
+    Optional<Island> getWestNeighbour();
+    Optional<Island> getNeighbour(Direction direction);
     IslandStatus getStatus();
     Set<Bridge> getBridges();
     boolean hasNorthNeighbour();
@@ -30,7 +31,7 @@ public interface Island {
     Set<Island> getNeighbours();
     boolean hasNeighbour(Direction direction);
     boolean isBridgedTo(Island island);
-    Bridge getBridgeTo(Island island);
+    Optional<Bridge> getBridgeTo(Island island);
     int getActualBridgesCount();
     Set<Island> getBridgedNeighbours();
 }

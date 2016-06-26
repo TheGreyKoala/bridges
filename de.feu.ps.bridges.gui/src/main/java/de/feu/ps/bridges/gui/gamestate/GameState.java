@@ -9,7 +9,10 @@ import de.feu.ps.bridges.model.Puzzle;
 import javafx.application.Platform;
 
 import java.io.File;
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -135,9 +138,13 @@ public class GameState {
         }
     }
 
-    public void addBridge(final Island island, final Direction direction) {
-        addedBridges.add(Facade.addBridge(puzzle, island, direction));
-        fireGameStateEvent(GameStateEventType.NEW_PUZZLE_LOADED);
+    public boolean tryAddBridge(final Island island, final Direction direction) {
+        Optional<Bridge> optionalBridge = Facade.tryAddBridge(puzzle, island, direction);
+        if (optionalBridge.isPresent()) {
+            addedBridges.add(optionalBridge.get());
+            fireGameStateEvent(GameStateEventType.NEW_PUZZLE_LOADED);
+        }
+        return optionalBridge.isPresent();
     }
 
     public void removeBridge(final Island island, final Direction direction) {

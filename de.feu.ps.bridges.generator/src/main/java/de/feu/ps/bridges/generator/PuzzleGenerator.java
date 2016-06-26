@@ -110,7 +110,7 @@ public class PuzzleGenerator {
         List<Position> validStartPoints = new ArrayList<>();
 
         if (direction == Direction.NORTH) {
-            int border = start.hasNorthNeighbour() ? start.getNorthNeighbour().getRow() + 2 : 0;
+            int border = start.hasNorthNeighbour() ? start.getNorthNeighbour().get().getRow() + 2 : 0;
             for (int row = start.getRow() - 2; row >= border; row--) {
                 Position position = new Position(start.getColumn(), row);
                 if (puzzleBuilder.adjacentIslandAt(position)
@@ -121,7 +121,7 @@ public class PuzzleGenerator {
                 }
             }
         } else if (direction == Direction.EAST) {
-            int border = start.hasEastNeighbour() ? start.getEastNeighbour().getColumn() - 2 : columns - 1;
+            int border = start.hasEastNeighbour() ? start.getEastNeighbour().get().getColumn() - 2 : columns - 1;
             for (int column = start.getColumn() + 2; column <= border; column++) {
                 Position position = new Position(column, start.getRow());
                 if (puzzleBuilder.adjacentIslandAt(position)
@@ -132,7 +132,7 @@ public class PuzzleGenerator {
                 }
             }
         } else if (direction == Direction.SOUTH) {
-            int border = start.hasSouthNeighbour() ? start.getSouthNeighbour().getRow() - 2 : rows - 1;
+            int border = start.hasSouthNeighbour() ? start.getSouthNeighbour().get().getRow() - 2 : rows - 1;
             for (int row = start.getRow() + 2; row <= border; row++) {
                 Position position = new Position(start.getColumn(), row);
                 if (puzzleBuilder.adjacentIslandAt(position)
@@ -143,7 +143,7 @@ public class PuzzleGenerator {
                 }
             }
         } else {
-            int border = start.hasWestNeighbour() ? start.getWestNeighbour().getColumn() - 2 : 0;
+            int border = start.hasWestNeighbour() ? start.getWestNeighbour().get().getColumn() - 2 : 0;
             for (int column = start.getColumn() - 2; column >= border; column--) {
                 Position position = new Position(column, start.getRow());
                 if (puzzleBuilder.adjacentIslandAt(position)

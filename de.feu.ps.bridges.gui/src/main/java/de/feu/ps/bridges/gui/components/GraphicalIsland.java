@@ -6,6 +6,7 @@ import de.feu.ps.bridges.model.Island;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -17,6 +18,8 @@ import javafx.scene.text.TextBoundsType;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
+
+import java.util.ResourceBundle;
 
 import static de.feu.ps.bridges.gui.components.GraphicalPuzzle.HALF_CELL_SIZE;
 
@@ -57,7 +60,14 @@ public class GraphicalIsland {
                 Direction direction = getDirection(pointOnCartesianSystem.getX(), pointOnCartesianSystem.getY());
 
                 if (addBridge) {
-                    gameState.addBridge(island, direction);
+                    boolean bridgeAdded = gameState.tryAddBridge(island, direction);
+                    if (!bridgeAdded) {
+                        ResourceBundle bundle = ResourceBundle.getBundle("de.feu.ps.bridges.gui.bundles.Bridges");
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle(bundle.getString("invalidMoveDialog.title"));
+                        alert.setContentText(bundle.getString("invalidMoveDialog.contentText"));
+                        alert.showAndWait();
+                    }
                 } else {
                     gameState.removeBridge(island, direction);
                 }

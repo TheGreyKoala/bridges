@@ -1,5 +1,6 @@
 package de.feu.ps.bridges.analyser;
 
+import de.feu.ps.bridges.model.Direction;
 import de.feu.ps.bridges.model.Island;
 import de.feu.ps.bridges.model.Puzzle;
 
@@ -88,11 +89,23 @@ public class DefaultAnalyser implements Analyser {
         return reachableUnfinishedNeighbours.parallelStream().filter(island1 -> causesNoIsolation(puzzle, island, island1)).collect(Collectors.toSet());
     }
 
+    @Override
+    public boolean isValidMove(final Island island1, final Island island2) {
+        // Do not use getValidBridgeDestinations, because a move that causes isolation can still be move
+        return getReachableUnfinishedNeighbours(puzzle, island1).contains(island2);
+    }
+
+    @Override
+    public boolean isValidMove(final Island island1, final Direction direction) {
+        Optional<Island> neighbour = island1.getNeighbour(direction);
+        return neighbour.isPresent() && isValidMove(island1, neighbour.get());
+    }
+
     private Set<Island> getReachableUnfinishedNeighbours(Puzzle puzzle, final Island island) {
         return island
                 .getNeighbours().stream()
                 .filter(this::islandNeedsMoreBridges)
-                .filter(neighbour -> !island.isBridgedTo(neighbour) || !island.getBridgeTo(neighbour).isDoubleBridge())
+                .filter(neighbour -> !island.isBridgedTo(neighbour) || !island.getBridgeTo(neighbour).get().isDoubleBridge())
                 .filter(neighbour -> noIntersectingBridge(puzzle, island, neighbour))
                 .collect(Collectors.toSet());
     }
