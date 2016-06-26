@@ -48,7 +48,7 @@
                         <Button fx:id="nextMoveButton" mnemonicParsing="false" prefWidth="1000.0" text="%controls.nextMove" onAction="#nextMove"/>
                     </children>
                 </HBox>
-                <Label text="Status"/>
+                <Label fx:id="statusLabel"/>
             </children>
             <BorderPane.margin>
                 <Insets/>

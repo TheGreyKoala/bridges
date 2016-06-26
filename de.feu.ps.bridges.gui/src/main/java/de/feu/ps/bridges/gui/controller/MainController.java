@@ -1,5 +1,6 @@
 package de.feu.ps.bridges.gui.controller;
 
+import de.feu.ps.bridges.analyser.PuzzleStatus;
 import de.feu.ps.bridges.gui.PuzzleDrawer;
 import de.feu.ps.bridges.gui.gamestate.GameState;
 import de.feu.ps.bridges.gui.gamestate.GameStateEvent;
@@ -13,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
@@ -43,6 +45,9 @@ public class MainController implements Initializable, GameStateListener {
 
     @FXML
     private Button nextMoveButton;
+
+    @FXML
+    private Label statusLabel;
 
     private ResourceBundle bundle;
     private FileChooser fileChooser;
@@ -126,6 +131,24 @@ public class MainController implements Initializable, GameStateListener {
                 getNodesToLock().forEach(node -> node.setDisable(false));
                 break;
         }
+        updateStatus();
+    }
+
+    private void updateStatus() {
+        PuzzleStatus puzzleStatus = gameState.getPuzzleStatus();
+        String labelKey = "";
+        switch (puzzleStatus) {
+            case SOLVED:
+                labelKey = "puzzle.status.solved";
+                break;
+            case UNSOLVED:
+                labelKey = "puzzle.status.unsolved";
+                break;
+            case UNSOLVABLE:
+                labelKey = "puzzle.status.unsolvable";
+                break;
+        }
+        statusLabel.setText(bundle.getString(labelKey));
     }
 
     private void drawPuzzle() {

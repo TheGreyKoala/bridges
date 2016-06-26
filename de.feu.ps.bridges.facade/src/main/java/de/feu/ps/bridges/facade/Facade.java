@@ -1,5 +1,7 @@
 package de.feu.ps.bridges.facade;
 
+import de.feu.ps.bridges.analyser.DefaultAnalyser;
+import de.feu.ps.bridges.analyser.PuzzleStatus;
 import de.feu.ps.bridges.generator.PuzzleGenerator;
 import de.feu.ps.bridges.model.Direction;
 import de.feu.ps.bridges.model.Island;
@@ -71,5 +73,10 @@ public class Facade {
 
     public static void removeBridge(Puzzle puzzle, Island island, Direction direction) {
         puzzle.tearDownBridge(island, island.getNeighbour(direction));
+    }
+
+    public static PuzzleStatus getPuzzleStatus(Puzzle puzzle) {
+        DefaultAnalyser analyserFor = DefaultAnalyser.createAnalyserFor(puzzle);
+        return analyserFor.getStatus();
     }
 }

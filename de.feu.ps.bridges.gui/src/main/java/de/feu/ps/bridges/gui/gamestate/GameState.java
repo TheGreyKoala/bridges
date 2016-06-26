@@ -1,5 +1,6 @@
 package de.feu.ps.bridges.gui.gamestate;
 
+import de.feu.ps.bridges.analyser.PuzzleStatus;
 import de.feu.ps.bridges.facade.Facade;
 import de.feu.ps.bridges.model.Direction;
 import de.feu.ps.bridges.model.Island;
@@ -125,5 +126,9 @@ public class GameState {
     public void removeBridge(final Island island, final Direction direction) {
         Facade.removeBridge(puzzle, island, direction);
         fireGameStateEvent(GameStateEventType.NEW_PUZZLE_LOADED);
+    }
+
+    public PuzzleStatus getPuzzleStatus() {
+        return Facade.getPuzzleStatus(puzzle);
     }
 }
