@@ -102,12 +102,13 @@ public class GameState {
         fireGameStateEvent(GameStateEventType.PUZZLE_RESTARTED);
     }
 
-    public void nextMove() {
+    public boolean nextMove() {
         Optional<Bridge> optionalBridge = Facade.nextMove(puzzle);
         if (optionalBridge.isPresent()) {
             addedBridges.add(optionalBridge.get());
             fireGameStateEvent(GameStateEventType.NEW_PUZZLE_LOADED);
         }
+        return optionalBridge.isPresent();
     }
 
     public void solve() {

@@ -176,7 +176,31 @@ public class MainController implements Initializable, GameStateListener {
     }
 
     public void nextMove(ActionEvent actionEvent) {
-        gameState.nextMove();
+        boolean bridgeAdded = gameState.nextMove();
+        showInfoWhenSolvedOrNoNextMove(bridgeAdded);
+    }
+
+    private void showInfoWhenSolvedOrNoNextMove(boolean bridgeAdded) {
+        PuzzleStatus puzzleStatus = gameState.getPuzzleStatus();
+
+        if (puzzleStatus == PuzzleStatus.SOLVED || !bridgeAdded) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle(bundle.getString("autoSolveDialog.title"));
+
+            if (puzzleStatus == PuzzleStatus.SOLVED) {
+                alert.setContentText(bundle.getString("autoSolveDialog.solved.contentText"));
+            } else {
+                switch (puzzleStatus) {
+                    case UNSOLVED:
+                        alert.setContentText(bundle.getString("noNextMoveDialog.contentText"));
+                        break;
+                    case UNSOLVABLE:
+                        alert.setContentText(bundle.getString("autoSolveDialog.unsolvable.contentText"));
+                        break;
+                }
+            }
+            alert.showAndWait();
+        }
     }
 
     public void solve(ActionEvent actionEvent) {
