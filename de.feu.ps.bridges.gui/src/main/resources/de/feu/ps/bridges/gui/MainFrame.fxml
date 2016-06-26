@@ -41,7 +41,7 @@
     <bottom>
         <VBox prefHeight="72.0" prefWidth="600.0" spacing="10.0" BorderPane.alignment="CENTER">
             <children>
-                <CheckBox fx:id="showRemainingBridgesCheckBox" mnemonicParsing="false" text="%controls.showRemainingBridges"/>
+                <CheckBox fx:id="showRemainingBridgesCheckBox" mnemonicParsing="false" text="%controls.showRemainingBridges" onAction="#showRemainingBridgesClicked"/>
                 <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                     <children>
                         <Button mnemonicParsing="false" prefWidth="1000.0" text="%controls.solve" onAction="#solve"/>

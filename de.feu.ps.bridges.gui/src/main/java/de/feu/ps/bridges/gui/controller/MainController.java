@@ -117,8 +117,7 @@ public class MainController implements Initializable, GameStateListener {
         switch (event.getGameStateEventType()) {
             case NEW_PUZZLE_LOADED:
             case PUZZLE_RESTARTED:
-                mainPanel.getChildren().clear();
-                puzzleDrawer.drawPuzzle(gameState.getPuzzle(), mainPanel);
+                drawPuzzle();
                 break;
             case AUTOMATIC_SOLVING_STARTED:
                 getNodesToLock().forEach(node -> node.setDisable(true));
@@ -127,6 +126,11 @@ public class MainController implements Initializable, GameStateListener {
                 getNodesToLock().forEach(node -> node.setDisable(false));
                 break;
         }
+    }
+
+    private void drawPuzzle() {
+        mainPanel.getChildren().clear();
+        puzzleDrawer.drawPuzzle(gameState.getPuzzle(), mainPanel, showRemainingBridgesCheckBox.isSelected());
     }
 
     private List<Node> getNodesToLock() {
@@ -139,5 +143,9 @@ public class MainController implements Initializable, GameStateListener {
 
     public void solve(ActionEvent actionEvent) {
         gameState.solve();
+    }
+
+    public void showRemainingBridgesClicked(ActionEvent actionEvent) {
+        drawPuzzle();
     }
 }

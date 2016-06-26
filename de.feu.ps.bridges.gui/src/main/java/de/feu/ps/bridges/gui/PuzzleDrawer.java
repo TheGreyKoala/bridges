@@ -40,7 +40,7 @@ public class PuzzleDrawer {
         this.gameState = gameState;
     }
 
-    public void drawPuzzle(final Puzzle puzzle, final Pane pane) {
+    public void drawPuzzle(final Puzzle puzzle, final Pane pane, boolean showRemainingBridges) {
         Set<Island> islands = puzzle.getIslands();
 
         GridPane gridPane = new GridPane();
@@ -59,7 +59,9 @@ public class PuzzleDrawer {
         for (Island island : islands) {
             Circle circle = new Circle(ISLAND_RADIUS, Color.BLACK);
 
-            Text text = new Text(String.valueOf(island.getRequiredBridges()));
+            int displayedNumber = showRemainingBridges ? island.getRemainingBridges() : island.getRequiredBridges();
+
+            Text text = new Text(String.valueOf(displayedNumber));
             text.setFont(new Font(12));
             text.setBoundsType(TextBoundsType.VISUAL);
             text.setFill(Color.WHITE);
