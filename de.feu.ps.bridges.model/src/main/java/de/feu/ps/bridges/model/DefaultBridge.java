@@ -11,29 +11,54 @@ import java.util.Set;
  */
 class DefaultBridge implements ModifiableBridge {
 
-    // TODO Test
-
     private final Island island1;
     private final Island island2;
     private final Set<Island> islands;
     private boolean doubleBridge;
 
+    /**
+     * Creates a new bridge between <code>island1</code> and <code>island2</code>.
+     *
+     * The bridged islands must not be equal,
+     * but either lie in the same row or the same column.
+     * Otherwise an {@link IllegalArgumentException} will be thrown.
+     *
+     * @param island1 {@link Island} to be bridged.
+     * @param island2 Another {@link Island} island to be bridged.
+     * @param doubleBridge <code>boolean</code> that indicates whether the new bridge should be a double bridge or not.
+     * @throws NullPointerException if <code>island1</code> or <code>island2</code> are <code>null</code>
+     * @throws IllegalArgumentException if <code>island1</code> and <code>island2</code> are equal
+     *  or if the islands do not lie in the same row or the same column.
+     */
     DefaultBridge(final Island island1, final Island island2, final boolean doubleBridge) {
         this.island1 = Objects.requireNonNull(island1, "Parameter 'island1' must not be null.");
         this.island2 = Objects.requireNonNull(island2, "Parameter 'island2' must not be null.");
 
-        if (island1 == island2) {
-            throw new IllegalArgumentException("Can not build a bridge from an island to itself.");
+        if (island1.equals(island2)) {
+            throw new IllegalArgumentException("Bridged islands must not be equal.");
         }
 
-        if (!canBeConnected(island1, island2)) {
-            throw new IllegalArgumentException("Islands must either be on the same row or the same column");
+        if (!(lieInTheSameRow(island1, island2) || lieInTheSameColumn(island1, island2))) {
+            throw new IllegalArgumentException("Bridged islands must either lie in the same row or the same column");
         }
 
         islands = new HashSet<>(2);
         islands.add(island1);
         islands.add(island2);
         this.doubleBridge = doubleBridge;
+    }
+
+    private boolean lieInTheSameRow(final Island island1, final Island island2) {
+        return island1.getRow() == island2.getRow();
+    }
+
+    private boolean lieInTheSameColumn(final Island island1, final Island island2) {
+        return island1.getColumn() == island2.getColumn();
+    }
+
+    @Override
+    public Set<Island> getBridgedIslands() {
+        return new HashSet<>(islands);
     }
 
     @Override
@@ -62,25 +87,7 @@ class DefaultBridge implements ModifiableBridge {
     }
 
     @Override
-    public Set<Island> getConnectedIslands() {
-        return new HashSet<>(islands);
-    }
-
-    private boolean canBeConnected(final Island island1, final Island island2) {
-        return island1.getRow() == island2.getRow() || island1.getColumn() == island2.getColumn();
-    }
-
-    @Override
     public void setDoubleBridge(boolean doubleBridge) {
         this.doubleBridge = doubleBridge;
-    }
-
-    @Override
-    public String toString() {
-        return "DefaultBridge{" +
-                "[" + island1.getPosition().getColumn() + ", " + island1.getPosition().getRow() + "] - " +
-                "[" + island2.getPosition().getColumn() + ", " + island2.getPosition().getRow() + "]" +
-                ", doubleBridge=" + doubleBridge +
-                '}';
     }
 }

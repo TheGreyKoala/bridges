@@ -92,7 +92,7 @@ class DefaultPuzzle implements ModifiablePuzzle {
             bridge.setDoubleBridge(true);
         } else {
             // TODO What if island already has enough islands
-            bridge = BridgeBuilder.buildBridge(island1, island2, doubleBridge);
+            bridge = ModifiableBridgeFactory.createBridge(island1, island2, doubleBridge);
             bridges.add(bridge);
 
             // TODO: This is ugly but we need to verify if the islands are in this puzzle anyway.
@@ -106,7 +106,7 @@ class DefaultPuzzle implements ModifiablePuzzle {
 
     private Optional<ModifiableBridge> findBridge(final Island island1, final Island island2) {
         return bridges.stream()
-                .filter(bridge1 -> bridge1.getConnectedIslands().containsAll(
+                .filter(bridge1 -> bridge1.getBridgedIslands().containsAll(
                         Arrays.asList(island1, island2))).findFirst();
     }
 
@@ -118,7 +118,7 @@ class DefaultPuzzle implements ModifiablePuzzle {
     @Override
     public void removeAllBridges() {
         // TODO the cast is ugly
-        bridges.forEach(bridge -> bridge.getConnectedIslands().forEach(island -> ((ModifiableIsland)island).removeAllBridges()));
+        bridges.forEach(bridge -> bridge.getBridgedIslands().forEach(island -> ((ModifiableIsland)island).removeAllBridges()));
         bridges.clear();
     }
 
@@ -160,8 +160,8 @@ class DefaultPuzzle implements ModifiablePuzzle {
     public void removeBridge(Bridge bridge) {
         Optional<Bridge> possibleDuplicate =
                 bridges.stream()
-                        .filter(bridge1 -> bridge1.getConnectedIslands().containsAll(
-                                bridge.getConnectedIslands())).findFirst();
+                        .filter(bridge1 -> bridge1.getBridgedIslands().containsAll(
+                                bridge.getBridgedIslands())).findFirst();
 
         if (possibleDuplicate.isPresent()) {
             Bridge duplicate = possibleDuplicate.get();
@@ -169,7 +169,7 @@ class DefaultPuzzle implements ModifiablePuzzle {
                 duplicate.setDoubleBridge(false);
             } else {
                 bridges.remove(duplicate);
-                duplicate.getConnectedIslands().forEach(island -> island.removeBridge(bridge));
+                duplicate.getBridgedIslands().forEach(island -> island.removeBridge(bridge));
             }
             possibleDuplicate.get().setDoubleBridge(false);
         }
@@ -184,7 +184,7 @@ class DefaultPuzzle implements ModifiablePuzzle {
                 bridge.setDoubleBridge(false);
             } else {
                 // TODO The cast is ugly
-                bridge.getConnectedIslands().forEach(island -> ((ModifiableIsland) island).removeBridge(bridge));
+                bridge.getBridgedIslands().forEach(island -> ((ModifiableIsland) island).removeBridge(bridge));
                 bridges.remove(bridge);
             }
             return Optional.of(bridge);

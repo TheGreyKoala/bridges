@@ -193,13 +193,13 @@ class DefaultIsland implements ModifiableIsland {
     public boolean isBridgedToNeighbour(Direction direction) {
         switch (direction) {
             case NORTH:
-                return hasNorthNeighbour() && bridges.stream().anyMatch(bridge -> bridge.getConnectedIslands().contains(northNeighbour));
+                return hasNorthNeighbour() && bridges.stream().anyMatch(bridge -> bridge.getBridgedIslands().contains(northNeighbour));
             case EAST:
-                return hasEastNeighbour() && bridges.stream().anyMatch(bridge -> bridge.getConnectedIslands().contains(eastNeighbour));
+                return hasEastNeighbour() && bridges.stream().anyMatch(bridge -> bridge.getBridgedIslands().contains(eastNeighbour));
             case SOUTH:
-                return hasSouthNeighbour() && bridges.stream().anyMatch(bridge -> bridge.getConnectedIslands().contains(southNeighbour));
+                return hasSouthNeighbour() && bridges.stream().anyMatch(bridge -> bridge.getBridgedIslands().contains(southNeighbour));
             case WEST:
-                return hasWestNeighbour() && bridges.stream().anyMatch(bridge -> bridge.getConnectedIslands().contains(westNeighbour));
+                return hasWestNeighbour() && bridges.stream().anyMatch(bridge -> bridge.getBridgedIslands().contains(westNeighbour));
             default:
                 return false;
         }
@@ -242,12 +242,12 @@ class DefaultIsland implements ModifiableIsland {
 
     @Override
     public boolean isBridgedTo(Island island) {
-        return bridges.stream().anyMatch(bridge -> bridge.getConnectedIslands().contains(island));
+        return bridges.stream().anyMatch(bridge -> bridge.getBridgedIslands().contains(island));
     }
 
     @Override
     public Optional<Bridge> getBridgeTo(Island island) {
-        return bridges.stream().filter(bridge -> bridge.getConnectedIslands().contains(island)).findFirst();
+        return bridges.stream().filter(bridge -> bridge.getBridgedIslands().contains(island)).findFirst();
     }
 
     @Override
