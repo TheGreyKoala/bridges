@@ -5,6 +5,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static de.feu.ps.bridges.model.Direction.NORTH;
+import static de.feu.ps.bridges.model.Direction.SOUTH;
 import static org.junit.Assert.*;
 
 
@@ -40,31 +42,31 @@ public class ColumnTest {
 
         final Column column = new Column(0);
         column.addIsland(island1);
-        assertFalse("Expected no north neighbour.", island1.getNorthNeighbour().isPresent());
-        assertFalse("Expected no south neighbour.", island1.getSouthNeighbour().isPresent());
+        assertFalse("Expected no north neighbour.", island1.getNeighbour(NORTH).isPresent());
+        assertFalse("Expected no south neighbour.", island1.getNeighbour(SOUTH).isPresent());
 
         column.addIsland(island3);
-        assertFalse("Expected no north neighbour.", island1.getNorthNeighbour().isPresent());
-        assertTrue("Expected south neighbour.", island1.getSouthNeighbour().isPresent());
-        assertEquals("Expected island3 to be the south neighbour of island1.", island3, island1.getSouthNeighbour().get());
+        assertFalse("Expected no north neighbour.", island1.getNeighbour(NORTH).isPresent());
+        assertTrue("Expected south neighbour.", island1.getNeighbour(SOUTH).isPresent());
+        assertEquals("Expected island3 to be the south neighbour of island1.", island3, island1.getNeighbour(SOUTH).get());
 
-        assertTrue("Expected north neighbour.", island3.getNorthNeighbour().isPresent());
-        assertEquals("Expected island1 to be the north neighbour of island3.", island1, island3.getNorthNeighbour().get());
-        assertFalse("Expected no south neighbour.", island3.getSouthNeighbour().isPresent());
+        assertTrue("Expected north neighbour.", island3.getNeighbour(NORTH).isPresent());
+        assertEquals("Expected island1 to be the north neighbour of island3.", island1, island3.getNeighbour(NORTH).get());
+        assertFalse("Expected no south neighbour.", island3.getNeighbour(SOUTH).isPresent());
 
         column.addIsland(island2);
-        assertFalse("Expected no north neighbour.", island1.getNorthNeighbour().isPresent());
-        assertTrue("Expected south neighbour.", island1.getSouthNeighbour().isPresent());
-        assertEquals("Expected island2 to be the south neighbour of island1.", island2, island1.getSouthNeighbour().get());
+        assertFalse("Expected no north neighbour.", island1.getNeighbour(NORTH).isPresent());
+        assertTrue("Expected south neighbour.", island1.getNeighbour(SOUTH).isPresent());
+        assertEquals("Expected island2 to be the south neighbour of island1.", island2, island1.getNeighbour(SOUTH).get());
 
-        assertTrue("Expected north neighbour.", island2.getNorthNeighbour().isPresent());
-        assertEquals("Expected island1 to be the north neighbour of island2.", island1, island2.getNorthNeighbour().get());
-        assertTrue("Expected south neighbour.", island2.getSouthNeighbour().isPresent());
-        assertEquals("Expected island3 to be the south neighbour of island2.", island3, island2.getSouthNeighbour().get());
+        assertTrue("Expected north neighbour.", island2.getNeighbour(NORTH).isPresent());
+        assertEquals("Expected island1 to be the north neighbour of island2.", island1, island2.getNeighbour(NORTH).get());
+        assertTrue("Expected south neighbour.", island2.getNeighbour(SOUTH).isPresent());
+        assertEquals("Expected island3 to be the south neighbour of island2.", island3, island2.getNeighbour(SOUTH).get());
 
-        assertTrue("Expected north neighbour.", island3.getNorthNeighbour().isPresent());
-        assertEquals("Expected island2 to be the north neighbour of island3.", island2, island3.getNorthNeighbour().get());
-        assertFalse("Expected no south neighbour.", island3.getSouthNeighbour().isPresent());
+        assertTrue("Expected north neighbour.", island3.getNeighbour(NORTH).isPresent());
+        assertEquals("Expected island2 to be the north neighbour of island3.", island2, island3.getNeighbour(NORTH).get());
+        assertFalse("Expected no south neighbour.", island3.getNeighbour(SOUTH).isPresent());
     }
 
     @Test
@@ -79,17 +81,17 @@ public class ColumnTest {
         column.addIsland(island2);
         column.addIsland(island2);
 
-        assertFalse("Expected no north neighbour.", island1.getNorthNeighbour().isPresent());
-        assertTrue("Expected south neighbour.", island1.getSouthNeighbour().isPresent());
-        assertEquals("Expected island2 to be the south neighbour of island1.", island2, island1.getSouthNeighbour().get());
+        assertFalse("Expected no north neighbour.", island1.getNeighbour(NORTH).isPresent());
+        assertTrue("Expected south neighbour.", island1.getNeighbour(SOUTH).isPresent());
+        assertEquals("Expected island2 to be the south neighbour of island1.", island2, island1.getNeighbour(SOUTH).get());
 
-        assertTrue("Expected north neighbour.", island2.getNorthNeighbour().isPresent());
-        assertEquals("Expected island1 to be the north neighbour of island2.", island1, island2.getNorthNeighbour().get());
-        assertTrue("Expected south neighbour.", island2.getSouthNeighbour().isPresent());
-        assertEquals("Expected island3 to be the south neighbour of island2.", island3, island2.getSouthNeighbour().get());
+        assertTrue("Expected north neighbour.", island2.getNeighbour(NORTH).isPresent());
+        assertEquals("Expected island1 to be the north neighbour of island2.", island1, island2.getNeighbour(NORTH).get());
+        assertTrue("Expected south neighbour.", island2.getNeighbour(SOUTH).isPresent());
+        assertEquals("Expected island3 to be the south neighbour of island2.", island3, island2.getNeighbour(SOUTH).get());
 
-        assertTrue("Expected north neighbour.", island3.getNorthNeighbour().isPresent());
-        assertEquals("Expected island2 to be the north neighbour of island3.", island2, island3.getNorthNeighbour().get());
-        assertFalse("Expected no south neighbour.", island3.getSouthNeighbour().isPresent());
+        assertTrue("Expected north neighbour.", island3.getNeighbour(NORTH).isPresent());
+        assertEquals("Expected island2 to be the north neighbour of island3.", island2, island3.getNeighbour(NORTH).get());
+        assertFalse("Expected no south neighbour.", island3.getNeighbour(SOUTH).isPresent());
     }
 }

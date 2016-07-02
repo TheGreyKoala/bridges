@@ -49,11 +49,11 @@ class DefaultBridge implements ModifiableBridge {
     }
 
     private boolean lieInTheSameRow(final Island island1, final Island island2) {
-        return island1.getRow() == island2.getRow();
+        return island1.getRowIndex() == island2.getRowIndex();
     }
 
     private boolean lieInTheSameColumn(final Island island1, final Island island2) {
-        return island1.getColumn() == island2.getColumn();
+        return island1.getColumnIndex() == island2.getColumnIndex();
     }
 
     @Override
@@ -78,12 +78,12 @@ class DefaultBridge implements ModifiableBridge {
 
     @Override
     public boolean isHorizontal() {
-        return island1.getRow() == island2.getRow();
+        return island1.getRowIndex() == island2.getRowIndex();
     }
 
     @Override
     public boolean isVertical() {
-        return island1.getColumn() == island2.getColumn();
+        return island1.getColumnIndex() == island2.getColumnIndex();
     }
 
     @Override

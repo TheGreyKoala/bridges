@@ -19,11 +19,11 @@ public class GraphicalBridge {
     public static Node createBridge(final Bridge bridge, final GameState gameState) {
         Pane pane = new Pane();
 
-        int startColumn = bridge.getIsland1().getColumn();
-        int startRow = bridge.getIsland1().getRow();
+        int startColumn = bridge.getIsland1().getColumnIndex();
+        int startRow = bridge.getIsland1().getRowIndex();
 
-        int endColumn = bridge.getIsland2().getColumn();
-        int endRow = bridge.getIsland2().getRow();
+        int endColumn = bridge.getIsland2().getColumnIndex();
+        int endRow = bridge.getIsland2().getRowIndex();
 
         boolean latestBridge = gameState.isLatestBridge(bridge);
 

@@ -17,7 +17,7 @@ class Column extends SortedIslandContainer {
      * Creates a new empty column.
      */
     public Column(final int index) {
-        super((o1, o2) -> o1.getRow() - o2.getRow());
+        super((o1, o2) -> o1.getRowIndex() - o2.getRowIndex());
 
         if (index < 0) {
             throw new IllegalArgumentException("Parameter 'index' must not be less than 0.");
@@ -35,21 +35,21 @@ class Column extends SortedIslandContainer {
      */
     @Override
     public void addIsland(final ModifiableIsland island) {
-        if (island.getColumn() != index) {
-            throw new IllegalArgumentException("This islands lies in another column: " + island.getColumn());
+        if (island.getColumnIndex() != index) {
+            throw new IllegalArgumentException("This islands lies in another column: " + island.getColumnIndex());
         }
         super.addIsland(island);
     }
 
     @Override
     protected void linkToPrecedingIsland(final ModifiableIsland island, final ModifiableIsland precedingIsland) {
-        precedingIsland.setSouthNeighbour(island);
-        island.setNorthNeighbour(precedingIsland);
+        precedingIsland.setNeighbour(island, Direction.SOUTH);
+        island.setNeighbour(precedingIsland, Direction.NORTH);
     }
 
     @Override
     protected void linkToFollowingIsland(final ModifiableIsland island, final ModifiableIsland followingIsland) {
-        followingIsland.setNorthNeighbour(island);
-        island.setSouthNeighbour(followingIsland);
+        followingIsland.setNeighbour(island, Direction.NORTH);
+        island.setNeighbour(followingIsland, Direction.SOUTH);
     }
 }

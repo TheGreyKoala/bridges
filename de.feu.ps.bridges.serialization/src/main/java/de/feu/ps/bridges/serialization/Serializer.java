@@ -46,15 +46,15 @@ public class Serializer {
 
             Stream<Island> sortedIslands = islands.stream()
                     // TODO THIS NEEDS TO BE TESTED!
-                    .sorted(comparingInt(Island::getColumn).thenComparing(Island::getRow));
+                    .sorted(comparingInt(Island::getColumnIndex).thenComparing(Island::getRowIndex));
 
             List<Island> islandList = sortedIslands.collect(Collectors.toList());
 
             islandList.forEach(island -> {
                         writer.print("( ");
-                        writer.print(island.getColumn());
+                        writer.print(island.getColumnIndex());
                         writer.print(", ");
-                        writer.print(island.getRow());
+                        writer.print(island.getRowIndex());
                         writer.print(" | ");
                         writer.print(island.getRequiredBridges());
                         writer.println(" )");

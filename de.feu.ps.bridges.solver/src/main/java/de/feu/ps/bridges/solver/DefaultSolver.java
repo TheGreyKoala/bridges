@@ -95,14 +95,14 @@ public class DefaultSolver implements Solver {
                 int existingBridgesToPossibleDestinations = 0;
 
                 for (Island destination : possibleDestinations) {
-                    if (island.isBridgedTo(destination)) {
+                    if (island.getBridgeTo(destination).isPresent()) {
                         existingBridgesToPossibleDestinations++;
                     }
                 }
 
                 for (Island destination : possibleDestinations) {
                     int existingToDestination = 0;
-                    if (island.isBridgedTo(destination)) {
+                    if (island.getBridgeTo(destination).isPresent()) {
                         existingToDestination = 1;
                     }
 

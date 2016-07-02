@@ -87,10 +87,10 @@ public class PuzzleBuilder {
             int column = position.getColumn();
             int row = position.getRow();
 
-            return island.getColumn() == column && island.getRow() == row - 1 // North
-                || island.getColumn() == column + 1 && island.getRow() == row // East
-                || island.getColumn() == column && island.getRow() == row + 1 // South
-                || island.getColumn() == column - 1 && island.getRow() == row; // West
+            return island.getColumnIndex() == column && island.getRowIndex() == row - 1 // North
+                || island.getColumnIndex() == column + 1 && island.getRowIndex() == row // East
+                || island.getColumnIndex() == column && island.getRowIndex() == row + 1 // South
+                || island.getColumnIndex() == column - 1 && island.getRowIndex() == row; // West
         });
     }
 

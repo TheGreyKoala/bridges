@@ -1,5 +1,6 @@
 package de.feu.ps.bridges.analyser;
 
+import de.feu.ps.bridges.model.Bridge;
 import de.feu.ps.bridges.model.Direction;
 import de.feu.ps.bridges.model.Island;
 import de.feu.ps.bridges.model.Puzzle;
@@ -105,7 +106,10 @@ public class DefaultAnalyser implements Analyser {
         return island
                 .getNeighbours().stream()
                 .filter(this::islandNeedsMoreBridges)
-                .filter(neighbour -> !island.isBridgedTo(neighbour) || !island.getBridgeTo(neighbour).get().isDoubleBridge())
+                .filter(neighbour -> {
+                    Optional<Bridge> optionalBridge = island.getBridgeTo(neighbour);
+                    return !optionalBridge.isPresent() || !optionalBridge.get().isDoubleBridge();
+                })
                 .filter(neighbour -> noIntersectingBridge(puzzle, island, neighbour))
                 .collect(Collectors.toSet());
     }
