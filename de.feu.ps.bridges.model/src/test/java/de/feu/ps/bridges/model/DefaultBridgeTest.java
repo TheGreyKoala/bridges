@@ -1,5 +1,6 @@
 package de.feu.ps.bridges.model;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.theories.*;
@@ -36,7 +37,7 @@ public class DefaultBridgeTest {
     @Test
     public void testIsland1Null() {
         expectedException.expect(NullPointerException.class);
-        expectedException.expectMessage("Parameter 'island1' must not be null.");
+        expectedException.expectMessage(CoreMatchers.is("Parameter 'island1' must not be null."));
 
         ModifiableBridgeFactory.createBridge(null, sourceIsland, false);
     }
@@ -44,7 +45,7 @@ public class DefaultBridgeTest {
     @Test
     public void testIsland2Null() {
         expectedException.expect(NullPointerException.class);
-        expectedException.expectMessage("Parameter 'island2' must not be null.");
+        expectedException.expectMessage(CoreMatchers.is("Parameter 'island2' must not be null."));
 
         ModifiableBridgeFactory.createBridge(sourceIsland, null, false);
     }
@@ -52,7 +53,7 @@ public class DefaultBridgeTest {
     @Test
     public void testBridgeBetweenEqualIsland() {
         expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("Bridged islands must not be equal.");
+        expectedException.expectMessage(CoreMatchers.is("Bridged islands must not be equal."));
 
         ModifiableBridgeFactory.createBridge(sourceIsland, sourceIsland, false);
     }
@@ -60,7 +61,7 @@ public class DefaultBridgeTest {
     @Test
     public void testUnbridgeableIslands() {
         expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("Bridged islands must either lie in the same row or the same column");
+        expectedException.expectMessage(CoreMatchers.is("Bridged islands must either lie in the same row or the same column"));
 
         final Island island2 = new DefaultIsland(2, 2, 1);
         ModifiableBridgeFactory.createBridge(sourceIsland, island2, false);
