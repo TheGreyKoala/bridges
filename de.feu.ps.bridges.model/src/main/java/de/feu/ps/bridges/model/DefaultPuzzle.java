@@ -111,11 +111,6 @@ class DefaultPuzzle implements ModifiablePuzzle {
     }
 
     @Override
-    public Island getIslandAt(int column, int row) {
-        return columns.get(column).getIslandAtRow(row);
-    }
-
-    @Override
     public void removeAllBridges() {
         // TODO the cast is ugly
         bridges.forEach(bridge -> bridge.getBridgedIslands().forEach(island -> ((ModifiableIsland)island).removeAllBridges()));
