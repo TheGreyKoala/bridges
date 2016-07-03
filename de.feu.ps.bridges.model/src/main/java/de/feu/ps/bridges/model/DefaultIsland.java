@@ -4,47 +4,89 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * Default implementation of {@link Island}.
+ *
  * @author Tim Gremplewski
  */
 class DefaultIsland implements ModifiableIsland {
 
-    private final int column;
-    private final int row;
+    private final Position position;
     private int requiredBridges;
     private final Set<Bridge> bridges;
-    private Map<Direction, Island> neighbours;
+    private final EnumMap<Direction, Island> neighbours;
 
-    DefaultIsland(final int column, final int row, final int requiredBridges) {
+    /**
+     * Creates a new instance.
+     *
+     * @param position Position of the new island.
+     * @param requiredBridges Amount of required bridges.
+     * @throws NullPointerException if position is null.
+     * @throws IllegalArgumentException if one of the following is true
+     *  <ul>
+     *      <li>position.getColumn is less than 0</li>
+     *      <li>position.getRow is less then 0</li>
+     *      <li>requiredBridges is less than 1</li>
+     *  </ul>
+     */
+    DefaultIsland(final Position position, final int requiredBridges) {
+        this.position = Objects.requireNonNull(position, "Parameter 'position' must not be null.");
 
-        // TODO: Parameter validation
+        if (position.getColumn() < 0) {
+            throw new IllegalArgumentException("Column must not be less than 0.");
+        }
 
-        this.column = column;
-        this.row = row;
+        if (position.getRow() < 0) {
+            throw new IllegalArgumentException("Row must not be less than 0.");
+        }
+
+        if (requiredBridges < 1) {
+            throw new IllegalArgumentException("Parameter 'requiredBridged' must not be less than 1.");
+        }
+
         this.requiredBridges = requiredBridges;
         bridges = new HashSet<>(requiredBridges);
-        neighbours = new HashMap<>(4);
+        neighbours = new EnumMap<>(Direction.class);
     }
 
     @Override
-    public void addBridge(Bridge bridge) {
-        //TODO Parameter validation and reject if already enough bridges
+    public void addBridge(final Bridge bridge) {
+        Objects.requireNonNull(bridge, "Parameter 'bridge' must not be null.");
+
+        if (getActualBridgesCount() == requiredBridges) {
+            throw new IllegalStateException("This island does not require any more bridges.");
+        }
+
+        if (!bridge.getBridgedIslands().contains(this)) {
+            throw new IllegalArgumentException("The given bridge does not bridge this island.");
+        }
+
         bridges.add(bridge);
     }
 
     @Override
-    public int getActualBridgesCount() {
-        int doubleBridges = (int) bridges.stream().filter(Bridge::isDoubleBridge).count();
-        int singleBridges = bridges.size() - doubleBridges;
-        return singleBridges + doubleBridges * 2;
+    public Set<Island> getBridgedNeighbours() {
+        return neighbours.entrySet().stream()
+                .filter(directionIslandEntry -> isBridgedToNeighbour(directionIslandEntry.getKey()))
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toSet());
     }
 
     @Override
-    public Set<Island> getBridgedNeighbours() {
-        return Arrays.stream(Direction.values())
-                .filter(this::isBridgedToNeighbour)
-                .map(this::getNeighbour)
-                .map(Optional::get)
-                .collect(Collectors.toSet());
+    public boolean isBridgedToNeighbour(final Direction direction) {
+        Objects.requireNonNull(direction, "Parameter 'direction' must not be null.");
+        final Optional<Island> optionalNeighbour = getNeighbour(direction);
+
+        if (optionalNeighbour.isPresent()) {
+            final Island neighbour = optionalNeighbour.get();
+            return bridges.stream().anyMatch(bridge -> bridge.getBridgedIslands().contains(neighbour));
+        }
+        return false;
+    }
+
+    @Override
+    public Optional<Island> getNeighbour(final Direction direction) {
+        Objects.requireNonNull(direction, "Parameter 'direction' must not be null.");
+        return Optional.ofNullable(neighbours.get(direction));
     }
 
     @Override
@@ -53,13 +95,9 @@ class DefaultIsland implements ModifiableIsland {
     }
 
     @Override
-    public Optional<Bridge> getBridgeTo(Island island) {
+    public Optional<Bridge> getBridgeTo(final Island island) {
+        Objects.requireNonNull(island, "Parameter 'island' must not be null.");
         return bridges.stream().filter(bridge -> bridge.getBridgedIslands().contains(island)).findFirst();
-    }
-
-    @Override
-    public int getColumnIndex() {
-        return column;
     }
 
     @Override
@@ -71,38 +109,29 @@ class DefaultIsland implements ModifiableIsland {
 
             switch (direction) {
                 case NORTH:
-                    return row - neighbour.getRowIndex();
+                    return position.getRow() - neighbour.getPosition().getRow();
                 case EAST:
-                    return neighbour.getColumnIndex() - column;
+                    return neighbour.getPosition().getColumn() - position.getColumn();
                 case SOUTH:
-                    return neighbour.getRowIndex() - row;
+                    return neighbour.getPosition().getRow() - position.getRow();
                 case WEST:
-                    return column - neighbour.getColumnIndex();
+                    return position.getColumn() - neighbour.getPosition().getColumn();
                 default:
                     throw new UnsupportedOperationException("Unsupported direction: " + direction.name());
             }
         } else {
-            throw new UnsupportedOperationException("Island has no optionalNeighbour in this direction: " + direction.name());
+            throw new UnsupportedOperationException("Island has no neighbour in this direction: " + direction.name());
         }
     }
 
     @Override
-    public Optional<Island> getNeighbour(Direction direction) {
-        return Optional.ofNullable(neighbours.get(direction));
+    public Position getPosition() {
+        return position;
     }
 
     @Override
     public Set<Island> getNeighbours() {
-        return Arrays.stream(Direction.values())
-                .map(this::getNeighbour)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toSet());
-    }
-
-    @Override
-    public Position getPosition() {
-        return new Position(column, row);
+        return new HashSet<>(neighbours.values());
     }
 
     @Override
@@ -111,24 +140,15 @@ class DefaultIsland implements ModifiableIsland {
     }
 
     @Override
+    public int getActualBridgesCount() {
+        final int doubleBridges = (int) bridges.stream().filter(Bridge::isDoubleBridge).count();
+        final int singleBridges = bridges.size() - doubleBridges;
+        return singleBridges + doubleBridges * 2;
+    }
+
+    @Override
     public int getRequiredBridges() {
         return requiredBridges;
-    }
-
-    @Override
-    public int getRowIndex() {
-        return row;
-    }
-
-    @Override
-    public boolean isBridgedToNeighbour(Direction direction) {
-        final Optional<Island> optionalNeighbour = getNeighbour(direction);
-
-        if (optionalNeighbour.isPresent()) {
-            final Island neighbour = optionalNeighbour.get();
-            return bridges.stream().anyMatch(bridge -> bridge.getBridgedIslands().contains(neighbour));
-        }
-        return false;
     }
 
     @Override
@@ -137,17 +157,23 @@ class DefaultIsland implements ModifiableIsland {
     }
 
     @Override
-    public void removeBridge(Bridge bridge) {
+    public void removeBridge(final Bridge bridge) {
+        Objects.requireNonNull(bridge, "Parameter 'bridge' must not be null.");
         bridges.remove(bridge);
     }
 
     @Override
     public void setNeighbour(final Island neighbour, final Direction direction) {
+        Objects.requireNonNull(neighbour, "Parameter 'neighbour' must not be null.");
+        Objects.requireNonNull(direction, "Parameter 'direction' must not be null.");
         neighbours.put(direction, neighbour);
     }
 
     @Override
     public void setRequiredBridges(final int requiredBridges) {
+        if (requiredBridges < 1) {
+            throw new IllegalArgumentException("Parameter 'requiredBridges' must not be less than 1.");
+        }
         this.requiredBridges = requiredBridges;
     }
 }

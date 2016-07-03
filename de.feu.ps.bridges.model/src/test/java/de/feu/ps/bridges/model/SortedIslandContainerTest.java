@@ -32,14 +32,14 @@ public class SortedIslandContainerTest {
         expectedException.expect(NullPointerException.class);
         expectedException.expectMessage("Parameter 'island' must not be null.");
 
-        SortedIslandContainer container = new DummySortedIslandContainer((o1, o2) -> o1.getColumnIndex() - o2.getColumnIndex());
+        SortedIslandContainer container = new DummySortedIslandContainer((o1, o2) -> o1.getPosition().getColumn() - o2.getPosition().getColumn());
         container.addIsland(null);
     }
 
     @Test
     public void getIslands() throws Exception {
-        SortedIslandContainer container = new DummySortedIslandContainer((o1, o2) -> o1.getColumnIndex() - o2.getColumnIndex());
-        ModifiableIsland island = new DefaultIsland(0, 0, 1);
+        SortedIslandContainer container = new DummySortedIslandContainer((o1, o2) -> o1.getPosition().getColumn() - o2.getPosition().getColumn());
+        ModifiableIsland island = ModifiableIslandFactory.create(new Position(0, 0), 1);
         container.addIsland(island);
 
         Set<Island> islands = container.getIslands();

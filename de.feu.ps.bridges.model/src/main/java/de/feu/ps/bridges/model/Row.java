@@ -17,7 +17,7 @@ class Row extends SortedIslandContainer {
      * Creates a new empty row.
      */
     public Row(final int index) {
-        super((o1, o2) -> o1.getColumnIndex() - o2.getColumnIndex());
+        super((o1, o2) -> o1.getPosition().getColumn() - o2.getPosition().getColumn());
 
         if (index < 0) {
             throw new IllegalArgumentException("Parameter 'index' must not be less than 0.");
@@ -35,8 +35,9 @@ class Row extends SortedIslandContainer {
      */
     @Override
     public void addIsland(final ModifiableIsland island) {
-        if (island.getRowIndex() != index) {
-            throw new IllegalArgumentException("This islands lies in another row: " + island.getRowIndex());
+        final int islandRow = island.getPosition().getRow();
+        if (islandRow != index) {
+            throw new IllegalArgumentException("This islands lies in another row: " + islandRow);
         }
         super.addIsland(island);
     }

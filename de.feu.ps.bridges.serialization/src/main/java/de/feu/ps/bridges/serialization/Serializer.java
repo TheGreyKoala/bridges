@@ -12,8 +12,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.Comparator.comparingInt;
-
 /**
  * @author Tim Gremplewski
  */
@@ -46,15 +44,16 @@ public class Serializer {
 
             Stream<Island> sortedIslands = islands.stream()
                     // TODO THIS NEEDS TO BE TESTED!
-                    .sorted(comparingInt(Island::getColumnIndex).thenComparing(Island::getRowIndex));
+                    .sorted(Comparator.<Island>comparingInt(island -> island.getPosition().getColumn())
+                            .thenComparing(island -> island.getPosition().getRow()));
 
             List<Island> islandList = sortedIslands.collect(Collectors.toList());
 
             islandList.forEach(island -> {
                         writer.print("( ");
-                        writer.print(island.getColumnIndex());
+                        writer.print(island.getPosition().getColumn());
                         writer.print(", ");
-                        writer.print(island.getRowIndex());
+                        writer.print(island.getPosition().getRow());
                         writer.print(" | ");
                         writer.print(island.getRequiredBridges());
                         writer.println(" )");

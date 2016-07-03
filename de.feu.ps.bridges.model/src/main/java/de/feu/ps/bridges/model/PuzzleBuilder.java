@@ -31,7 +31,10 @@ public class PuzzleBuilder {
         return this;
     }
 
-    public Island addIsland(final int column, final int row, final int requiredBridges) {
+    public Island addIsland(final Position position, final int requiredBridges) {
+        final int column = position.getColumn();
+        final int row = position.getRow();
+
         if (islands.size() == islandsCount) {
             // TODO throw error if already all islands
         }
@@ -45,7 +48,7 @@ public class PuzzleBuilder {
         }
 
         // TODO This cast is ugly
-        final ModifiableIsland island = ((ModifiableIsland) puzzle.buildIsland(column, row, requiredBridges));
+        final ModifiableIsland island = ((ModifiableIsland) puzzle.buildIsland(position, requiredBridges));
         islands.add(island);
         return island;
     }
@@ -83,14 +86,17 @@ public class PuzzleBuilder {
     }
 
     public boolean adjacentIslandAt(final Position position) {
-        return islands.stream().anyMatch(island -> {
-            int column = position.getColumn();
-            int row = position.getRow();
+        final int column = position.getColumn();
+        final int row = position.getRow();
 
-            return island.getColumnIndex() == column && island.getRowIndex() == row - 1 // North
-                || island.getColumnIndex() == column + 1 && island.getRowIndex() == row // East
-                || island.getColumnIndex() == column && island.getRowIndex() == row + 1 // South
-                || island.getColumnIndex() == column - 1 && island.getRowIndex() == row; // West
+        return islands.stream().anyMatch(island -> {
+            final int islandColumn = island.getPosition().getColumn();
+            final int islandRow = island.getPosition().getRow();
+
+            return islandColumn == column && islandRow == row - 1 // North
+                || islandColumn == column + 1 && islandRow == row // East
+                || islandColumn == column && islandRow == row + 1 // South
+                || islandColumn == column - 1 && islandRow == row; // West
         });
     }
 

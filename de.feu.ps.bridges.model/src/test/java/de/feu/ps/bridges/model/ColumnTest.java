@@ -31,14 +31,14 @@ public class ColumnTest {
         expectedException.expectMessage(CoreMatchers.is("This islands lies in another column: " + 1));
 
         final Column column = new Column(0);
-        column.addIsland(new DefaultIsland(1, 0, 1));
+        column.addIsland(ModifiableIslandFactory.create(new Position(1, 0), 1));
     }
 
     @Test
     public void testAddIsland() {
-        final ModifiableIsland island1 = new DefaultIsland(0, 0, 1);
-        final ModifiableIsland island2 = new DefaultIsland(0, 2, 2);
-        final ModifiableIsland island3 = new DefaultIsland(0, 4, 2);
+        final ModifiableIsland island1 = ModifiableIslandFactory.create(new Position(0, 0), 1);
+        final ModifiableIsland island2 = ModifiableIslandFactory.create(new Position(0, 2), 2);
+        final ModifiableIsland island3 = ModifiableIslandFactory.create(new Position(0, 4), 2);
 
         final Column column = new Column(0);
         column.addIsland(island1);
@@ -71,9 +71,9 @@ public class ColumnTest {
 
     @Test
     public void testAddIslandTwice() {
-        final ModifiableIsland island1 = new DefaultIsland(0, 0, 1);
-        final ModifiableIsland island2 = new DefaultIsland(0, 2, 2);
-        final ModifiableIsland island3 = new DefaultIsland(0, 4, 2);
+        final ModifiableIsland island1 = ModifiableIslandFactory.create(new Position(0, 0), 1);
+        final ModifiableIsland island2 = ModifiableIslandFactory.create(new Position(0, 2), 2);
+        final ModifiableIsland island3 = ModifiableIslandFactory.create(new Position(0, 4), 2);
 
         final Column column = new Column(0);
         column.addIsland(island1);

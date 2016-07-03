@@ -1,5 +1,6 @@
 package de.feu.ps.bridges.serialization;
 
+import de.feu.ps.bridges.model.Position;
 import de.feu.ps.bridges.model.Puzzle;
 import de.feu.ps.bridges.model.PuzzleBuilder;
 
@@ -96,7 +97,7 @@ public class Deserializer {
             int row = Integer.parseInt(match.group(2));
             int requiredBridges = Integer.parseInt(match.group(3));
 
-            puzzleBuilder.addIsland(column, row, requiredBridges);
+            puzzleBuilder.addIsland(new Position(column, row), requiredBridges);
         }
     }
 

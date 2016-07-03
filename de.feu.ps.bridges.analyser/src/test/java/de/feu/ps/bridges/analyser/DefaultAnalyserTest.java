@@ -1,5 +1,6 @@
 package de.feu.ps.bridges.analyser;
 
+import de.feu.ps.bridges.model.Position;
 import de.feu.ps.bridges.model.PuzzleBuilder;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,15 +18,15 @@ public class DefaultAnalyserTest {
     public void setUp() throws Exception {
         puzzleBuilder = new PuzzleBuilder();
         puzzleBuilder.setPuzzleDimensions(5, 5);
-        puzzleBuilder.addIsland(0, 0, 3);
-        puzzleBuilder.addIsland(0, 2, 4);
-        puzzleBuilder.addIsland(0, 4, 2);
-        puzzleBuilder.addIsland(2, 0, 3);
-        puzzleBuilder.addIsland(2, 3, 2);
-        puzzleBuilder.addIsland(3, 2, 1);
-        puzzleBuilder.addIsland(3, 4, 1);
-        puzzleBuilder.addIsland(4, 0, 3);
-        puzzleBuilder.addIsland(4, 3, 3);
+        puzzleBuilder.addIsland(new Position(0, 0), 3);
+        puzzleBuilder.addIsland(new Position(0, 2), 4);
+        puzzleBuilder.addIsland(new Position(0, 4), 2);
+        puzzleBuilder.addIsland(new Position(2, 0), 3);
+        puzzleBuilder.addIsland(new Position(2, 3), 2);
+        puzzleBuilder.addIsland(new Position(3, 2), 1);
+        puzzleBuilder.addIsland(new Position(3, 4), 1);
+        puzzleBuilder.addIsland(new Position(4, 0), 3);
+        puzzleBuilder.addIsland(new Position(4, 3), 3);
     }
 
     @Test
@@ -71,10 +72,10 @@ public class DefaultAnalyserTest {
     public void getStatusTwoNetworks() {
         PuzzleBuilder builder = new PuzzleBuilder();
         builder.setPuzzleDimensions(5, 5);
-        builder.addIsland(0, 0, 1);
-        builder.addIsland(0, 4, 1);
-        builder.addIsland(4, 0, 1);
-        builder.addIsland(4, 4, 1);
+        builder.addIsland(new Position(0, 0), 1);
+        builder.addIsland(new Position(0, 4), 1);
+        builder.addIsland(new Position(4, 0), 1);
+        builder.addIsland(new Position(4, 4), 1);
         builder.addBridge(0, 1, false);
         builder.addBridge(2, 3, false);
 

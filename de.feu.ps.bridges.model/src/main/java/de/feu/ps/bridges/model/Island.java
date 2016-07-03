@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
+ * Interface for an island in the puzzle.
  * @author Tim Gremplewski
  */
 public interface Island {
@@ -35,14 +36,9 @@ public interface Island {
      *
      * @param island Another possibly bridged island.
      * @return {@link Optional} containing the {@link Bridge} to the given island.
+     * @throws NullPointerException if island is null.
      */
     Optional<Bridge> getBridgeTo(Island island);
-
-    /**
-     * Get the index of the column this island lies in.
-     * @return the index of the column this island lies in.
-     */
-    int getColumnIndex();
 
     /**
      * Get the distance to the neighbour in the given {@link Direction}.
@@ -58,6 +54,7 @@ public interface Island {
      *
      * @param direction {@link Direction} to check.
      * @return {@link Optional} containing the neighbour in the given {@link Direction}, if one exist.
+     * @throws NullPointerException if direction is null.
      */
     Optional<Island> getNeighbour(Direction direction);
 
@@ -86,17 +83,12 @@ public interface Island {
     int getRequiredBridges();
 
     /**
-     * Get the index of the row this island lies in.
-     * @return the index of the row this island lies in.
-     */
-    int getRowIndex();
-
-    /**
      * Indicates whether this islands is bridged to its neighbour in the given {@link Direction}.
      *
      * @param direction {@link Direction} to check.
      * @return <code>true</code> if this island has a neighbour in the given {@link Direction} and is bridged to it,
      *  <code>false</code> otherwise
+     * @throws NullPointerException if direction is null.
      */
     boolean isBridgedToNeighbour(Direction direction);
 }

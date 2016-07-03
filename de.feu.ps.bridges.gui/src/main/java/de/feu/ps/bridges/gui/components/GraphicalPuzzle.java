@@ -52,7 +52,7 @@ public class GraphicalPuzzle {
     private static void addIslands(final GridPane gridPane, final Set<Island> islands, final GameState gameState, final boolean showRemainingBridges) {
         for (Island island : islands) {
             Node graphicalIsland = GraphicalIsland.createIsland(island, gameState, showRemainingBridges);
-            gridPane.add(graphicalIsland, island.getColumnIndex(), island.getRowIndex());
+            gridPane.add(graphicalIsland, island.getPosition().getColumn(), island.getPosition().getRow());
         }
     }
 

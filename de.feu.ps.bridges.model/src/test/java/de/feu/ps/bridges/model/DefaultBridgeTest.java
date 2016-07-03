@@ -18,12 +18,12 @@ import static org.junit.Assert.*;
 public class DefaultBridgeTest {
 
     @DataPoint("sourceIsland")
-    public static Island sourceIsland = new DefaultIsland(0, 0, 1);
+    public static Island sourceIsland = ModifiableIslandFactory.create(new Position(0, 0), 1);
 
     @DataPoints("validDestinationIslands")
     public static Island[] validDestinationIslands = new Island[] {
-            new DefaultIsland(2, 0, 1),
-            new DefaultIsland(0, 2, 1)
+            ModifiableIslandFactory.create(new Position(2, 0), 1),
+            ModifiableIslandFactory.create(new Position(0, 2), 1)
     };
 
     @DataPoints("booleanValues")
@@ -63,7 +63,7 @@ public class DefaultBridgeTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage(CoreMatchers.is("Bridged islands must either lie in the same row or the same column"));
 
-        final Island island2 = new DefaultIsland(2, 2, 1);
+        final Island island2 = ModifiableIslandFactory.create(new Position(2, 2), 1);
         ModifiableBridgeFactory.createBridge(sourceIsland, island2, false);
     }
 

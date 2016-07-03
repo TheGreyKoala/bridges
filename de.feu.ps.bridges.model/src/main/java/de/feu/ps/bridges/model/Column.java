@@ -17,7 +17,7 @@ class Column extends SortedIslandContainer {
      * Creates a new empty column.
      */
     public Column(final int index) {
-        super((o1, o2) -> o1.getRowIndex() - o2.getRowIndex());
+        super((o1, o2) -> o1.getPosition().getRow() - o2.getPosition().getRow());
 
         if (index < 0) {
             throw new IllegalArgumentException("Parameter 'index' must not be less than 0.");
@@ -35,8 +35,9 @@ class Column extends SortedIslandContainer {
      */
     @Override
     public void addIsland(final ModifiableIsland island) {
-        if (island.getColumnIndex() != index) {
-            throw new IllegalArgumentException("This islands lies in another column: " + island.getColumnIndex());
+        final int islandColumn = island.getPosition().getColumn();
+        if (islandColumn != index) {
+            throw new IllegalArgumentException("This islands lies in another column: " + islandColumn);
         }
         super.addIsland(island);
     }

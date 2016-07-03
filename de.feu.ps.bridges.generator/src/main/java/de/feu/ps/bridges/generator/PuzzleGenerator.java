@@ -103,7 +103,8 @@ public class PuzzleGenerator {
     }
 
     private void buildInitialIsland(PuzzleBuilder puzzleBuilder) {
-        Island island = puzzleBuilder.addIsland(randomIntBetweenZeroAnd(columns - 1), randomIntBetweenZeroAnd(rows - 1), 8);
+        Position position = new Position(randomIntBetweenZeroAnd(columns - 1), randomIntBetweenZeroAnd(rows - 1));
+        Island island = puzzleBuilder.addIsland(position, 8);
         startPoints.add(island);
     }
 
@@ -113,9 +114,9 @@ public class PuzzleGenerator {
 
         if (direction == NORTH) {
             Optional<Island> optionalNorthNeighbour = start.getNeighbour(NORTH);
-            int border = optionalNorthNeighbour.isPresent() ? optionalNorthNeighbour.get().getRowIndex() + 2 : 0;
-            for (int row = start.getRowIndex() - 2; row >= border; row--) {
-                Position position = new Position(start.getColumnIndex(), row);
+            int border = optionalNorthNeighbour.isPresent() ? optionalNorthNeighbour.get().getPosition().getRow() + 2 : 0;
+            for (int row = start.getPosition().getRow() - 2; row >= border; row--) {
+                Position position = new Position(start.getPosition().getColumn(), row);
                 if (puzzleBuilder.adjacentIslandAt(position)
                     || puzzleBuilder.isAnyBridgeCrossing(start.getPosition(), position)) {
                     break;
@@ -125,9 +126,9 @@ public class PuzzleGenerator {
             }
         } else if (direction == EAST) {
             Optional<Island> optionalEastNeighbour = start.getNeighbour(EAST);
-            int border = optionalEastNeighbour.isPresent() ? optionalEastNeighbour.get().getColumnIndex() - 2 : columns - 1;
-            for (int column = start.getColumnIndex() + 2; column <= border; column++) {
-                Position position = new Position(column, start.getRowIndex());
+            int border = optionalEastNeighbour.isPresent() ? optionalEastNeighbour.get().getPosition().getColumn() - 2 : columns - 1;
+            for (int column = start.getPosition().getColumn() + 2; column <= border; column++) {
+                Position position = new Position(column, start.getPosition().getRow());
                 if (puzzleBuilder.adjacentIslandAt(position)
                     || puzzleBuilder.isAnyBridgeCrossing(start.getPosition(), position)) {
                     break;
@@ -137,9 +138,9 @@ public class PuzzleGenerator {
             }
         } else if (direction == SOUTH) {
             Optional<Island> optionalSouthNeighbour = start.getNeighbour(SOUTH);
-            int border = optionalSouthNeighbour.isPresent() ? optionalSouthNeighbour.get().getRowIndex() - 2 : rows - 1;
-            for (int row = start.getRowIndex() + 2; row <= border; row++) {
-                Position position = new Position(start.getColumnIndex(), row);
+            int border = optionalSouthNeighbour.isPresent() ? optionalSouthNeighbour.get().getPosition().getRow() - 2 : rows - 1;
+            for (int row = start.getPosition().getRow() + 2; row <= border; row++) {
+                Position position = new Position(start.getPosition().getColumn(), row);
                 if (puzzleBuilder.adjacentIslandAt(position)
                         || puzzleBuilder.isAnyBridgeCrossing(start.getPosition(), position)) {
                     break;
@@ -149,9 +150,9 @@ public class PuzzleGenerator {
             }
         } else {
             Optional<Island> optionalWestNeighbour = start.getNeighbour(WEST);
-            int border = optionalWestNeighbour.isPresent() ? optionalWestNeighbour.get().getColumnIndex() - 2 : 0;
-            for (int column = start.getColumnIndex() - 2; column >= border; column--) {
-                Position position = new Position(column, start.getRowIndex());
+            int border = optionalWestNeighbour.isPresent() ? optionalWestNeighbour.get().getPosition().getColumn() - 2 : 0;
+            for (int column = start.getPosition().getColumn() - 2; column >= border; column--) {
+                Position position = new Position(column, start.getPosition().getRow());
                 if (puzzleBuilder.adjacentIslandAt(position)
                         || puzzleBuilder.isAnyBridgeCrossing(start.getPosition(), position)) {
                     break;
@@ -182,7 +183,7 @@ public class PuzzleGenerator {
                     possibleDirections.remove(direction);
                 } else {
                     Position position = validIslandPositions.get(randomIntBetweenZeroAnd(validIslandPositions.size() - 1));
-                    Island nextIsland = puzzleBuilder.addIsland(position.getColumn(), position.getRow(), 8);
+                    Island nextIsland = puzzleBuilder.addIsland(position, 8);
                     puzzleBuilder.addBridge(start, nextIsland, random.nextBoolean());
                     return nextIsland;
                 }
@@ -196,7 +197,7 @@ public class PuzzleGenerator {
         final List<Direction> possibleDirections = new ArrayList<>(4);
 
         // >= 2 so it is possible to have at least one free field between this island and the new one
-        if (island.getRowIndex() >= 2) {
+        if (island.getPosition().getRow() >= 2) {
             if (island.getNeighbour(NORTH).isPresent()) {
                 // Does a new island fit between the current island and its north neighbour
                 if (island.getDistanceToNeighbour(NORTH) >= 4) {
@@ -212,7 +213,7 @@ public class PuzzleGenerator {
          * -1 because column numbering starts at 0
          * -2 so it is possible to have at least one free field between this island and the new one
          */
-        if (island.getColumnIndex() <= columns - 3) {
+        if (island.getPosition().getColumn() <= columns - 3) {
             if (island.getNeighbour(EAST).isPresent()) {
                 if (island.getDistanceToNeighbour(EAST) >= 4) {
                     possibleDirections.add(EAST);
@@ -222,7 +223,7 @@ public class PuzzleGenerator {
             }
         }
 
-        if (island.getRowIndex() <= rows - 3) {
+        if (island.getPosition().getRow() <= rows - 3) {
             if (island.getNeighbour(SOUTH).isPresent()) {
                 if (island.getDistanceToNeighbour(SOUTH) >= 4) {
                     possibleDirections.add(SOUTH);
@@ -232,7 +233,7 @@ public class PuzzleGenerator {
             }
         }
 
-        if (island.getColumnIndex() >= 2) {
+        if (island.getPosition().getColumn() >= 2) {
             if (island.getNeighbour(WEST).isPresent()) {
                 if (island.getDistanceToNeighbour(WEST) >= 4) {
                     possibleDirections.add(WEST);

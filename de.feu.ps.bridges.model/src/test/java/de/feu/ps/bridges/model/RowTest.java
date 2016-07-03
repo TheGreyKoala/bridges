@@ -30,14 +30,14 @@ public class RowTest {
         expectedException.expectMessage(CoreMatchers.is("This islands lies in another row: " + 1));
 
         final Row row = new Row(0);
-        row.addIsland(new DefaultIsland(0, 1, 1));
+        row.addIsland(ModifiableIslandFactory.create(new Position(0, 1), 1));
     }
 
     @Test
     public void testAddIsland() {
-        final ModifiableIsland island1 = new DefaultIsland(0, 0, 1);
-        final ModifiableIsland island2 = new DefaultIsland(2, 0, 2);
-        final ModifiableIsland island3 = new DefaultIsland(4, 0, 2);
+        final ModifiableIsland island1 = ModifiableIslandFactory.create(new Position(0, 0), 1);
+        final ModifiableIsland island2 = ModifiableIslandFactory.create(new Position(2, 0), 2);
+        final ModifiableIsland island3 = ModifiableIslandFactory.create(new Position(4, 0), 2);
 
         final Row row = new Row(0);
         row.addIsland(island1);
@@ -70,9 +70,9 @@ public class RowTest {
 
     @Test
     public void testAddIslandTwice() {
-        final ModifiableIsland island1 = new DefaultIsland(0, 0, 1);
-        final ModifiableIsland island2 = new DefaultIsland(2, 0, 2);
-        final ModifiableIsland island3 = new DefaultIsland(4, 0, 2);
+        final ModifiableIsland island1 = ModifiableIslandFactory.create(new Position(0, 0), 1);
+        final ModifiableIsland island2 = ModifiableIslandFactory.create(new Position(2, 0), 2);
+        final ModifiableIsland island3 = ModifiableIslandFactory.create(new Position(4, 0), 2);
 
         final Row row = new Row(0);
         row.addIsland(island1);

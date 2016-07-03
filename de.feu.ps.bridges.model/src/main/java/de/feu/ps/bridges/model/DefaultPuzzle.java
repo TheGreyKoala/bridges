@@ -53,9 +53,12 @@ class DefaultPuzzle implements ModifiablePuzzle {
     }
 
     @Override
-    public Island buildIsland(final int columnIndex, final int rowIndex, final int requiredBridges) {
+    public Island buildIsland(final Position position, final int requiredBridges) {
         // TODO Create Builder?
-        final ModifiableIsland island = new DefaultIsland(columnIndex, rowIndex, requiredBridges);
+        final ModifiableIsland island = ModifiableIslandFactory.create(position, requiredBridges);
+
+        final int columnIndex = position.getColumn();
+        final int rowIndex = position.getRow();
 
         final Column column;
         if (columns.containsKey(columnIndex)) {
