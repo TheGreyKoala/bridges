@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Implementation of {@link BridgesTester}.
  * @author Tim Gremplewski
  */
 public class BridgesTesterImpl implements BridgesTester {
