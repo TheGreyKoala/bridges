@@ -1,7 +1,7 @@
 package de.feu.ps.bridges.shared;
 
 import de.feu.ps.bridges.facade.Facade;
-import de.feu.ps.bridges.generator.PuzzleGenerator;
+import de.feu.ps.bridges.generator.PuzzleGeneratorFactory;
 import de.feu.ps.bridges.model.Puzzle;
 
 import java.io.File;
@@ -25,7 +25,7 @@ public class BridgesTesterImpl implements BridgesTester {
     }
 
     private void generatePuzzle(String filePath, int width, int height, int isles) {
-        Puzzle puzzle = PuzzleGenerator.generatePuzzle(width, height, isles);
+        Puzzle puzzle = PuzzleGeneratorFactory.createPuzzleGenerator(width, height, isles).generate();
         Facade.savePuzzle(puzzle, new File(filePath));
     }
 

@@ -3,7 +3,7 @@ package de.feu.ps.bridges.facade;
 import de.feu.ps.bridges.analyser.Analyser;
 import de.feu.ps.bridges.analyser.DefaultAnalyser;
 import de.feu.ps.bridges.analyser.PuzzleStatus;
-import de.feu.ps.bridges.generator.PuzzleGenerator;
+import de.feu.ps.bridges.generator.PuzzleGeneratorFactory;
 import de.feu.ps.bridges.model.Bridge;
 import de.feu.ps.bridges.model.Direction;
 import de.feu.ps.bridges.model.Island;
@@ -36,15 +36,15 @@ public class Facade {
     }
 
     public static Puzzle newPuzzle() {
-        return PuzzleGenerator.generatePuzzle();
+        return PuzzleGeneratorFactory.createPuzzleGenerator().generate();
     }
 
     public static Puzzle newPuzzle(final int columns, final int rows) {
-        return PuzzleGenerator.generatePuzzle(columns, rows);
+        return PuzzleGeneratorFactory.createPuzzleGenerator(columns, rows).generate();
     }
 
     public static Puzzle newPuzzle(final int columns, final int rows, final int islands) {
-        return PuzzleGenerator.generatePuzzle(columns, rows, islands);
+        return PuzzleGeneratorFactory.createPuzzleGenerator(columns, rows, islands).generate();
     }
 
     public static Optional<Bridge> nextMove(final Puzzle puzzle) {

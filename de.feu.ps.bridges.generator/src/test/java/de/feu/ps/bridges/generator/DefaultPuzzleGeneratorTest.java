@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
  * @author Tim Gremplewski
  */
 @RunWith(Theories.class)
-public class PuzzleGeneratorTest {
+public class DefaultPuzzleGeneratorTest {
 
     private static final int availableProcessors;
     private static final int loadPerProcessor;
@@ -37,7 +37,7 @@ public class PuzzleGeneratorTest {
     @Test
     public void testGenerate() throws Exception {
         for (int i = 0; i < 1024; i++) {
-            final Puzzle puzzle = PuzzleGenerator.generatePuzzle();
+            final Puzzle puzzle = PuzzleGeneratorFactory.createPuzzleGenerator().generate();
             assertNotNull("Puzzle is null.", puzzle);
 
             int columnsCount = puzzle.getColumnsCount();
@@ -64,7 +64,7 @@ public class PuzzleGeneratorTest {
         for (int j = 0; j < availableProcessors; j++) {
             executorService.submit(() -> {
                 for (int i = 0; i < loadPerProcessor; i++) {
-                    final Puzzle puzzle = PuzzleGenerator.generatePuzzle(columns, rows);
+                    final Puzzle puzzle = PuzzleGeneratorFactory.createPuzzleGenerator(columns, rows).generate();
                     assertValidPuzzle(columns, rows, puzzle);
                 }
             });
@@ -88,7 +88,7 @@ public class PuzzleGeneratorTest {
         for (int p = 0; p < 4; p++) {
             executorService.submit(() -> {
                 for (int islands : validIslands) {
-                    Puzzle puzzle = PuzzleGenerator.generatePuzzle(columns, rows, islands);
+                    Puzzle puzzle = PuzzleGeneratorFactory.createPuzzleGenerator(columns, rows, islands).generate();
                     assertValidPuzzle(columns, rows, puzzle);
                 }
             });
@@ -127,7 +127,7 @@ public class PuzzleGeneratorTest {
         int islandsLowerLimit = getIslandsLowerLimit(columns, rows);
         int islandsUpperLimit = getIslandsUpperLimit(columns, rows);
 
-        assertTrue("Puzzle has too few islands: [columns=" + columns + ", rows=" + rows + ", islands=" + actualIslands, actualIslands >= islandsLowerLimit);
-        assertTrue("Puzzle has too many islands: [columns=" + columns + ", rows=" + rows + ", islands=" + actualIslands, actualIslands <= islandsUpperLimit);
+        assertTrue("Puzzle has too few islands: [columns=" + columns + ", rows=" + rows + ", islands=" + actualIslands + "]", actualIslands >= islandsLowerLimit);
+        assertTrue("Puzzle has too many islands: [columns=" + columns + ", rows=" + rows + ", islands=" + actualIslands + "]", actualIslands <= islandsUpperLimit);
     }
 }
