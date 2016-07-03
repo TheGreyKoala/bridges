@@ -76,6 +76,7 @@ public class Facade {
         Optional<Bridge> optionalBridge;
         Analyser analyser = DefaultAnalyser.createAnalyserFor(puzzle);
         if (analyser.isValidMove(island, direction)) {
+            // TODO: Can .get() without isPresent lead to an error here?
             Bridge bridge = puzzle.buildBridge(island, island.getNeighbour(direction).get(), false);
             optionalBridge = Optional.of(bridge);
         } else {
@@ -85,7 +86,11 @@ public class Facade {
     }
 
     public static Optional<Bridge> removeBridge(Puzzle puzzle, Island island, Direction direction) {
-        return puzzle.tearDownBridge(island, island.getNeighbour(direction).get());
+        Optional<Island> neighbour = island.getNeighbour(direction);
+        if (neighbour.isPresent()) {
+            return puzzle.tearDownBridge(island, neighbour.get());
+        }
+        return Optional.empty();
     }
 
     public static PuzzleStatus getPuzzleStatus(Puzzle puzzle) {
