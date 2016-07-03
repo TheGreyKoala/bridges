@@ -1,7 +1,7 @@
 package de.feu.ps.bridges.solver;
 
-import de.feu.ps.bridges.analyser.Analyser;
-import de.feu.ps.bridges.analyser.DefaultAnalyser;
+import de.feu.ps.bridges.analyser.PuzzleAnalyser;
+import de.feu.ps.bridges.analyser.PuzzleAnalyserFactory;
 import de.feu.ps.bridges.model.*;
 
 import java.util.Objects;
@@ -15,7 +15,7 @@ import java.util.Set;
 class DefaultPuzzleSolver implements PuzzleSolver {
 
     private final Puzzle puzzle;
-    private final Analyser analyser;
+    private final PuzzleAnalyser puzzleAnalyser;
 
     /**
      * Create a new instance.
@@ -23,7 +23,7 @@ class DefaultPuzzleSolver implements PuzzleSolver {
      */
     DefaultPuzzleSolver(final Puzzle puzzle) {
         this.puzzle = Objects.requireNonNull(puzzle, "Parameter 'puzzle' must not be null.");
-        this.analyser = DefaultAnalyser.createAnalyserFor(puzzle);
+        this.puzzleAnalyser = PuzzleAnalyserFactory.createPuzzleAnalyserFor(puzzle);
     }
 
     @Override
@@ -50,7 +50,7 @@ class DefaultPuzzleSolver implements PuzzleSolver {
         Move nextMove =null;
 
         for (Island island : islands) {
-            Set<Island> destinations = analyser.getValidBridgeDestinations(island);
+            Set<Island> destinations = puzzleAnalyser.getValidBridgeDestinations(island);
 
             for (Island destination : destinations) {
                 puzzle.buildBridge(island, destination, false);
@@ -59,7 +59,7 @@ class DefaultPuzzleSolver implements PuzzleSolver {
 
                 Set<Island> islands1 = puzzle.getUnfinishedIslands();
                 for (Island island1 : islands1) {
-                    Set<Island> destinationsTest = analyser.getValidBridgeDestinations(island1);
+                    Set<Island> destinationsTest = puzzleAnalyser.getValidBridgeDestinations(island1);
                     if (destinationsTest.isEmpty()) {
                         causesConflict = true;
                         break;
@@ -92,7 +92,7 @@ class DefaultPuzzleSolver implements PuzzleSolver {
         Move safeMove = null;
 
         for (Island island : puzzle.getUnfinishedIslands()) {
-            final Set<Island> possibleDestinations = analyser.getValidBridgeDestinations(island);
+            final Set<Island> possibleDestinations = puzzleAnalyser.getValidBridgeDestinations(island);
 
             if (!possibleDestinations.isEmpty()) {
                 int remainingBridges = island.getRemainingBridges();

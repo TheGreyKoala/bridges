@@ -9,18 +9,19 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * Default implementation of {@link PuzzleAnalyser}.
  * @author Tim Gremplewski
  */
-public class DefaultAnalyser implements Analyser {
+class DefaultPuzzleAnalyser implements PuzzleAnalyser {
 
     private final Puzzle puzzle;
 
-    private DefaultAnalyser(final Puzzle puzzle) {
-        this.puzzle = puzzle;
-    }
-
-    public static DefaultAnalyser createAnalyserFor(final Puzzle puzzle) {
-        return new DefaultAnalyser(puzzle);
+    /**
+     * Creates a new instance.
+     * @param puzzle {@link Puzzle} to be analysed.
+     */
+    DefaultPuzzleAnalyser(final Puzzle puzzle) {
+        this.puzzle = Objects.requireNonNull(puzzle, "Parameter 'puzzle' must not be empty.");
     }
 
     @Override
@@ -75,31 +76,30 @@ public class DefaultAnalyser implements Analyser {
     }
 
     private boolean noIsolatedIslands(final Set<Island> unfinishedIslands) {
-        return unfinishedIslands.stream().allMatch(this::hasValidBridgeDestinations);
-    }
-
-    @Override
-    public boolean hasValidBridgeDestinations(final Island island) {
-        return !getValidBridgeDestinations(island).isEmpty();
+        return unfinishedIslands.stream().allMatch(island -> !getValidBridgeDestinations(island).isEmpty());
     }
 
     @Override
     public Set<Island> getValidBridgeDestinations(final Island island) {
+        Objects.requireNonNull(island, "Parameter 'island' must not be null.");
+
         //TODO Check that island belongs to puzzle
         final Set<Island> reachableUnfinishedNeighbours = getReachableUnfinishedNeighbours(puzzle, island);
         return reachableUnfinishedNeighbours.parallelStream().filter(island1 -> causesNoIsolation(puzzle, island, island1)).collect(Collectors.toSet());
     }
 
     @Override
-    public boolean isValidMove(final Island island1, final Island island2) {
-        // Do not use getValidBridgeDestinations, because a move that causes isolation can still be move
-        return getReachableUnfinishedNeighbours(puzzle, island1).contains(island2);
+    public boolean isValidMove(final Island island, final Direction direction) {
+        Objects.requireNonNull(island, "Parameter 'island' must not be null");
+        Objects.requireNonNull(direction, "Parameter 'direction' must not be null");
+
+        Optional<Island> neighbour = island.getNeighbour(direction);
+        return neighbour.isPresent() && isValidMove(island, neighbour.get());
     }
 
-    @Override
-    public boolean isValidMove(final Island island1, final Direction direction) {
-        Optional<Island> neighbour = island1.getNeighbour(direction);
-        return neighbour.isPresent() && isValidMove(island1, neighbour.get());
+    private boolean isValidMove(final Island island1, final Island island2) {
+        // Do not use getValidBridgeDestinations, because a move that causes isolation can still be move
+        return getReachableUnfinishedNeighbours(puzzle, island1).contains(island2);
     }
 
     private Set<Island> getReachableUnfinishedNeighbours(Puzzle puzzle, final Island island) {

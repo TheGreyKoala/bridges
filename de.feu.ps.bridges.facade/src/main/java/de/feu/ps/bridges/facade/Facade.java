@@ -1,7 +1,7 @@
 package de.feu.ps.bridges.facade;
 
-import de.feu.ps.bridges.analyser.Analyser;
-import de.feu.ps.bridges.analyser.DefaultAnalyser;
+import de.feu.ps.bridges.analyser.PuzzleAnalyser;
+import de.feu.ps.bridges.analyser.PuzzleAnalyserFactory;
 import de.feu.ps.bridges.analyser.PuzzleStatus;
 import de.feu.ps.bridges.generator.PuzzleGeneratorFactory;
 import de.feu.ps.bridges.model.Bridge;
@@ -61,8 +61,8 @@ public class Facade {
 
     public static Optional<Bridge> tryAddBridge(Puzzle puzzle, Island island, Direction direction) {
         Optional<Bridge> optionalBridge;
-        Analyser analyser = DefaultAnalyser.createAnalyserFor(puzzle);
-        if (analyser.isValidMove(island, direction)) {
+        PuzzleAnalyser puzzleAnalyser = PuzzleAnalyserFactory.createPuzzleAnalyserFor(puzzle);
+        if (puzzleAnalyser.isValidMove(island, direction)) {
             // TODO: Can .get() without isPresent lead to an error here?
             Bridge bridge = puzzle.buildBridge(island, island.getNeighbour(direction).get(), false);
             optionalBridge = Optional.of(bridge);
@@ -81,7 +81,7 @@ public class Facade {
     }
 
     public static PuzzleStatus getPuzzleStatus(Puzzle puzzle) {
-        DefaultAnalyser analyserFor = DefaultAnalyser.createAnalyserFor(puzzle);
+        final PuzzleAnalyser analyserFor = PuzzleAnalyserFactory.createPuzzleAnalyserFor(puzzle);
         return analyserFor.getStatus();
     }
 }

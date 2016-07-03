@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Tim Gremplewski
  */
-public class DefaultAnalyserTest {
+public class DefaultPuzzleAnalyserTest {
 
     private PuzzleBuilder puzzleBuilder;
 
@@ -35,8 +35,8 @@ public class DefaultAnalyserTest {
         puzzleBuilder.addBridge(2, 6, false);
         puzzleBuilder.addBridge(7, 8, false);
 
-        Analyser analyser = DefaultAnalyser.createAnalyserFor(puzzleBuilder.getResult());
-        assertEquals("Unexpected status.", PuzzleStatus.UNSOLVED, analyser.getStatus());
+        PuzzleAnalyser puzzleAnalyser = PuzzleAnalyserFactory.createPuzzleAnalyserFor(puzzleBuilder.getResult());
+        assertEquals("Unexpected status.", PuzzleStatus.UNSOLVED, puzzleAnalyser.getStatus());
     }
 
     @Test
@@ -50,8 +50,8 @@ public class DefaultAnalyserTest {
         puzzleBuilder.addBridge(4, 8, true);
         puzzleBuilder.addBridge(7, 8, false);
 
-        Analyser analyser = DefaultAnalyser.createAnalyserFor(puzzleBuilder.getResult());
-        assertEquals("Unexpected status.", PuzzleStatus.SOLVED, analyser.getStatus());
+        PuzzleAnalyser puzzleAnalyser = PuzzleAnalyserFactory.createPuzzleAnalyserFor(puzzleBuilder.getResult());
+        assertEquals("Unexpected status.", PuzzleStatus.SOLVED, puzzleAnalyser.getStatus());
     }
 
     @Test
@@ -63,8 +63,8 @@ public class DefaultAnalyserTest {
         puzzleBuilder.addBridge(5, 6, false);
         puzzleBuilder.addBridge(7, 8, false);
 
-        Analyser analyser = DefaultAnalyser.createAnalyserFor(puzzleBuilder.getResult());
-        assertEquals("Unexpected status.", PuzzleStatus.UNSOLVABLE, analyser.getStatus());
+        PuzzleAnalyser puzzleAnalyser = PuzzleAnalyserFactory.createPuzzleAnalyserFor(puzzleBuilder.getResult());
+        assertEquals("Unexpected status.", PuzzleStatus.UNSOLVABLE, puzzleAnalyser.getStatus());
     }
 
     @Test
@@ -77,7 +77,7 @@ public class DefaultAnalyserTest {
         builder.addBridge(0, 1, false);
         builder.addBridge(2, 3, false);
 
-        Analyser analyser = DefaultAnalyser.createAnalyserFor(builder.getResult());
-        assertEquals("Unexpected status.", PuzzleStatus.UNSOLVABLE, analyser.getStatus());
+        PuzzleAnalyser puzzleAnalyser = PuzzleAnalyserFactory.createPuzzleAnalyserFor(builder.getResult());
+        assertEquals("Unexpected status.", PuzzleStatus.UNSOLVABLE, puzzleAnalyser.getStatus());
     }
 }
