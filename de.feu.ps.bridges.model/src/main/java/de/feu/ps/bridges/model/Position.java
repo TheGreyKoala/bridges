@@ -8,6 +8,14 @@ public class Position {
     private final int row;
 
     public Position(int column, int row) {
+        if (column < 0) {
+            throw new IllegalArgumentException("Parameter 'column' must not be less than 0.");
+        }
+
+        if (row < 0) {
+            throw new IllegalArgumentException("Parameter 'row' must not be less than 0.");
+        }
+
         this.column = column;
         this.row = row;
     }

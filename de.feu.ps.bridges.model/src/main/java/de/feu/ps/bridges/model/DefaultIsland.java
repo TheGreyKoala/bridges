@@ -21,23 +21,10 @@ class DefaultIsland implements ModifiableIsland {
      * @param position Position of the new island.
      * @param requiredBridges Amount of required bridges.
      * @throws NullPointerException if position is null.
-     * @throws IllegalArgumentException if one of the following is true
-     *  <ul>
-     *      <li>position.getColumn is less than 0</li>
-     *      <li>position.getRow is less then 0</li>
-     *      <li>requiredBridges is less than 1</li>
-     *  </ul>
+     * @throws IllegalArgumentException if requiredBridges is less than 1
      */
     DefaultIsland(final Position position, final int requiredBridges) {
         this.position = Objects.requireNonNull(position, "Parameter 'position' must not be null.");
-
-        if (position.getColumn() < 0) {
-            throw new IllegalArgumentException("Column must not be less than 0.");
-        }
-
-        if (position.getRow() < 0) {
-            throw new IllegalArgumentException("Row must not be less than 0.");
-        }
 
         if (requiredBridges < 1) {
             throw new IllegalArgumentException("Parameter 'requiredBridged' must not be less than 1.");

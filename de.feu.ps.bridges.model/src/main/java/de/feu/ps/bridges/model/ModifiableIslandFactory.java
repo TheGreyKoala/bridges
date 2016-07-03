@@ -15,12 +15,7 @@ final class ModifiableIslandFactory {
      * @param position Position of the new island.
      * @param requiredBridges Amount of required bridges.
      * @throws NullPointerException if position is null.
-     * @throws IllegalArgumentException if one of the following is true
-     *  <ul>
-     *      <li>position.getColumn is less than 0</li>
-     *      <li>position.getRow is less then 0</li>
-     *      <li>requiredBridges is less than 1</li>
-     *  </ul>
+     * @throws IllegalArgumentException an island can not be build at the given position.
      */
     static ModifiableIsland create(final Position position, final int requiredBridges) {
         return new DefaultIsland(position, requiredBridges);

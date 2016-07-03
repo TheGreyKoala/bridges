@@ -9,42 +9,100 @@ import java.util.stream.Collectors;
  */
 class DefaultPuzzle implements ModifiablePuzzle {
 
-    private int columnsCount;
+    private final int columnsCount;
     private final int rowsCount;
 
-    private Map<Integer, Column> columns;
-    private Map<Integer, Row> rows;
+    private final Column[] columns;
+    private final Row[] rows;
 
-    private Set<ModifiableBridge> bridges;
+    private final Set<ModifiableBridge> bridges;
+    private final Set<ModifiableIsland> islands;
 
-    public DefaultPuzzle(final int columns, final int rows) {
+    DefaultPuzzle(final int columns, final int rows) {
+        if (columns < 1) {
+            throw new IllegalArgumentException("Parameter 'columns' must not be less than 1.");
+        }
 
-        //TODO Parameter validation
+        if (rows < 1) {
+            throw new IllegalArgumentException("Parameter 'rows' must not be less than 1.");
+        }
 
         columnsCount = columns;
         rowsCount = rows;
-
-        this.columns = new HashMap<>(columns);
-        this.rows = new HashMap<>(rows);
-
+        this.columns = new Column[columns];
+        this.rows = new Row[rows];
         bridges = new HashSet<>();
+        islands = new HashSet<>();
     }
 
     @Override
-    public int getColumnsCount() {
-        return columnsCount;
+    public Bridge buildBridge(final Island island1, final Island island2, final boolean doubleBridge) {
+        validateIslands(island1, island2);
+
+        final ModifiableBridge bridge;
+        final Optional<ModifiableBridge> possibleDuplicate = findBridge(island1, island2);
+
+        if (possibleDuplicate.isPresent()) {
+            bridge = possibleDuplicate.get();
+            bridge.setDoubleBridge(true);
+        } else {
+            bridge = ModifiableBridgeFactory.createBridge(island1, island2, doubleBridge);
+            ((ModifiableIsland) island1).addBridge(bridge);
+            ((ModifiableIsland) island2).addBridge(bridge);
+            bridges.add(bridge);
+        }
+        return bridge;
+    }
+
+    private void validateIslands(final Island island1, final Island island2) {
+        Objects.requireNonNull(island1, "Parameter 'island1' must not be null.");
+        Objects.requireNonNull(island2, "Parameter 'island2' must not be null.");
+
+        if (!(island1 instanceof ModifiableIsland) || !islands.contains(island1)) {
+            throw new IllegalArgumentException("Island1 is not part of this puzzle.");
+        }
+
+        if (!(island2 instanceof ModifiableIsland) || !islands.contains(island2)) {
+            throw new IllegalArgumentException("Island2 is not part of this puzzle.");
+        }
+    }
+
+    private Optional<ModifiableBridge> findBridge(final Island island1, final Island island2) {
+        return bridges.stream()
+                .filter(bridge -> bridge.getBridgedIslands().containsAll(
+                        Arrays.asList(island1, island2))).findFirst();
     }
 
     @Override
-    public int getRowsCount() {
-        return rowsCount;
+    public Island buildIsland(final Position position, final int requiredBridges) {
+        Objects.requireNonNull(position, "Parameter 'position' must not be null.");
+
+        final int column = position.getColumn();
+        final int row = position.getRow();
+
+        if (columns[column] != null && columns[column].getIslandAtRow(row).isPresent()) {
+            throw new IllegalStateException("An islands already exists at the given position.");
+        }
+
+        final ModifiableIsland island = ModifiableIslandFactory.create(position, requiredBridges);
+        addToColumn(island, column);
+        addToRow(island, row);
+        islands.add(island);
+        return island;
     }
 
-    @Override
-    public Set<Island> getIslands() {
-        Set<Island> islands = new HashSet<>();
-        columns.forEach((integer, column) -> islands.addAll(column.getIslands()));
-        return islands;
+    private void addToColumn(final ModifiableIsland island, final int columnIndex) {
+        if (columns[columnIndex] == null) {
+            columns[columnIndex] = new Column(columnIndex);
+        }
+        columns[columnIndex].addIsland(island);
+    }
+
+    private void addToRow(final ModifiableIsland island, final int rowIndex) {
+        if (rows[rowIndex] == null) {
+            rows[rowIndex] = new Row(rowIndex);
+        }
+        rows[rowIndex].addIsland(island);
     }
 
     @Override
@@ -53,75 +111,31 @@ class DefaultPuzzle implements ModifiablePuzzle {
     }
 
     @Override
-    public Island buildIsland(final Position position, final int requiredBridges) {
-        // TODO Create Builder?
-        final ModifiableIsland island = ModifiableIslandFactory.create(position, requiredBridges);
-
-        final int columnIndex = position.getColumn();
-        final int rowIndex = position.getRow();
-
-        final Column column;
-        if (columns.containsKey(columnIndex)) {
-            column = columns.get(columnIndex);
-        } else {
-            column = new Column(columnIndex);
-            columns.put(columnIndex, column);
-        }
-
-        column.addIsland(island);
-
-        final Row row;
-        if (rows.containsKey(rowIndex)) {
-            row = rows.get(rowIndex);
-        } else {
-            row = new Row(rowIndex);
-            rows.put(rowIndex, row);
-        }
-
-        row.addIsland(island);
-
-        return island;
+    public int getColumnsCount() {
+        return columnsCount;
     }
 
     @Override
-    public Bridge buildBridge(final Island island1, final Island island2, final boolean doubleBridge) {
-        // TODO validate bridge and reject
-
-        ModifiableBridge bridge;
-        Optional<ModifiableBridge> possibleDuplicate = findBridge(island1, island2);
-
-        if (possibleDuplicate.isPresent()) {
-            bridge = possibleDuplicate.get();
-            bridge.setDoubleBridge(true);
-        } else {
-            // TODO What if island already has enough islands
-            bridge = ModifiableBridgeFactory.createBridge(island1, island2, doubleBridge);
-            bridges.add(bridge);
-
-            // TODO: This is ugly but we need to verify if the islands are in this puzzle anyway.
-            // If we check, we know that this implementation only uses ModifiableIslands
-            ((ModifiableIsland) bridge.getIsland1()).addBridge(bridge);
-            ((ModifiableIsland) bridge.getIsland2()).addBridge(bridge);
-        }
-
-        return bridge;
-    }
-
-    private Optional<ModifiableBridge> findBridge(final Island island1, final Island island2) {
-        return bridges.stream()
-                .filter(bridge1 -> bridge1.getBridgedIslands().containsAll(
-                        Arrays.asList(island1, island2))).findFirst();
+    public Set<Island> getIslands() {
+        return new HashSet<>(islands);
     }
 
     @Override
-    public void removeAllBridges() {
-        // TODO the cast is ugly
-        bridges.forEach(bridge -> bridge.getBridgedIslands().forEach(island -> ((ModifiableIsland)island).removeAllBridges()));
-        bridges.clear();
+    public int getRowsCount() {
+        return rowsCount;
     }
 
     @Override
-    public boolean isAnyBridgeCrossing(final Position otherBridgeStart, final Position otherBridgeEnd) {
+    public Set<Island> getUnfinishedIslands() {
+        return islands.stream()
+                .filter(island -> island.getRemainingBridges() > 0)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public boolean isAnyBridgeCrossing(final Position start, final Position end) {
+        Objects.requireNonNull(start, "Parameter 'start' must not be null.");
+        Objects.requireNonNull(end, "Parameter 'end' must not be null.");
 
         // TODO: TEST!
 
@@ -130,70 +144,53 @@ class DefaultPuzzle implements ModifiablePuzzle {
             Position bridgeEnd = bridge.getIsland2().getPosition();
 
             boolean linesIntersect = Line2D.linesIntersect(
-                bridgeStart.getColumn(),
-                bridgeStart.getRow(),
-                bridgeEnd.getColumn(),
-                bridgeEnd.getRow(),
-                otherBridgeStart.getColumn(),
-                otherBridgeStart.getRow(),
-                otherBridgeEnd.getColumn(),
-                otherBridgeEnd.getRow());
+                    bridgeStart.getColumn(),
+                    bridgeStart.getRow(),
+                    bridgeEnd.getColumn(),
+                    bridgeEnd.getRow(),
+                    start.getColumn(),
+                    start.getRow(),
+                    end.getColumn(),
+                    end.getRow());
 
             boolean bridgesShareSingeIsland =
-                bridgeStart.equals(otherBridgeStart)
-                    ^ bridgeStart.equals(otherBridgeEnd)
-                    ^ bridgeEnd.equals(otherBridgeStart)
-                    ^ bridgeEnd.equals(otherBridgeEnd);
+                    bridgeStart.equals(start)
+                            ^ bridgeStart.equals(end)
+                            ^ bridgeEnd.equals(start)
+                            ^ bridgeEnd.equals(end);
 
             boolean bridgesConnectTheSameIsland =
-                (bridgeStart.equals(otherBridgeStart) || bridgeStart.equals(otherBridgeEnd))
-                    && (bridgeEnd.equals(otherBridgeEnd) || bridgeEnd.equals(otherBridgeStart))
-                    && !bridge.isDoubleBridge();
+                    (bridgeStart.equals(start) || bridgeStart.equals(end))
+                            && (bridgeEnd.equals(end) || bridgeEnd.equals(start))
+                            && !bridge.isDoubleBridge();
 
             return linesIntersect && !(bridgesShareSingeIsland || bridgesConnectTheSameIsland);
         });
     }
 
-    /*@Override
-    public void removeBridge(Bridge bridge) {
-        Optional<Bridge> possibleDuplicate =
-                bridges.stream()
-                        .filter(bridge1 -> bridge1.getBridgedIslands().containsAll(
-                                bridge.getBridgedIslands())).findFirst();
-
-        if (possibleDuplicate.isPresent()) {
-            Bridge duplicate = possibleDuplicate.get();
-            if (duplicate.isDoubleBridge()) {
-                duplicate.setDoubleBridge(false);
-            } else {
-                bridges.remove(duplicate);
-                duplicate.getBridgedIslands().forEach(island -> island.removeBridge(bridge));
-            }
-            possibleDuplicate.get().setDoubleBridge(false);
-        }
-    }*/
+    @Override
+    public void removeAllBridges() {
+        islands.forEach(ModifiableIsland::removeAllBridges);
+        bridges.clear();
+    }
 
     @Override
     public Optional<Bridge> tearDownBridge(final Island island1, final Island island2) {
-        Optional<ModifiableBridge> optionalBridge = findBridge(island1, island2);
+        validateIslands(island1, island2);
+
+        final Optional<ModifiableBridge> optionalBridge = findBridge(island1, island2);
         if (optionalBridge.isPresent()) {
-            ModifiableBridge bridge = optionalBridge.get();
+            final ModifiableBridge bridge = optionalBridge.get();
+
             if (bridge.isDoubleBridge()) {
                 bridge.setDoubleBridge(false);
             } else {
-                // TODO The cast is ugly
-                bridge.getBridgedIslands().forEach(island -> ((ModifiableIsland) island).removeBridge(bridge));
+                ((ModifiableIsland) island1).removeBridge(bridge);
+                ((ModifiableIsland) island2).removeBridge(bridge);
                 bridges.remove(bridge);
             }
             return Optional.of(bridge);
         }
         return Optional.empty();
-    }
-
-    @Override
-    public Set<Island> getUnfinishedIslands() {
-        return getIslands().stream()
-                .filter(island -> island.getRemainingBridges() > 0)
-                .collect(Collectors.toSet());
     }
 }

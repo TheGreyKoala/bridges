@@ -1,5 +1,7 @@
 package de.feu.ps.bridges.model;
 
+import java.util.Optional;
+
 /**
  * A column in a puzzle.
  *
@@ -40,6 +42,15 @@ class Column extends SortedIslandContainer {
             throw new IllegalArgumentException("This islands lies in another column: " + islandColumn);
         }
         super.addIsland(island);
+    }
+
+    /**
+     * Returns the island at the given row in this column.
+     * @param row the row of the requested island.
+     * @return {@link Optional} containing the requested island, if it exists.
+     */
+    public Optional<Island> getIslandAtRow(final int row) {
+        return getIslands().stream().filter(island -> island.getPosition().getRow() == row).findFirst();
     }
 
     @Override
