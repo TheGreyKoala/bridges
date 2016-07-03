@@ -126,6 +126,9 @@ public class MainController implements Initializable, GameStateListener {
                 getNodesToLock().forEach(node -> node.setDisable(false));
                 showInfoAfterAutomaticPuzzleSolving();
                 break;
+            case AUTOMATIC_SOLVING_CANCELLED_BY_USER:
+                getNodesToLock().forEach(node -> node.setDisable(false));
+                break;
         }
         updateStatus();
     }
@@ -139,6 +142,7 @@ public class MainController implements Initializable, GameStateListener {
                 alert.setContentText(bundle.getString("autoSolveDialog.solved.contentText"));
                 break;
             case UNSOLVED:
+                // TODO: When user presses solve button again, this message will be show too
                 alert.setContentText(bundle.getString("autoSolveDialog.unsolved.contentText"));
                 break;
             case UNSOLVABLE:

@@ -2,6 +2,6 @@ apply plugin: 'application'
 mainClassName = "de.feu.ps.bridges.gui.Main"
 
 dependencies {
-    compile project(':de.feu.ps.bridges.facade')
     compile project(':de.feu.ps.bridges.model')
+    compile project(':de.feu.ps.bridges.toolkit')
 }

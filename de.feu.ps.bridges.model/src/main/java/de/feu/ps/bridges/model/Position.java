@@ -12,7 +12,7 @@ public class Position {
      * Creates a new instance.
      * @param column the column of the position
      * @param row thr row of the position.
-     * @throws IllegalArgumentException if <code>column</code> or <row>row</row> is null.
+     * @throws IllegalArgumentException if <code>column</code> or <code>row</code> is null.
      */
     public Position(int column, int row) {
         if (column < 0) {

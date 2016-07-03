@@ -1,8 +1,7 @@
 package de.feu.ps.bridges.shared;
 
-import de.feu.ps.bridges.facade.Facade;
-import de.feu.ps.bridges.generator.PuzzleGeneratorFactory;
-import de.feu.ps.bridges.model.Puzzle;
+import de.feu.ps.bridges.toolkit.PuzzleToolkit;
+import de.feu.ps.bridges.toolkit.PuzzleToolkitFactory;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -26,8 +25,8 @@ public class BridgesTesterImpl implements BridgesTester {
     }
 
     private void generatePuzzle(String filePath, int width, int height, int isles) {
-        Puzzle puzzle = PuzzleGeneratorFactory.createPuzzleGenerator(width, height, isles).generate();
-        Facade.savePuzzle(puzzle, new File(filePath));
+        final PuzzleToolkit puzzleToolkit = PuzzleToolkitFactory.createForGeneratedPuzzle(width, height, isles);
+        puzzleToolkit.savePuzzle(new File(filePath));
     }
 
     @Override
@@ -40,8 +39,8 @@ public class BridgesTesterImpl implements BridgesTester {
     }
 
     private void solvePuzzle(String puzzlePath, String solutionPath) {
-        Puzzle puzzle = Facade.loadPuzzle(new File(puzzlePath));
-        Facade.solvePuzzle(puzzle);
-        Facade.savePuzzle(puzzle, new File(solutionPath));
+        final PuzzleToolkit puzzleToolkit = PuzzleToolkitFactory.createForLoadedPuzzle(new File(puzzlePath));
+        puzzleToolkit.solvePuzzle();
+        puzzleToolkit.savePuzzle(new File(solutionPath));
     }
 }

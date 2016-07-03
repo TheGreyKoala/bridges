@@ -1,4 +1,4 @@
 dependencies {
-    compile project(':de.feu.ps.bridges.facade')
     compile project(':de.feu.ps.bridges.model')
+    compile project(':de.feu.ps.bridges.toolkit')
 }
