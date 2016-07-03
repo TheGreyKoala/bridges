@@ -19,6 +19,12 @@ class DefaultPuzzleGenerator implements PuzzleGenerator {
     private Set<Island> startPoints;
     private RandomUtil randomUtil;
 
+    /**
+     * Creates a new instance.
+     * @param columns Amount of columns generated puzzles should have.
+     * @param rows Amount of rows generated puzzles should have.
+     * @param islands Amount of islands generated puzzles should have.
+     */
     DefaultPuzzleGenerator(final int columns, final int rows, final int islands) {
         this.columns = columns;
         this.rows = rows;

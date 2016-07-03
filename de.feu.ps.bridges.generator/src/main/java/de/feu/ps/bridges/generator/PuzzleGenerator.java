@@ -11,6 +11,7 @@ public interface PuzzleGenerator {
     /**
      * Generate a new puzzle.
      * @return a new puzzle.
+     * @throws GenerationException if puzzle could not be generated.
      */
     Puzzle generate();
 }
