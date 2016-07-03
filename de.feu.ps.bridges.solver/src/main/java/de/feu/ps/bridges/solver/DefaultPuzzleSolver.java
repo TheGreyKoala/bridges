@@ -4,26 +4,29 @@ import de.feu.ps.bridges.analyser.Analyser;
 import de.feu.ps.bridges.analyser.DefaultAnalyser;
 import de.feu.ps.bridges.model.*;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
 /**
+ * Default implementation of {@link PuzzleSolver}.
  * @author Tim Gremplewski
  */
-public class DefaultSolver implements Solver {
+class DefaultPuzzleSolver implements PuzzleSolver {
 
     private final Puzzle puzzle;
     private final Analyser analyser;
 
-    private DefaultSolver(final Puzzle puzzle) {
-        this.puzzle = puzzle;
+    /**
+     * Create a new instance.
+     * @param puzzle the puzzle to be solved.
+     */
+    DefaultPuzzleSolver(final Puzzle puzzle) {
+        this.puzzle = Objects.requireNonNull(puzzle, "Parameter 'puzzle' must not be null.");
         this.analyser = DefaultAnalyser.createAnalyserFor(puzzle);
     }
 
-    public static Solver createSolverFor(final Puzzle puzzle) {
-        return new DefaultSolver(puzzle);
-    }
-
+    @Override
     public void solve() {
         Optional<Move> nextMove;
         do {
@@ -35,6 +38,7 @@ public class DefaultSolver implements Solver {
         } while (nextMove.isPresent());
     }
 
+    @Override
     public Optional<Move> getNextMove() {
         Optional<Move> safeMove = getSafeMove();
         return safeMove.isPresent() ? safeMove : findSoleNonErrorCausingMove();

@@ -10,9 +10,9 @@ import de.feu.ps.bridges.model.Island;
 import de.feu.ps.bridges.model.Puzzle;
 import de.feu.ps.bridges.serialization.Deserializer;
 import de.feu.ps.bridges.serialization.Serializer;
-import de.feu.ps.bridges.solver.DefaultSolver;
 import de.feu.ps.bridges.solver.Move;
-import de.feu.ps.bridges.solver.Solver;
+import de.feu.ps.bridges.solver.PuzzleSolver;
+import de.feu.ps.bridges.solver.PuzzleSolverFactory;
 
 import java.io.File;
 import java.util.Optional;
@@ -31,8 +31,8 @@ public class Facade {
     }
 
     public static void solvePuzzle(final Puzzle puzzle) {
-        Solver solver = DefaultSolver.createSolverFor(puzzle);
-        solver.solve();
+        PuzzleSolver puzzleSolver = PuzzleSolverFactory.createPuzzleSolverFor(puzzle);
+        puzzleSolver.solve();
     }
 
     public static Puzzle newPuzzle() {
@@ -48,8 +48,8 @@ public class Facade {
     }
 
     public static Optional<Bridge> nextMove(final Puzzle puzzle) {
-        Solver solver = DefaultSolver.createSolverFor(puzzle);
-        Optional<Move> nextMove = solver.getNextMove();
+        PuzzleSolver puzzleSolver = PuzzleSolverFactory.createPuzzleSolverFor(puzzle);
+        Optional<Move> nextMove = puzzleSolver.getNextMove();
         Optional<Bridge> optionalBridge;
         if (nextMove.isPresent()) {
             optionalBridge = Optional.of(nextMove.get().apply());
