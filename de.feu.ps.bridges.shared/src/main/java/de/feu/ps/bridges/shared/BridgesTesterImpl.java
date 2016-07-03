@@ -5,7 +5,6 @@ import de.feu.ps.bridges.generator.PuzzleGenerator;
 import de.feu.ps.bridges.model.Puzzle;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,12 +19,12 @@ public class BridgesTesterImpl implements BridgesTester {
     public void testGeneratePuzzle(String filePath, int width, int height, int isles) {
         try {
             generatePuzzle(filePath, width, height, isles);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             logger.log(Level.SEVERE, "Could generate and store puzzle.", e);
         }
     }
 
-    private void generatePuzzle(String filePath, int width, int height, int isles) throws FileNotFoundException {
+    private void generatePuzzle(String filePath, int width, int height, int isles) {
         Puzzle puzzle = PuzzleGenerator.generatePuzzle(width, height, isles);
         Facade.savePuzzle(puzzle, new File(filePath));
     }
@@ -34,12 +33,12 @@ public class BridgesTesterImpl implements BridgesTester {
     public void testSolvePuzzle(String puzzlePath, String solutionPath) {
         try {
             solvePuzzle(puzzlePath, solutionPath);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             logger.log(Level.SEVERE, "Could solve and store puzzle.", e);
         }
     }
 
-    private void solvePuzzle(String puzzlePath, String solutionPath) throws Exception {
+    private void solvePuzzle(String puzzlePath, String solutionPath) {
         Puzzle puzzle = Facade.loadPuzzle(new File(puzzlePath));
         Facade.solvePuzzle(puzzle);
         Facade.savePuzzle(puzzle, new File(solutionPath));

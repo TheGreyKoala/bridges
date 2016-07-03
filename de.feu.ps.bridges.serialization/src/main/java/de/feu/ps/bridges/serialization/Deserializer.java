@@ -5,51 +5,67 @@ import de.feu.ps.bridges.model.Puzzle;
 import de.feu.ps.bridges.model.PuzzleBuilder;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
+import static de.feu.ps.bridges.serialization.Keyword.BRIDGES;
+import static de.feu.ps.bridges.serialization.Keyword.FIELD;
+import static de.feu.ps.bridges.serialization.Keyword.ISLANDS;
+
 /**
+ * Class that can be used to load a {@link Puzzle} from a file.
  * @author Tim Gremplewski
  */
 public class Deserializer {
 
     private static final String END_OF_FILE = "EOF";
 
-    public Puzzle loadPuzzle(final String filePath) throws Exception {
-        // TODO Parameter validation
+    private Deserializer() {
+    }
 
+    /**
+     * Load a puzzle from the given file.
+     * @param source the source file.
+     * @return the puzzle loaded from the given file.
+     * @throws SerializationException if the puzzle could not be loaded.
+     */
+    public static Puzzle loadPuzzle(final File source) {
+        Objects.requireNonNull(source, "Parameter 'source' must not be null.");
 
+        try {
+            return parseSourceFile(source).getResult();
+        } catch (final Exception e) {
+            throw new SerializationException("Could load puzzle.", e);
+        }
+    }
+
+    private static PuzzleBuilder parseSourceFile(final File source) throws IOException {
         PuzzleBuilder puzzleBuilder = null;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(source))) {
             String nextLine = getNextUncommentedLine(bufferedReader);
 
-
             while (!END_OF_FILE.equals(nextLine)) {
-                switch (nextLine) {
-                    case "FIELD":
-                        puzzleBuilder = parseFieldSection(bufferedReader);
-                        break;
-                    case "ISLANDS":
-                        parseIslandsSection(bufferedReader, puzzleBuilder);
-                        break;
-                    case "BRIDGES":
-                        parseBridgesSection(bufferedReader, puzzleBuilder);
-                        break;
-                    default:
-                        // TODO Handle unexpected line
-                        //throw new Exception("Unexpected line");
+                if (FIELD.name().equals(nextLine)) {
+                    puzzleBuilder = parseFieldSection(bufferedReader);
+                } else if (ISLANDS.name().equals(nextLine)) {
+                    parseIslandsSection(bufferedReader, puzzleBuilder);
+                } else if (BRIDGES.name().equals(nextLine)) {
+                    parseBridgesSection(bufferedReader, puzzleBuilder);
+                } else {
+                    throw new UnsupportedOperationException("Unexpected line: '" + nextLine + "'");
                 }
                 nextLine = getNextUncommentedLine(bufferedReader);
             }
         }
-
-        return puzzleBuilder.getResult();
+        return puzzleBuilder;
     }
 
-    private String getNextUncommentedLine(BufferedReader reader) throws IOException {
+    private static String getNextUncommentedLine(final BufferedReader reader) throws IOException {
         String line = reader.readLine();
 
         while (line != null) {
@@ -63,60 +79,54 @@ public class Deserializer {
         return END_OF_FILE;
     }
 
-    private PuzzleBuilder parseFieldSection(BufferedReader reader) throws IOException {
+    private static PuzzleBuilder parseFieldSection(final BufferedReader reader) throws IOException {
         final String line = getNextUncommentedLine(reader);
         final Scanner scanner = new Scanner(line);
         scanner.findInLine("^(\\d+)[ ]*x[ ]*(\\d+)[ ]*\\|[ ]*(\\d+)$");
-        MatchResult match = scanner.match();
+        final MatchResult match = scanner.match();
 
-        // TODO: Handle match not found (IllegalStateException)
-
-        int columns = Integer.parseInt(match.group(1));
-        int rows = Integer.parseInt(match.group(2));
-        int islands = Integer.parseInt(match.group(3));
-
-        // TODO: Handle parse exception
+        final int columns = Integer.parseInt(match.group(1));
+        final int rows = Integer.parseInt(match.group(2));
+        final int islands = Integer.parseInt(match.group(3));
 
         return PuzzleBuilder.createBuilder(columns, rows, islands);
     }
 
-    private void parseIslandsSection(BufferedReader bufferedReader, final PuzzleBuilder puzzleBuilder) throws IOException {
+    private static void parseIslandsSection(BufferedReader bufferedReader, final PuzzleBuilder puzzleBuilder) throws IOException {
         final int islandsCount = puzzleBuilder.getIslandsCount();
         final Pattern islandPattern = Pattern.compile("^\\([ ]*(\\d+)[ ]*,[ ]*(\\d+)[ ]*\\|[ ]*(\\d+)[ ]*\\)$");
 
         for (int i = 0; i < islandsCount; i++) {
-            String line = getNextUncommentedLine(bufferedReader);
+            final String line = getNextUncommentedLine(bufferedReader);
 
-            Scanner scanner = new Scanner(line);
+            final Scanner scanner = new Scanner(line);
             scanner.findInLine(islandPattern);
-            MatchResult match = scanner.match();
+            final MatchResult match = scanner.match();
 
-            // TODO: Handle no match found (IllegalArguementException)
-
-            int column = Integer.parseInt(match.group(1));
-            int row = Integer.parseInt(match.group(2));
-            int requiredBridges = Integer.parseInt(match.group(3));
+            final int column = Integer.parseInt(match.group(1));
+            final int row = Integer.parseInt(match.group(2));
+            final int requiredBridges = Integer.parseInt(match.group(3));
 
             puzzleBuilder.addIsland(new Position(column, row), requiredBridges);
         }
     }
 
-    private void parseBridgesSection(BufferedReader bufferedReader, PuzzleBuilder puzzleBuilder) throws IOException {
+    private static void parseBridgesSection(BufferedReader bufferedReader, PuzzleBuilder puzzleBuilder) throws IOException {
         final Pattern bridgePattern = Pattern.compile("^\\([ ]*(\\d+)[ ]*,[ ]*(\\d+)[ ]*\\|[ ]*(true|false)[ ]*\\)$");
 
         // TODO: Test islandsCount != bridgesCount
 
         String line = getNextUncommentedLine(bufferedReader);
         while (!END_OF_FILE.equals(line)) {
-            Scanner scanner = new Scanner(line);
+            final Scanner scanner = new Scanner(line);
             scanner.findInLine(bridgePattern);
-            MatchResult match = scanner.match();
+            final MatchResult match = scanner.match();
 
-            int islandAIndex = Integer.parseInt(match.group(1));
-            int islandBIndex = Integer.parseInt(match.group(2));
-            boolean doubleBridge = Boolean.parseBoolean(match.group(3));
+            final int island1Index = Integer.parseInt(match.group(1));
+            final int island2Index = Integer.parseInt(match.group(2));
+            final boolean doubleBridge = Boolean.parseBoolean(match.group(3));
 
-            puzzleBuilder.addBridge(islandAIndex, islandBIndex, doubleBridge);
+            puzzleBuilder.addBridge(island1Index, island2Index, doubleBridge);
             line = getNextUncommentedLine(bufferedReader);
         }
     }

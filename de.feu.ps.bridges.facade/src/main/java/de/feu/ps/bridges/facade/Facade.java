@@ -15,7 +15,6 @@ import de.feu.ps.bridges.solver.Move;
 import de.feu.ps.bridges.solver.Solver;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Optional;
 
 /**
@@ -24,23 +23,11 @@ import java.util.Optional;
 public class Facade {
 
     public static Puzzle loadPuzzle(final File sourceFile) {
-        Deserializer deserializer = new Deserializer();
-        try {
-            return deserializer.loadPuzzle(sourceFile.getPath());
-        } catch (Exception e) {
-            // TODO exception handling!
-            e.printStackTrace();
-            return null;
-        }
+        return Deserializer.loadPuzzle(sourceFile);
     }
 
     public static void savePuzzle(final Puzzle puzzle, final File destinationFile) {
-        Serializer serializer = new Serializer();
-        try {
-            serializer.storePuzzle(puzzle, destinationFile.getPath());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        Serializer.savePuzzle(puzzle, destinationFile);
     }
 
     public static void solvePuzzle(final Puzzle puzzle) {
