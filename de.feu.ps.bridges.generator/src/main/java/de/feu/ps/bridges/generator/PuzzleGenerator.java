@@ -65,9 +65,7 @@ public class PuzzleGenerator {
         PuzzleBuilder puzzleBuilder = null;
 
         do {
-            puzzleBuilder = new PuzzleBuilder();
-            puzzleBuilder.setPuzzleDimensions(columns, rows);
-            puzzleBuilder.setIslandsCount(islands);
+            puzzleBuilder = PuzzleBuilder.createBuilder(columns, rows, islands);
             buildInitialIsland(puzzleBuilder);
 
             runs++;
@@ -94,8 +92,9 @@ public class PuzzleGenerator {
 
         if (puzzleCreated) {
             puzzleBuilder.setRequiredBridgesToCurrentCountOfBridges();
-            puzzleBuilder.clearBridges();
-            return puzzleBuilder.getResult();
+            Puzzle puzzle = puzzleBuilder.getResult();
+            puzzle.removeAllBridges();
+            return puzzle;
         } else {
             // TODO do something
             return null;

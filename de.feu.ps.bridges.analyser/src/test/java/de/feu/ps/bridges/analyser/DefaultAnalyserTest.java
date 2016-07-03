@@ -16,8 +16,7 @@ public class DefaultAnalyserTest {
 
     @Before
     public void setUp() throws Exception {
-        puzzleBuilder = new PuzzleBuilder();
-        puzzleBuilder.setPuzzleDimensions(5, 5);
+        puzzleBuilder = PuzzleBuilder.createBuilder(5, 5, 9);
         puzzleBuilder.addIsland(new Position(0, 0), 3);
         puzzleBuilder.addIsland(new Position(0, 2), 4);
         puzzleBuilder.addIsland(new Position(0, 4), 2);
@@ -70,8 +69,7 @@ public class DefaultAnalyserTest {
 
     @Test
     public void getStatusTwoNetworks() {
-        PuzzleBuilder builder = new PuzzleBuilder();
-        builder.setPuzzleDimensions(5, 5);
+        PuzzleBuilder builder = PuzzleBuilder.createBuilder(5, 5, 4);
         builder.addIsland(new Position(0, 0), 1);
         builder.addIsland(new Position(0, 4), 1);
         builder.addIsland(new Position(4, 0), 1);

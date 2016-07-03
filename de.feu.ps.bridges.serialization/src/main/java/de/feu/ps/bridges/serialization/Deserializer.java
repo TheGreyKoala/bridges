@@ -21,15 +21,16 @@ public class Deserializer {
     public Puzzle loadPuzzle(final String filePath) throws Exception {
         // TODO Parameter validation
 
-        final PuzzleBuilder puzzleBuilder = new PuzzleBuilder();
 
+        PuzzleBuilder puzzleBuilder = null;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath))) {
             String nextLine = getNextUncommentedLine(bufferedReader);
+
 
             while (!END_OF_FILE.equals(nextLine)) {
                 switch (nextLine) {
                     case "FIELD":
-                        parseFieldSection(bufferedReader, puzzleBuilder);
+                        puzzleBuilder = parseFieldSection(bufferedReader);
                         break;
                     case "ISLANDS":
                         parseIslandsSection(bufferedReader, puzzleBuilder);
@@ -62,7 +63,7 @@ public class Deserializer {
         return END_OF_FILE;
     }
 
-    private void parseFieldSection(BufferedReader reader, PuzzleBuilder puzzleBuilder) throws IOException {
+    private PuzzleBuilder parseFieldSection(BufferedReader reader) throws IOException {
         final String line = getNextUncommentedLine(reader);
         final Scanner scanner = new Scanner(line);
         scanner.findInLine("^(\\d+)[ ]*x[ ]*(\\d+)[ ]*\\|[ ]*(\\d+)$");
@@ -76,8 +77,7 @@ public class Deserializer {
 
         // TODO: Handle parse exception
 
-        puzzleBuilder.setPuzzleDimensions(columns, rows);
-        puzzleBuilder.setIslandsCount(islands);
+        return PuzzleBuilder.createBuilder(columns, rows, islands);
     }
 
     private void parseIslandsSection(BufferedReader bufferedReader, final PuzzleBuilder puzzleBuilder) throws IOException {
