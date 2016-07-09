@@ -85,7 +85,7 @@ class DefaultPuzzleAnalyser implements PuzzleAnalyser {
 
         //TODO Check that island belongs to puzzle
         final Set<Island> reachableUnfinishedNeighbours = getReachableUnfinishedNeighbours(puzzle, island);
-        return reachableUnfinishedNeighbours.parallelStream().filter(island1 -> causesNoIsolation(puzzle, island, island1)).collect(Collectors.toSet());
+        return reachableUnfinishedNeighbours.stream().filter(island1 -> causesNoIsolation(puzzle, island, island1)).collect(Collectors.toSet());
     }
 
     @Override
