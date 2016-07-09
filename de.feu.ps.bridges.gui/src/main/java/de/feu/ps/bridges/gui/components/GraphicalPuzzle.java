@@ -4,11 +4,9 @@ import de.feu.ps.bridges.gui.gamestate.GameState;
 import de.feu.ps.bridges.model.Bridge;
 import de.feu.ps.bridges.model.Island;
 import de.feu.ps.bridges.model.Puzzle;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
 
 import java.util.Set;
 
@@ -40,9 +38,11 @@ public class GraphicalPuzzle {
      * @return a new {@link Pane} that contains a graphical representation of the given {@link Puzzle}.
      */
     public static Pane createPuzzle(final Puzzle puzzle, final GameState gameState, final boolean showRemainingBridges) {
-        Pane pane = new Pane();
+        StackPane pane = new StackPane();
 
         GridPane gridPane = new GridPane();
+        gridPane.setAlignment(Pos.CENTER);
+
         initColumnConstraints(gridPane, puzzle.getColumnsCount());
         initRowsConstraints(gridPane, puzzle.getRowsCount());
 

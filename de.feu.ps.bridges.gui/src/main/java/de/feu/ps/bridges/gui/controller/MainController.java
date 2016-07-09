@@ -6,6 +6,7 @@ import de.feu.ps.bridges.gui.gamestate.GameState;
 import de.feu.ps.bridges.gui.gamestate.GameStateEvent;
 import de.feu.ps.bridges.gui.gamestate.GameStateListener;
 import de.feu.ps.bridges.model.Puzzle;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +15,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -31,7 +32,7 @@ import java.util.*;
 public class MainController implements Initializable, GameStateListener {
 
     @FXML
-    private Pane mainPanel;
+    private StackPane mainPanel;
 
     @FXML
     private MenuBar menuBar;
@@ -44,6 +45,9 @@ public class MainController implements Initializable, GameStateListener {
 
     @FXML
     private Label statusLabel;
+
+    @FXML
+    private ScrollPane scrollPane;
 
     private ResourceBundle bundle;
     private FileChooser fileChooser;
@@ -67,6 +71,12 @@ public class MainController implements Initializable, GameStateListener {
         fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(bundle.getString("puzzleExtensionFilter.description"), "*.bgs"));
         gameState.addGameStateListener(this);
+
+        // Center content in the scroll pane
+        mainPanel.minWidthProperty().bind(Bindings.createDoubleBinding(() ->
+                scrollPane.getViewportBounds().getWidth(), scrollPane.viewportBoundsProperty()));
+        mainPanel.minHeightProperty().bind(Bindings.createDoubleBinding(() ->
+                scrollPane.getViewportBounds().getHeight(), scrollPane.viewportBoundsProperty()));
     }
 
     /**
