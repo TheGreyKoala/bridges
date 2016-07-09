@@ -98,8 +98,9 @@ class DefaultPuzzleAnalyser implements PuzzleAnalyser {
     }
 
     private boolean isValidMove(final Island island1, final Island island2) {
-        // Do not use getValidBridgeDestinations, because a move that causes isolation can still be move
-        return getReachableUnfinishedNeighbours(puzzle, island1).contains(island2);
+        // Do not use getValidBridgeDestinations, because a move that causes isolation can still be valid (but not safe)
+        return island1.getRemainingBridges() > 0
+                && getReachableUnfinishedNeighbours(puzzle, island1).contains(island2);
     }
 
     private Set<Island> getReachableUnfinishedNeighbours(Puzzle puzzle, final Island island) {
