@@ -12,6 +12,9 @@ import java.io.File;
  */
 public class PuzzleToolkitFactory {
 
+    private PuzzleToolkitFactory() {
+    }
+
     /**
      * Create a new instance for the given {@link Puzzle}.
      * @param puzzle puzzle to use.

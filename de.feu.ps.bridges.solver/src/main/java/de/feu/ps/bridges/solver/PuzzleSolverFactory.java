@@ -8,6 +8,9 @@ import de.feu.ps.bridges.model.Puzzle;
  */
 public class PuzzleSolverFactory {
 
+    private PuzzleSolverFactory() {
+    }
+
     /**
      * Create a new {@link PuzzleSolver} for the given puzzle.
      * @param puzzle the puzzle to be solved.

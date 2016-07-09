@@ -8,6 +8,9 @@ public class PuzzleGeneratorFactory {
 
     private static RandomUtil randomUtil = new RandomUtil();
 
+    private PuzzleGeneratorFactory() {
+    }
+
     /**
      * Creates a new {@link PuzzleGenerator} that generates puzzles with a random
      * amount of columns, rows and islands.

@@ -15,6 +15,12 @@ public class BridgesTesterImpl implements BridgesTester {
 
     private static final Logger logger = Logger.getLogger(BridgesTesterImpl.class.getName());
 
+    /**
+     * Creates a new instance.
+     */
+    public BridgesTesterImpl() {
+    }
+
     @Override
     public void testGeneratePuzzle(String filePath, int width, int height, int isles) {
         try {

@@ -21,6 +21,12 @@ public class Main extends Application {
     private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 
     /**
+     * Creates a new instance.
+     */
+    public Main() {
+    }
+
+    /**
      * Main entry point of the gui application.
      * @param args arguments - not used.
      */
