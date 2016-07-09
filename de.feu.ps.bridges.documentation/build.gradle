@@ -13,4 +13,5 @@ apply plugin: "org.asciidoctor.convert"
 
 asciidoctor {
 	backends 'pdf'
+	attributes "imagesdir": "../../resources/images/de-DE"
 }

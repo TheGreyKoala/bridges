@@ -1,7 +1,56 @@
 = Dokumentation
 Tim Gremplewski <tim.gremplewski@gmail.com>
 :notitle:
+:figure-caption: Abbildung
 
 == Architektur
 
-Hier steht ganz viel tolles zur Architektur, mit einem kleinen schönen Bild!
+Die Architektur des Spiel orientiert sich an einer einfachen Schichtenarchitektur
+und besteht aus drei auf einander aufbauenden horizontalen
+sowie einer vierten unabhängigen vertikalen Schicht.
+
+Eine schematische Darstellung ist in Abbildung <<architecture>> zu sehen.
+
+[[architecture]]
+.Architektur des Spiels
+image::architektur.png[]
+
+Die Quadrate stellen elementare Komponenten der Anwendung dar.
+Ihre Einfärbung spiegelt die Schicht, auf der sie angesiedelt sind, wider.
+Die Pfeile repräsentieren Abhänngigkeiten zwischen den Komponenten.
+
+Im Folgenden wird die Aufgabe jeder Komponente kurz beschrieben.
+
+==== Puzzle Model
+Das Puzzle Model bietet Mittel, um eine vollständige Repräsentation eines Puzzles zu erstellen.
+Diese Datenstruktur stellt alle relevanten Informationen über das Puzzle, die Inseln und die Brücken bereit.
+Brücken können über das Puzzle Model außerdem erstellt oder entfernt werden.
+
+==== Puzzle Analysator
+Der Puzzle Analysator liefert weitergehende Informationen über ein gegebenes Puzzle,
+die eine genauere Betrachtung des Puzzles und ggf. einige logsiche Schlussfolgerungen erfordern.
+Zu diesen Informationen zählen vor allem der Status eines Puzzles und die Gültigkeit einer Brücke.
+
+==== Puzzle Löser
+Der Puzzle Löser kann ein gegebenes Puzzle vollständig lösen oder lediglich einen nächsten
+Zug vorschlagen. Für beides ermittelt er mit Hilfe des Puzzle Analysators garantiert sichere Züge.
+Ein Puzzle wird nur so weit gelöst, wie ein solcher Zug gefunden werden kann.
+
+==== Puzzle Generator
+Der Puzzle Generator erzeugt zufallsbasiert Puzzles,
+die gewissen vorgegebenen Kriterien bzgl. ihrer Größe sowie der Anzahl an Inseln genügen können.
+
+==== Puzzle Im- & Exporter
+Der Puzzle Im- und Exporter speichert alle Informationen eines gegebenen Puzzles in einer vorgegebenen Datei.
+Des Weiteren kann er solche Dateien einlesen und somit ein Puzzle vollständig wiederherstellen.
+
+==== Puzzle Toolkit
+Das Puzzle Toolkit stellt eine Fassade für die bisher beschriebenen Komponenten dar,
+über die höhere Komponenten auf die Funktionen unterer Komponenten zentralisiert und einfach zugreifen können.
+
+==== Bridges Tester
+Diese Komponente implementiert das vorgegebene Interface `de.feu.ps.bridges.shared.BridgesTester`.
+
+==== GUI
+Diese Komponente bietet dem Benutzer eine grafische Oberfläche,
+über die er die Anwendung bedienen und ein Puzzle lösen kann.
