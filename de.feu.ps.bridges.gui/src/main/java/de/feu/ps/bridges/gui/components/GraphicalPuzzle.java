@@ -13,13 +13,32 @@ import javafx.scene.layout.RowConstraints;
 import java.util.Set;
 
 /**
+ * Helper class to create a graphical representation of a puzzle in the gui application.
+ *
  * @author Tim Gremplewski
  */
 public class GraphicalPuzzle {
 
+    /**
+     * The width and height of a cell that contains an island.
+     */
     public static final int CELL_SIZE = 50;
-    public static final int HALF_CELL_SIZE = CELL_SIZE / 2;
 
+    /**
+     * Half of {@link #CELL_SIZE}.
+     */
+    static final int HALF_CELL_SIZE = CELL_SIZE / 2;
+
+    private GraphicalPuzzle() {
+    }
+
+    /**
+     * Create a new {@link Pane} and draw the given puzzle into it.
+     * @param puzzle {@link Puzzle} to draw.
+     * @param gameState {@link GameState} to use.
+     * @param showRemainingBridges Indicates if islands should display the number of remaining bridges.
+     * @return a new {@link Pane} that contains a graphical representation of the given {@link Puzzle}.
+     */
     public static Pane createPuzzle(final Puzzle puzzle, final GameState gameState, final boolean showRemainingBridges) {
         Pane pane = new Pane();
 

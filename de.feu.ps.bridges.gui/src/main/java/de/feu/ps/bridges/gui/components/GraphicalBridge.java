@@ -12,10 +12,20 @@ import static de.feu.ps.bridges.gui.components.GraphicalPuzzle.CELL_SIZE;
 import static de.feu.ps.bridges.gui.components.GraphicalPuzzle.HALF_CELL_SIZE;
 
 /**
+ * Helper class to create a graphical representation of a {@link Bridge}.
  * @author Tim Gremplewski
  */
 public class GraphicalBridge {
 
+    private GraphicalBridge() {
+    }
+
+    /**
+     * Create a new graphical representation of the given {@link Bridge}.
+     * @param bridge {@link Bridge} to be drawn.
+     * @param gameState {@link GameState} to use.
+     * @return a new {@link Node} that contains the drawn bridge.
+     */
     public static Node createBridge(final Bridge bridge, final GameState gameState) {
         Pane pane = new Pane();
 

@@ -9,9 +9,11 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
+ * Controller for the new puzzle dialog.
  * @author Tim Gremplewski
  */
 public class NewPuzzleController implements Initializable {
@@ -37,13 +39,19 @@ public class NewPuzzleController implements Initializable {
     private final GameState gameState;
     private final Stage stage;
 
+    /**
+     * Creates a new instance.
+     * @param gameState the {@link GameState} to use.
+     * @param stage the {@link Stage} to use.
+     * @throws NullPointerException if gameState or stage is null.
+     */
     public NewPuzzleController(final GameState gameState, final Stage stage) {
-        this.gameState = gameState;
-        this.stage = stage;
+        this.gameState = Objects.requireNonNull(gameState, "Parameter 'gameState' must not be null.");
+        this.stage = Objects.requireNonNull(stage, "Parameter 'stage' must not be null.");
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(final URL location, final ResourceBundle resources) {
         // TODO Can this be done in the fxml file?
         columnsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(4, 25));
         rowsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(4, 25));
@@ -56,24 +64,44 @@ public class NewPuzzleController implements Initializable {
         manualIslandsCountClicked(null);
     }
 
-    public void autoModeSelected(ActionEvent actionEvent) {
+    /**
+     * Invoked when the user selected the auto generation mode.
+     * @param actionEvent the event.
+     */
+    public void autoModeSelected(final ActionEvent actionEvent) {
         manualSettingsGridPane.setDisable(true);
     }
 
-    public void manualModeSelected(ActionEvent actionEvent) {
+    /**
+     * Invoked when the user selected the manual generation mode.
+     * @param actionEvent the event.
+     */
+    public void manualModeSelected(final ActionEvent actionEvent) {
         manualSettingsGridPane.setDisable(false);
     }
 
-    public void manualIslandsCountClicked(ActionEvent actionEvent) {
+    /**
+     * Invoked when the user clicked the manual islands count checkbox.
+     * @param actionEvent the event.
+     */
+    public void manualIslandsCountClicked(final ActionEvent actionEvent) {
         boolean manualIslandsCount = manualIslandsCountCheckBox.isSelected();
         islandsSpinner.setDisable(!manualIslandsCount);
     }
 
-    public void cancel(ActionEvent actionEvent) {
+    /**
+     * Invoked when the user clicked the cancel button.
+     * @param actionEvent the event.
+     */
+    public void cancel(final ActionEvent actionEvent) {
         stage.close();
     }
 
-    public void ok(ActionEvent actionEvent) {
+    /**
+     * Invoked when the user clicked the ok button.
+     * @param actionEvent the event.
+     */
+    public void ok(final ActionEvent actionEvent) {
         if (autoGenerateRadioButton.isSelected()) {
             gameState.newPuzzle();
         } else {

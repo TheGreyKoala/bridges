@@ -5,6 +5,7 @@ import de.feu.ps.bridges.gui.components.GraphicalPuzzle;
 import de.feu.ps.bridges.gui.gamestate.GameState;
 import de.feu.ps.bridges.gui.gamestate.GameStateEvent;
 import de.feu.ps.bridges.gui.gamestate.GameStateListener;
+import de.feu.ps.bridges.model.Puzzle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,12 +22,10 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
+ * Controller for the main panel.
  * @author Tim Gremplewski
  */
 public class MainController implements Initializable, GameStateListener {
@@ -51,6 +50,12 @@ public class MainController implements Initializable, GameStateListener {
     private final GameState gameState;
     private final Stage stage;
 
+    /**
+     * Creates a new instance.
+     * @param gameState the {@link GameState} to use.
+     * @param stage the {@link Stage} to use.
+     * @throws NullPointerException if gameState or stage is null.
+     */
     public MainController(final GameState gameState, final Stage stage) {
         this.gameState = Objects.requireNonNull(gameState, "Parameter 'gameState' must not be null.");
         this.stage = Objects.requireNonNull(stage, "Parameter 'stage' must not be null.");
@@ -64,7 +69,12 @@ public class MainController implements Initializable, GameStateListener {
         gameState.addGameStateListener(this);
     }
 
-    public void newPuzzle(ActionEvent actionEvent) throws IOException {
+    /**
+     * Invoked when the user clicks the new puzzle menu item.
+     * @param actionEvent the event.
+     * @throws IOException thrown if the gui for the new puzzle dialog can't be loaded.
+     */
+    public void newPuzzle(final ActionEvent actionEvent) throws IOException {
         Stage dialogStage = new Stage();
         dialogStage.setTitle(bundle.getString("newPuzzleDialog.title"));
         dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -80,11 +90,21 @@ public class MainController implements Initializable, GameStateListener {
         dialogStage.showAndWait();
     }
 
-    public void restartPuzzle(ActionEvent actionEvent) {
-        gameState.restartPuzzle();
+    /**
+     * Invoked when the user clicks the restart puzzle menu item.
+     * @param actionEvent the event.
+     */
+    public void restartPuzzle(final ActionEvent actionEvent) {
+        if (gameState.getPuzzle().isPresent()) {
+            gameState.restartPuzzle();
+        }
     }
 
-    public void loadPuzzle(ActionEvent actionEvent) {
+    /**
+     * Invoked when the user clicks the load puzzle menu item.
+     * @param actionEvent the event.
+     */
+    public void loadPuzzle(final ActionEvent actionEvent) {
         fileChooser.setTitle(bundle.getString("loadDialog.title"));
         File sourceFile = fileChooser.showOpenDialog(mainPanel.getScene().getWindow());
 
@@ -94,10 +114,22 @@ public class MainController implements Initializable, GameStateListener {
         }
     }
 
-    public void savePuzzle(ActionEvent actionEvent) {
-        gameState.savePuzzle();
+    /**
+     * Invoked when the user clicks the save puzzle menu item.
+     * @param actionEvent the event.
+     */
+    public void savePuzzle(final ActionEvent actionEvent) {
+        if (gameState.isPuzzleSourceFileKnown()) {
+            gameState.savePuzzle();
+        } else {
+            savePuzzleAs(actionEvent);
+        }
     }
 
+    /**
+     * Invoked when the user clicks the save puzzle as menu item.
+     * @param actionEvent the event.
+     */
     public void savePuzzleAs(ActionEvent actionEvent) {
         fileChooser.setTitle(bundle.getString("saveAsDialog.title"));
         File destinationFile = fileChooser.showSaveDialog(mainPanel.getScene().getWindow());
@@ -108,7 +140,11 @@ public class MainController implements Initializable, GameStateListener {
         }
     }
 
-    public void exit(ActionEvent actionEvent) {
+    /**
+     * Invoked when the user clicks the exit menu item.
+     * @param actionEvent the event.
+     */
+    public void exit(final ActionEvent actionEvent) {
         stage.close();
     }
 
@@ -122,15 +158,58 @@ public class MainController implements Initializable, GameStateListener {
             case AUTOMATIC_SOLVING_STARTED:
                 getNodesToLock().forEach(node -> node.setDisable(true));
                 break;
-            case AUTOMATIC_SOLVING_STOPPED:
+            case AUTOMATIC_SOLVING_FINISHED:
                 getNodesToLock().forEach(node -> node.setDisable(false));
                 showInfoAfterAutomaticPuzzleSolving();
                 break;
             case AUTOMATIC_SOLVING_CANCELLED_BY_USER:
                 getNodesToLock().forEach(node -> node.setDisable(false));
                 break;
+            case NO_NEXT_MOVE:
+                showInfoWhenSolvedOrNoNextMove(false);
+                break;
+            case PUZZLE_GENERATION_FAILED:
+                showError(bundle.getString("generation.failed"));
+                break;
+            case LOADING_PUZZLE_FAILED:
+                showError(bundle.getString("loading.failed"));
+                break;
+            case SAVING_PUZZLE_FAILED:
+                showError(bundle.getString("saving.failed"));
+                break;
+            case RESTARTING_PUZZLE_FAILED:
+                showError(bundle.getString("restarting.failed"));
+                break;
+            case NEXT_MOVE_FAILED:
+                showError(bundle.getString("nextMove.failed"));
+                break;
+            case SOLVING_FAILED:
+                showError(bundle.getString("solving.failed"));
+                getNodesToLock().forEach(node -> node.setDisable(false));
+                break;
+            case BUILD_BRIDGE_FAILED:
+                showError(bundle.getString("buildBridge.failed"));
+                break;
+            case INVALID_MOVE:
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle(bundle.getString("warning.title"));
+                alert.setHeaderText(bundle.getString("invalidMoveDialog.headerText"));
+                alert.setContentText(bundle.getString("invalidMoveDialog.contentText"));
+                alert.showAndWait();
+                break;
+            case TEAR_DOWN_BRIDGE_FAILED:
+                showError(bundle.getString("tearDownBridge.failed"));
+                break;
         }
         updateStatus();
+    }
+
+    private void showError(final String headerText) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(bundle.getString("error.title"));
+        alert.setHeaderText(headerText);
+        alert.setContentText(bundle.getString("error.content.text"));
+        alert.showAndWait();
     }
 
     private void showInfoAfterAutomaticPuzzleSolving() {
@@ -171,8 +250,11 @@ public class MainController implements Initializable, GameStateListener {
 
     private void drawPuzzle() {
         mainPanel.getChildren().clear();
-        Node puzzleNode = GraphicalPuzzle.createPuzzle(gameState.getPuzzle(), gameState, showRemainingBridgesCheckBox.isSelected());
-        mainPanel.getChildren().addAll(puzzleNode);
+        Optional<Puzzle> puzzle = gameState.getPuzzle();
+        if (puzzle.isPresent()) {
+            Node puzzleNode = GraphicalPuzzle.createPuzzle(puzzle.get(), gameState, showRemainingBridgesCheckBox.isSelected());
+            mainPanel.getChildren().addAll(puzzleNode);
+        }
     }
 
     private List<Node> getNodesToLock() {
@@ -180,8 +262,9 @@ public class MainController implements Initializable, GameStateListener {
     }
 
     public void nextMove(ActionEvent actionEvent) {
-        boolean bridgeAdded = gameState.nextMove();
-        showInfoWhenSolvedOrNoNextMove(bridgeAdded);
+        if (gameState.getPuzzle().isPresent()) {
+            gameState.nextMove();
+        }
     }
 
     private void showInfoWhenSolvedOrNoNextMove(boolean bridgeAdded) {
@@ -207,11 +290,21 @@ public class MainController implements Initializable, GameStateListener {
         }
     }
 
-    public void solve(ActionEvent actionEvent) {
-        gameState.solve();
+    /**
+     * Invoked when the user clicks the solve puzzle button.
+     * @param actionEvent the event.
+     */
+    public void solve(final ActionEvent actionEvent) {
+        if (gameState.getPuzzle().isPresent()) {
+            gameState.solve();
+        }
     }
 
-    public void showRemainingBridgesClicked(ActionEvent actionEvent) {
+    /**
+     * Invoked when the user clicked the show remaining bridges checkbox.
+     * @param actionEvent the event.
+     */
+    public void showRemainingBridgesClicked(final ActionEvent actionEvent) {
         drawPuzzle();
     }
 }

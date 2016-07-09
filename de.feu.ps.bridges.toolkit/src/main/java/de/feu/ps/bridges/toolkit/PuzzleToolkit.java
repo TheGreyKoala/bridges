@@ -31,6 +31,7 @@ public interface PuzzleToolkit {
      * Apply a next save move on the puzzle.
      * @return {@link Optional} containing the {@link Bridge} that was created when the move was applied,
      *  if any could be found.
+     * @throws GeneralException if anything goes wrong.
      */
     Optional<Bridge> nextMove();
 
@@ -39,17 +40,20 @@ public interface PuzzleToolkit {
      * @param island Island from which the bridge should be removed.
      * @param direction Direction that specifies the bridge that should be removed.
      * @return {@link Optional} containing the {@link Bridge} that was removed, if any.
+     * @throws GeneralException if anything goes wrong.
      */
-    Optional<Bridge> removeBridge(Island island, Direction direction);
+    Optional<Bridge> tearDownBridge(Island island, Direction direction);
 
     /**
      * Save the puzzle at the given destination.
      * @param destinationFile Location where the puzzle should be saved.
+     * @throws GeneralException if anything goes wrong.
      */
     void savePuzzle(final File destinationFile);
 
     /**
      * Solve the puzzle.
+     * @throws GeneralException if anything goes wrong.
      */
     void solvePuzzle();
 
@@ -60,6 +64,7 @@ public interface PuzzleToolkit {
      * @param island Island to which the bridge should be added.
      * @param direction Direction of the new bridge.
      * @return {@link Optional} containing the new {@link Bridge}, if one was created.
+     * @throws GeneralException if anything goes wrong.
      */
-    Optional<Bridge> tryAddBridge(Island island, Direction direction);
+    Optional<Bridge> tryBuildBridge(Island island, Direction direction);
 }
