@@ -22,7 +22,7 @@ public class GraphicalPuzzle {
     /**
      * The width and height of a cell that contains an island.
      */
-    public static final int CELL_SIZE = 50;
+    public static final int CELL_SIZE = 40;
 
     /**
      * Half of {@link #CELL_SIZE}.

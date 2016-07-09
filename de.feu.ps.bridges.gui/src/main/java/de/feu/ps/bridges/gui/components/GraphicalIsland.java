@@ -31,7 +31,7 @@ public class GraphicalIsland {
     /**
      * The radius of a drawn island.
      */
-    public static final int ISLAND_RADIUS = 15;
+    public static final int ISLAND_RADIUS = 10;
 
     private static Rotate rotate = Transform.rotate(45, 0, 0);
     private static Translate translate = Transform.translate(-HALF_CELL_SIZE, -HALF_CELL_SIZE);
