@@ -47,7 +47,8 @@ public class Main extends Application {
 
         Parent root = fxmlLoader.load();
         primaryStage.setTitle(bundle.getString("mainFrame.title"));
-        primaryStage.setScene(new Scene(root, 600, 500));
+        primaryStage.setScene(new Scene(root));
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 }
