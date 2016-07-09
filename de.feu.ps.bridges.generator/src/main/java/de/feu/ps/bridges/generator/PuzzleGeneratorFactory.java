@@ -30,6 +30,7 @@ public class PuzzleGeneratorFactory {
      */
     public static PuzzleGenerator createPuzzleGenerator(final int columns, final int rows) {
         if (columns * rows < 3) {
+            // With only two fields, there would not be an empty cell between two islands.
             throw new IllegalArgumentException("Puzzle must consist of at least 3 fields.");
         }
         return createPuzzleGenerator(columns, rows, randomIslands(columns, rows));

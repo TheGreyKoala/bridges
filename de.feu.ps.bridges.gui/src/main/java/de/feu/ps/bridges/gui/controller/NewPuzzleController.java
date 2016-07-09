@@ -4,7 +4,10 @@ import de.feu.ps.bridges.gui.gamestate.GameState;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -54,14 +57,23 @@ public class NewPuzzleController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         // TODO Can this be done in the fxml file?
         columnsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(4, 25));
+        columnsSpinner.valueProperty().addListener((a, b, c) -> updateValidIslandsRange());
+
         rowsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(4, 25));
-        islandsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 125));
+        rowsSpinner.valueProperty().addListener((a, b, c) -> updateValidIslandsRange());
+
+        updateValidIslandsRange();
 
         autoGenerateRadioButton.setSelected(true);
         autoModeSelected(null);
 
         manualIslandsCountCheckBox.setSelected(false);
         manualIslandsCountClicked(null);
+    }
+
+    private void updateValidIslandsRange() {
+        final int max = (int) (0.2 * columnsSpinner.getValue() * rowsSpinner.getValue());
+        islandsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2, max));
     }
 
     /**
