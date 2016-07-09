@@ -258,7 +258,7 @@ public class MainController implements Initializable, GameStateListener {
     }
 
     private List<Node> getNodesToLock() {
-        return Arrays.asList(menuBar, showRemainingBridgesCheckBox, nextMoveButton);
+        return Arrays.asList(menuBar, showRemainingBridgesCheckBox, nextMoveButton, mainPanel);
     }
 
     public void nextMove(ActionEvent actionEvent) {
