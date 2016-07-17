@@ -29,11 +29,9 @@ public class PuzzleGeneratorFactory {
      * @return a new {@link PuzzleGenerator}.
      */
     public static PuzzleGenerator createPuzzleGenerator(final int columns, final int rows) {
-        if (columns * rows < 3) {
-            // With only two fields, there would not be an empty cell between two islands.
-            throw new IllegalArgumentException("Puzzle must consist of at least 3 fields.");
-        }
-        return createPuzzleGenerator(columns, rows, randomIslands(columns, rows));
+        final int islands = randomIslands(columns, rows);
+        validateParameters(columns, rows, islands);
+        return createPuzzleGenerator(columns, rows, islands);
     }
 
     private static int randomIslands(final int columns, final int rows) {
@@ -62,6 +60,21 @@ public class PuzzleGeneratorFactory {
      * @return a new {@link PuzzleGenerator}.
      */
     public static PuzzleGenerator createPuzzleGenerator(final int columns, final int rows, final int islands) {
+        validateParameters(columns, rows, islands);
         return new DefaultPuzzleGenerator(columns, rows, islands);
+    }
+
+    private static void validateParameters(final int columns, final int rows, final int islands) {
+        if (columns < 4 || columns > 25) {
+            throw new IllegalArgumentException("Parameter 'columns' must be between 4 and 25.");
+        }
+
+        if (rows < 4 || rows > 25) {
+            throw new IllegalArgumentException("Parameter 'rows' must be between 4 and 25.");
+        }
+
+        if (islands < 2 || islands > columns * rows * 0.2) {
+            throw new IllegalArgumentException("Parameter 'islands' must be greater than or equal to columns * rows * 0.2");
+        }
     }
 }
