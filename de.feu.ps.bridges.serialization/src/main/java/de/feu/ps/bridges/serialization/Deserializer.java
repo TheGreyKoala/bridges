@@ -37,6 +37,10 @@ public class Deserializer {
     public static Puzzle loadPuzzle(final File source) {
         Objects.requireNonNull(source, "Parameter 'source' must not be null.");
 
+        if (!source.exists()) {
+            throw new IllegalArgumentException("Source file does not exist.");
+        }
+
         try {
             return parseSourceFile(source).getResult();
         } catch (final Exception e) {

@@ -44,65 +44,45 @@ class DefaultPuzzleToolkit implements PuzzleToolkit {
 
     @Override
     public Optional<Bridge> nextMove() {
-        try {
-            Optional<Move> nextMove = puzzleSolver.getNextMove();
-            Optional<Bridge> optionalBridge;
-            if (nextMove.isPresent()) {
-                optionalBridge = Optional.of(nextMove.get().apply());
-            } else {
-                optionalBridge = Optional.empty();
-            }
-            return optionalBridge;
-        } catch (final Exception e) {
-            throw new GeneralException("Error while finding a next safe move.", e);
+        Optional<Move> nextMove = puzzleSolver.getNextMove();
+        Optional<Bridge> optionalBridge;
+        if (nextMove.isPresent()) {
+            optionalBridge = Optional.of(nextMove.get().apply());
+        } else {
+            optionalBridge = Optional.empty();
         }
+        return optionalBridge;
     }
 
     @Override
     public Optional<Bridge> tearDownBridge(final Island island, final Direction direction) {
-        try {
-            Optional<Island> neighbour = island.getNeighbour(direction);
-            if (neighbour.isPresent()) {
-                return puzzle.tearDownBridge(island, neighbour.get());
-            }
-            return Optional.empty();
-        } catch (final Exception e) {
-            throw new GeneralException("Error while removing bridge.", e);
+        Optional<Island> neighbour = island.getNeighbour(direction);
+        if (neighbour.isPresent()) {
+            return puzzle.tearDownBridge(island, neighbour.get());
         }
+        return Optional.empty();
     }
 
     @Override
     public void savePuzzle(final File destinationFile) {
-        try {
-            Serializer.savePuzzle(puzzle, destinationFile);
-        } catch (final Exception e) {
-            throw new GeneralException("Error while saving puzzle", e);
-        }
+        Serializer.savePuzzle(puzzle, destinationFile);
     }
 
     @Override
     public void solvePuzzle() {
-        try {
-            puzzleSolver.solve();
-        } catch (Exception e) {
-            throw new GeneralException("Error while solving the puzzle.", e);
-        }
+        puzzleSolver.solve();
     }
 
     @Override
     public Optional<Bridge> tryBuildBridge(final Island island, final Direction direction) {
-        try {
-            Optional<Bridge> optionalBridge;
-            if (puzzleAnalyser.isValidMove(island, direction)) {
-                // TODO: Can .get() without isPresent lead to an error here?
-                Bridge bridge = puzzle.buildBridge(island, island.getNeighbour(direction).get(), false);
-                optionalBridge = Optional.of(bridge);
-            } else {
-                optionalBridge = Optional.empty();
-            }
-            return  optionalBridge;
-        } catch (Exception e) {
-            throw new GeneralException("Error while adding bridge.", e);
+        Optional<Bridge> optionalBridge;
+        if (puzzleAnalyser.isValidMove(island, direction)) {
+            // TODO: Can .get() without isPresent lead to an error here?
+            Bridge bridge = puzzle.buildBridge(island, island.getNeighbour(direction).get(), false);
+            optionalBridge = Optional.of(bridge);
+        } else {
+            optionalBridge = Optional.empty();
         }
+        return  optionalBridge;
     }
 }
