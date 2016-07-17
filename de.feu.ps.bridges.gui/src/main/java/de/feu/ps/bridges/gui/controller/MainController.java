@@ -164,18 +164,23 @@ public class MainController implements Initializable, GameStateListener {
             case NEW_PUZZLE_LOADED:
             case PUZZLE_RESTARTED:
                 drawPuzzle();
+                updateStatus();
                 break;
             case AUTOMATIC_SOLVING_STARTED:
                 getNodesToLock().forEach(node -> node.setDisable(true));
+                updateStatus();
                 break;
             case AUTOMATIC_SOLVING_FINISHED:
                 getNodesToLock().forEach(node -> node.setDisable(false));
+                updateStatus();
                 showInfoAfterAutomaticPuzzleSolving();
                 break;
             case AUTOMATIC_SOLVING_CANCELLED_BY_USER:
                 getNodesToLock().forEach(node -> node.setDisable(false));
+                updateStatus();
                 break;
             case NO_NEXT_MOVE:
+                updateStatus();
                 showInfoWhenSolvedOrNoNextMove(false);
                 break;
             case PUZZLE_GENERATION_FAILED:
@@ -211,7 +216,6 @@ public class MainController implements Initializable, GameStateListener {
                 showError(bundle.getString("tearDownBridge.failed"));
                 break;
         }
-        updateStatus();
     }
 
     private void showError(final String headerText) {

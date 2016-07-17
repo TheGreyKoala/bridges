@@ -26,8 +26,8 @@ class DefaultIsland implements ModifiableIsland {
     DefaultIsland(final Position position, final int requiredBridges) {
         this.position = Objects.requireNonNull(position, "Parameter 'position' must not be null.");
 
-        if (requiredBridges < 1) {
-            throw new IllegalArgumentException("Parameter 'requiredBridged' must not be less than 1.");
+        if (requiredBridges < 1 || requiredBridges > 8) {
+            throw new IllegalArgumentException("Parameter 'requiredBridged' must be between 1 and 8.");
         }
 
         this.requiredBridges = requiredBridges;
