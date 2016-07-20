@@ -229,9 +229,12 @@ public class MainController implements Initializable, GameStateListener {
     private void showInfoAfterAutomaticPuzzleSolving() {
         PuzzleStatus puzzleStatus = gameState.getPuzzleStatus();
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(bundle.getString("autoSolveDialog.title"));
+        alert.setTitle(bundle.getString("autoSolveDialog.unsolved.title"));
+        alert.setHeaderText(bundle.getString("autoSolveDialog.unsolved.title"));
         switch (puzzleStatus) {
             case SOLVED:
+                alert.setTitle(bundle.getString("autoSolveDialog.solved.title"));
+                alert.setHeaderText(bundle.getString("autoSolveDialog.solved.title"));
                 alert.setContentText(bundle.getString("autoSolveDialog.solved.contentText"));
                 break;
             case UNSOLVED:
@@ -286,11 +289,14 @@ public class MainController implements Initializable, GameStateListener {
 
         if (puzzleStatus == PuzzleStatus.SOLVED || !bridgeAdded) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle(bundle.getString("autoSolveDialog.title"));
 
             if (puzzleStatus == PuzzleStatus.SOLVED) {
+                alert.setTitle(bundle.getString("autoSolveDialog.solved.title"));
+                alert.setHeaderText(bundle.getString("autoSolveDialog.solved.title"));
                 alert.setContentText(bundle.getString("autoSolveDialog.solved.contentText"));
             } else {
+                alert.setTitle(bundle.getString("autoSolveDialog.unsolved.title"));
+                alert.setHeaderText(bundle.getString("autoSolveDialog.unsolved.title"));
                 switch (puzzleStatus) {
                     case UNSOLVED:
                         alert.setContentText(bundle.getString("noNextMoveDialog.contentText"));
