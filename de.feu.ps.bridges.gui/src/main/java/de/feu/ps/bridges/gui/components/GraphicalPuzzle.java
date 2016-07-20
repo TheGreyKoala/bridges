@@ -8,6 +8,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -46,8 +48,8 @@ public class GraphicalPuzzle {
         initColumnConstraints(gridPane, puzzle.getColumnsCount());
         initRowsConstraints(gridPane, puzzle.getRowsCount());
 
-        addIslands(gridPane, puzzle.getIslands(), gameState, showRemainingBridges);
-        addBridges(pane, puzzle.getBridges(), gameState);
+        Map<Island, Node> islandGraphicalIslandMap = addIslands(gridPane, puzzle.getIslands(), gameState, showRemainingBridges);
+        addBridges(pane, puzzle.getBridges(), gameState, islandGraphicalIslandMap);
 
         pane.getChildren().add(gridPane);
 
@@ -68,14 +70,23 @@ public class GraphicalPuzzle {
         }
     }
 
-    private static void addIslands(final GridPane gridPane, final Set<Island> islands, final GameState gameState, final boolean showRemainingBridges) {
+    private static Map<Island, Node> addIslands(final GridPane gridPane, final Set<Island> islands, final GameState gameState, final boolean showRemainingBridges) {
+        final Map<Island, Node> island2GraphicalIsland = new HashMap<>();
+
         for (Island island : islands) {
             Node graphicalIsland = GraphicalIsland.createIsland(island, gameState, showRemainingBridges);
+            island2GraphicalIsland.put(island, graphicalIsland);
             gridPane.add(graphicalIsland, island.getPosition().getColumn(), island.getPosition().getRow());
         }
+        return island2GraphicalIsland;
     }
 
-    private static void addBridges(final Pane pane, final Set<Bridge> bridges, final GameState gameState) {
-        bridges.forEach(bridge -> pane.getChildren().add(GraphicalBridge.createBridge(bridge, gameState)));
+    private static void addBridges(final Pane pane, final Set<Bridge> bridges, final GameState gameState, Map<Island, Node> islandGraphicalIslandMap) {
+        bridges.forEach(bridge -> {
+            Node graphicalIsland1 = islandGraphicalIslandMap.get(bridge.getIsland1());
+            Node graphicalIsland2 = islandGraphicalIslandMap.get(bridge.getIsland2());
+
+            pane.getChildren().add(GraphicalBridge.createBridge(bridge, graphicalIsland1, graphicalIsland2, gameState));
+        });
     }
 }

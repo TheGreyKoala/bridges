@@ -2,13 +2,13 @@ package de.feu.ps.bridges.gui.components;
 
 import de.feu.ps.bridges.gui.gamestate.GameState;
 import de.feu.ps.bridges.model.Bridge;
+import de.feu.ps.bridges.model.Island;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 import static de.feu.ps.bridges.gui.components.GraphicalIsland.ISLAND_RADIUS;
-import static de.feu.ps.bridges.gui.components.GraphicalPuzzle.CELL_SIZE;
 import static de.feu.ps.bridges.gui.components.GraphicalPuzzle.HALF_CELL_SIZE;
 
 /**
@@ -23,68 +23,63 @@ public class GraphicalBridge {
     /**
      * Create a new graphical representation of the given {@link Bridge}.
      * @param bridge {@link Bridge} to be drawn.
-     * @param gameState {@link GameState} to use.
-     * @return a new {@link Node} that contains the drawn bridge.
+     * @param island1 Graphical representation of the first bridged {@link Island}
+     * @param island2 Graphical representation of the second bridged {@link Island}
+     * @param gameState {@link GameState} to use
+     * @return A graphical representation of the given {@link Bridge}.
      */
-    public static Node createBridge(final Bridge bridge, final GameState gameState) {
-        Pane pane = new Pane();
-
-        int startColumn = bridge.getIsland1().getPosition().getColumn();
-        int startRow = bridge.getIsland1().getPosition().getRow();
-
-        int endColumn = bridge.getIsland2().getPosition().getColumn();
-        int endRow = bridge.getIsland2().getPosition().getRow();
-
-        boolean latestBridge = gameState.isLatestBridge(bridge);
+    public static Node createBridge(final Bridge bridge, final Node island1, final Node island2, final GameState gameState) {
+        final Pane pane = new Pane();
 
         if (bridge.isDoubleBridge()) {
-            createDoubleBridge(bridge, pane, startColumn, startRow, endColumn, endRow, latestBridge);
+            addDoubleBridge(pane, bridge, island1, island2);
         } else {
-            createSingleBridge(pane, startColumn, startRow, endColumn, endRow, latestBridge);
+            addSingleBridge(pane, island1, island2);
+        }
+
+        if (gameState.isLatestBridge(bridge)) {
+            ((Line) pane.getChildren().get(0)).setStroke(Color.BLUE);
         }
 
         return pane;
     }
 
-    private static void createDoubleBridge(Bridge bridge, Pane pane, int startColumn, int startRow, int endColumn, int endRow, boolean latestBridge) {
-        Line line1;
-        Line line2;
+    private static void addDoubleBridge(final Pane pane, final Bridge bridge, final Node island1, final Node island2) {
+        Line line;
+        Line doubleLine;
         if (bridge.isHorizontal()) {
-            line1 = new Line(startColumn * CELL_SIZE + HALF_CELL_SIZE,
-                    startRow * CELL_SIZE + HALF_CELL_SIZE - ISLAND_RADIUS / 2,
-                    endColumn * CELL_SIZE + HALF_CELL_SIZE,
-                    endRow * CELL_SIZE + HALF_CELL_SIZE - ISLAND_RADIUS / 2);
-            line2 = new Line(startColumn * CELL_SIZE + HALF_CELL_SIZE,
-                    startRow * CELL_SIZE + HALF_CELL_SIZE + ISLAND_RADIUS / 2,
-                    endColumn * CELL_SIZE + HALF_CELL_SIZE,
-                    endRow * CELL_SIZE + HALF_CELL_SIZE + ISLAND_RADIUS / 2);
+            line = initLine(island1, island2, 0, -ISLAND_RADIUS / 2);
+            doubleLine = initLine(island1, island2, 0, ISLAND_RADIUS / 2);
         } else {
-            line1 = new Line(startColumn * CELL_SIZE + HALF_CELL_SIZE - ISLAND_RADIUS / 2,
-                    startRow * CELL_SIZE + HALF_CELL_SIZE,
-                    endColumn * CELL_SIZE + HALF_CELL_SIZE - ISLAND_RADIUS / 2,
-                    endRow * CELL_SIZE + HALF_CELL_SIZE);
-            line2 = new Line(startColumn * CELL_SIZE + HALF_CELL_SIZE + ISLAND_RADIUS / 2,
-                    startRow * CELL_SIZE + HALF_CELL_SIZE,
-                    endColumn * CELL_SIZE + HALF_CELL_SIZE + ISLAND_RADIUS / 2,
-                    endRow * CELL_SIZE + HALF_CELL_SIZE);
+            line = initLine(island1, island2, -ISLAND_RADIUS / 2, 0);
+            doubleLine = initLine(island1, island2, ISLAND_RADIUS / 2, 0);
         }
-
-        if (latestBridge) {
-            line1.setStroke(Color.BLUE);
-        }
-        pane.getChildren().addAll(line1, line2);
+        pane.getChildren().addAll(line, doubleLine);
     }
 
-    private static void createSingleBridge(Pane pane, int startColumn, int startRow, int endColumn, int endRow, boolean latestBridge) {
-        Line line = new Line(startColumn * CELL_SIZE + HALF_CELL_SIZE,
-                startRow * CELL_SIZE + HALF_CELL_SIZE,
-                endColumn * CELL_SIZE + HALF_CELL_SIZE,
-                endRow * CELL_SIZE + HALF_CELL_SIZE);
+    private static void addSingleBridge(final Pane pane, final Node island1, final Node island2) {
+        pane.getChildren().add(initLine(island1, island2, 0, 0));
+    }
 
-        if (latestBridge) {
-            line.setStroke(Color.BLUE);
-        }
+    private static Line initLine(final Node island1, final Node island2, final int xOffset, final int yOffset) {
+        Line line = new Line();
 
-        pane.getChildren().add(line);
+        island1.layoutXProperty().addListener((observable, oldValue, newValue) -> {
+            line.setStartX(newValue.doubleValue() + HALF_CELL_SIZE + xOffset);
+        });
+
+        island1.layoutYProperty().addListener((observable, oldValue, newValue) -> {
+            line.setStartY(newValue.doubleValue() + HALF_CELL_SIZE + yOffset);
+        });
+
+        island2.layoutXProperty().addListener((observable, oldValue, newValue) -> {
+            line.setEndX(newValue.doubleValue() + HALF_CELL_SIZE + xOffset);
+        });
+
+        island2.layoutYProperty().addListener((observable, oldValue, newValue) -> {
+            line.setEndY(newValue.doubleValue() + HALF_CELL_SIZE + yOffset);
+        });
+
+        return line;
     }
 }
