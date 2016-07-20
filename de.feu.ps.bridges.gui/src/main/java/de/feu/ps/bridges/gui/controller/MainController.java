@@ -168,7 +168,6 @@ public class MainController implements Initializable, GameStateListener {
                 break;
             case AUTOMATIC_SOLVING_STARTED:
                 getNodesToLock().forEach(node -> node.setDisable(true));
-                updateStatus();
                 break;
             case AUTOMATIC_SOLVING_FINISHED:
                 getNodesToLock().forEach(node -> node.setDisable(false));
@@ -181,7 +180,7 @@ public class MainController implements Initializable, GameStateListener {
                 break;
             case NO_NEXT_MOVE:
                 updateStatus();
-                showInfoWhenSolvedOrNoNextMove(false);
+                showInfoWhenNoNextMove();
                 break;
             case PUZZLE_GENERATION_FAILED:
                 showError(bundle.getString("generation.failed"));
@@ -228,41 +227,37 @@ public class MainController implements Initializable, GameStateListener {
 
     private void showInfoAfterAutomaticPuzzleSolving() {
         PuzzleStatus puzzleStatus = gameState.getPuzzleStatus();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(bundle.getString("autoSolveDialog.unsolved.title"));
-        alert.setHeaderText(bundle.getString("autoSolveDialog.unsolved.title"));
-        switch (puzzleStatus) {
-            case SOLVED:
-                alert.setTitle(bundle.getString("autoSolveDialog.solved.title"));
-                alert.setHeaderText(bundle.getString("autoSolveDialog.solved.title"));
-                alert.setContentText(bundle.getString("autoSolveDialog.solved.contentText"));
-                break;
-            case UNSOLVED:
-                // TODO: When user presses solve button again, this message will be show too
-                alert.setContentText(bundle.getString("autoSolveDialog.unsolved.contentText"));
-                break;
-            case UNSOLVABLE:
-                alert.setContentText(bundle.getString("autoSolveDialog.unsolvable.contentText"));
-                break;
+        if (puzzleStatus == PuzzleStatus.UNSOLVED) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle(bundle.getString("autoSolveDialog.unsolved.title"));
+            alert.setHeaderText(bundle.getString("autoSolveDialog.unsolved.title"));
+            alert.setContentText(bundle.getString("autoSolveDialog.unsolved.contentText"));
+            alert.showAndWait();
         }
-        alert.showAndWait();
     }
 
     private void updateStatus() {
         PuzzleStatus puzzleStatus = gameState.getPuzzleStatus();
-        String labelKey = "";
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         switch (puzzleStatus) {
             case SOLVED:
-                labelKey = "puzzle.status.solved";
+                statusLabel.setText(bundle.getString("puzzle.status.solved"));
+                alert.setTitle(bundle.getString("autoSolveDialog.solved.title"));
+                alert.setHeaderText(bundle.getString("autoSolveDialog.solved.title"));
+                alert.setContentText(bundle.getString("autoSolveDialog.solved.contentText"));
+                alert.showAndWait();
                 break;
             case UNSOLVED:
-                labelKey = "puzzle.status.unsolved";
+                statusLabel.setText(bundle.getString("puzzle.status.unsolved"));
                 break;
             case UNSOLVABLE:
-                labelKey = "puzzle.status.unsolvable";
+                statusLabel.setText(bundle.getString("puzzle.status.unsolvable"));
+                alert.setTitle(bundle.getString("autoSolveDialog.unsolved.title"));
+                alert.setHeaderText(bundle.getString("autoSolveDialog.unsolved.title"));
+                alert.setContentText(bundle.getString("autoSolveDialog.unsolvable.contentText"));
+                alert.showAndWait();
                 break;
         }
-        statusLabel.setText(bundle.getString(labelKey));
     }
 
     private void drawPuzzle() {
@@ -284,28 +279,13 @@ public class MainController implements Initializable, GameStateListener {
         }
     }
 
-    private void showInfoWhenSolvedOrNoNextMove(boolean bridgeAdded) {
+    private void showInfoWhenNoNextMove() {
         PuzzleStatus puzzleStatus = gameState.getPuzzleStatus();
-
-        if (puzzleStatus == PuzzleStatus.SOLVED || !bridgeAdded) {
+        if (puzzleStatus == PuzzleStatus.UNSOLVED) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-
-            if (puzzleStatus == PuzzleStatus.SOLVED) {
-                alert.setTitle(bundle.getString("autoSolveDialog.solved.title"));
-                alert.setHeaderText(bundle.getString("autoSolveDialog.solved.title"));
-                alert.setContentText(bundle.getString("autoSolveDialog.solved.contentText"));
-            } else {
-                alert.setTitle(bundle.getString("autoSolveDialog.unsolved.title"));
-                alert.setHeaderText(bundle.getString("autoSolveDialog.unsolved.title"));
-                switch (puzzleStatus) {
-                    case UNSOLVED:
-                        alert.setContentText(bundle.getString("noNextMoveDialog.contentText"));
-                        break;
-                    case UNSOLVABLE:
-                        alert.setContentText(bundle.getString("autoSolveDialog.unsolvable.contentText"));
-                        break;
-                }
-            }
+            alert.setTitle(bundle.getString("autoSolveDialog.unsolved.title"));
+            alert.setHeaderText(bundle.getString("autoSolveDialog.unsolved.title"));
+            alert.setContentText(bundle.getString("noNextMoveDialog.contentText"));
             alert.showAndWait();
         }
     }
