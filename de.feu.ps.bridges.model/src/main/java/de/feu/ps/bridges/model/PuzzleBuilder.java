@@ -85,8 +85,11 @@ public class PuzzleBuilder {
         if (islands.size() == islandsCount) {
             throw new IllegalStateException("The puzzle already has enough islands.");
         }
-        //TODO check for adjacentIslandAt -> Deserialization!
         validatePosition(position);
+
+        if (adjacentIslandAt(position)) {
+            throw new IllegalStateException("Cannot add island. There is an adjacent island.");
+        }
 
         // TODO This cast is ugly
         final ModifiableIsland island = ((ModifiableIsland) puzzle.buildIsland(position, requiredBridges));
