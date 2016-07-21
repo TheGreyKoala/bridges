@@ -67,6 +67,10 @@ public class PuzzleBuilder {
      * @param doubleBridge indicates whether the new bridge should be a double bridge.
      */
     public void addBridge(final Island island1, final Island island2, final boolean doubleBridge) {
+        if (isAnyBridgeCrossing(island1.getPosition(), island2.getPosition())) {
+            throw new IllegalStateException("Cannot build bridge. It would cross another bridge.");
+        }
+
         puzzle.buildBridge(island1, island2, doubleBridge);
     }
 
@@ -81,7 +85,7 @@ public class PuzzleBuilder {
         if (islands.size() == islandsCount) {
             throw new IllegalStateException("The puzzle already has enough islands.");
         }
-
+        //TODO check for adjacentIslandAt -> Deserialization!
         validatePosition(position);
 
         // TODO This cast is ugly

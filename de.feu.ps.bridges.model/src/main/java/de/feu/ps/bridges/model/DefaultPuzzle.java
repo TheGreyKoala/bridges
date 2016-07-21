@@ -1,6 +1,7 @@
 package de.feu.ps.bridges.model;
 
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -139,33 +140,44 @@ class DefaultPuzzle implements ModifiablePuzzle {
 
         // TODO: TEST!
 
+        final Point2D newBridgeStart = new Point2D.Double(start.getColumn(), start.getRow());
+        final Point2D newBridgeEnd = new Point2D.Double(end.getColumn(), end.getRow());
+
+        final Line2D newBridge = new Line2D.Double(newBridgeStart, newBridgeEnd);
+
         return bridges.stream().anyMatch(bridge -> {
             Position bridgeStart = bridge.getIsland1().getPosition();
             Position bridgeEnd = bridge.getIsland2().getPosition();
 
-            boolean linesIntersect = Line2D.linesIntersect(
-                    bridgeStart.getColumn(),
-                    bridgeStart.getRow(),
-                    bridgeEnd.getColumn(),
-                    bridgeEnd.getRow(),
-                    start.getColumn(),
-                    start.getRow(),
-                    end.getColumn(),
-                    end.getRow());
+            Point2D.Double existingBridgeStart = new Point2D.Double(bridgeStart.getColumn(), bridgeStart.getRow());
+            Point2D.Double existingBridgeEnd = new Point2D.Double(bridgeEnd.getColumn(), bridgeEnd.getRow());
 
-            boolean bridgesShareSingeIsland =
-                    bridgeStart.equals(start)
-                            ^ bridgeStart.equals(end)
-                            ^ bridgeEnd.equals(start)
-                            ^ bridgeEnd.equals(end);
+            Line2D existingBridge = new Line2D.Double(existingBridgeStart, existingBridgeEnd);
 
-            boolean bridgesConnectTheSameIsland =
-                    (bridgeStart.equals(start) || bridgeStart.equals(end))
-                            && (bridgeEnd.equals(end) || bridgeEnd.equals(start))
-                            && !bridge.isDoubleBridge();
+            if (existingBridge.intersectsLine(newBridge)) {
+                // It is allowed that the two bridges connect a common island to different other islands.
+                // This is the case, if they intersect in exactly one point, that must be the start or the end of the other bridge.
 
-            return linesIntersect && !(bridgesShareSingeIsland || bridgesConnectTheSameIsland);
+                if (bridgeStart.equals(start)) {
+                    return intersectsPoint(existingBridge, newBridgeEnd) || intersectsPoint(newBridge, existingBridgeEnd);
+                } else if (bridgeStart.equals(end)) {
+                    return intersectsPoint(existingBridge, newBridgeStart) || intersectsPoint(newBridge, existingBridgeEnd);
+                } else if (bridgeEnd.equals(start)) {
+                    return intersectsPoint(existingBridge, newBridgeEnd) || intersectsPoint(newBridge, existingBridgeStart);
+                } else if (bridgeEnd.equals(end)) {
+                    return intersectsPoint(existingBridge, newBridgeStart) || intersectsPoint(newBridge, existingBridgeStart);
+                } else {
+                    return true;
+                }
+            } else {
+                return false;
+            }
         });
+    }
+
+    private boolean intersectsPoint(Line2D line, Point2D point) {
+        // A line does not have an area. Therefore contains always returns false and we have to do this workaround
+        return line.intersectsLine(point.getX(), point.getY(), point.getX(), point.getY());
     }
 
     @Override

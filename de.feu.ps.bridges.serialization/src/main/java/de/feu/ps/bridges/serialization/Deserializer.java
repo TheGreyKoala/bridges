@@ -44,7 +44,7 @@ public class Deserializer {
         try {
             return parseSourceFile(source).getResult();
         } catch (final Exception e) {
-            throw new SerializationException("Could load puzzle.", e);
+            throw new SerializationException("Could not load puzzle.", e);
         }
     }
 
