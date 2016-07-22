@@ -16,7 +16,7 @@ Eine schematische Darstellung ist in Abbildung <<architecture>> zu sehen.
 image::architektur.png[]
 
 Die Quadrate stellen elementare Komponenten der Anwendung dar.
-Ihre Einfärbung spiegelt die Schicht, auf der sie angesiedelt sind, wider.
+Ihre Einfärbung spiegelt die Schicht wider, auf der sie angesiedelt sind.
 Die Pfeile repräsentieren Abhänngigkeiten zwischen den Komponenten.
 
 Im Folgenden wird die Aufgabe jeder Komponente kurz beschrieben.
