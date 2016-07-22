@@ -1,3 +1,4 @@
 dependencies {
+    compile project(':de.feu.ps.bridges.analyser')
     compile project(':de.feu.ps.bridges.model')
 }

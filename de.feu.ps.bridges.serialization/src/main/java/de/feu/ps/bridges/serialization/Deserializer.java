@@ -1,5 +1,8 @@
 package de.feu.ps.bridges.serialization;
 
+import de.feu.ps.bridges.analyser.PuzzleAnalyser;
+import de.feu.ps.bridges.analyser.PuzzleAnalyserFactory;
+import de.feu.ps.bridges.model.Island;
 import de.feu.ps.bridges.model.Position;
 import de.feu.ps.bridges.model.Puzzle;
 import de.feu.ps.bridges.model.PuzzleBuilder;
@@ -8,14 +11,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
-import static de.feu.ps.bridges.serialization.Keyword.BRIDGES;
-import static de.feu.ps.bridges.serialization.Keyword.FIELD;
-import static de.feu.ps.bridges.serialization.Keyword.ISLANDS;
+import static de.feu.ps.bridges.serialization.Keyword.*;
 
 /**
  * Class that can be used to load a {@link Puzzle} from a file.
@@ -24,8 +27,13 @@ import static de.feu.ps.bridges.serialization.Keyword.ISLANDS;
 public class Deserializer {
 
     private static final String END_OF_FILE = "EOF";
+    private final List<Island> createdIslands;
+    private PuzzleBuilder puzzleBuilder;
+    private Puzzle puzzle;
+    private PuzzleAnalyser puzzleAnalyser;
 
     private Deserializer() {
+        createdIslands = new ArrayList<>();
     }
 
     /**
@@ -42,20 +50,19 @@ public class Deserializer {
         }
 
         try {
-            return parseSourceFile(source).getResult();
+            return new Deserializer().parseSourceFile(source).getResult();
         } catch (final Exception e) {
             throw new SerializationException("Could not load puzzle.", e);
         }
     }
 
-    private static PuzzleBuilder parseSourceFile(final File source) throws IOException {
-        PuzzleBuilder puzzleBuilder = null;
+    private PuzzleBuilder parseSourceFile(final File source) throws IOException {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(source))) {
             String nextLine = getNextUncommentedLine(bufferedReader);
 
             while (!END_OF_FILE.equals(nextLine)) {
                 if (FIELD.name().equals(nextLine)) {
-                    puzzleBuilder = parseFieldSection(bufferedReader);
+                    parseFieldSection(bufferedReader);
                 } else if (ISLANDS.name().equals(nextLine)) {
                     parseIslandsSection(bufferedReader, puzzleBuilder);
                 } else if (BRIDGES.name().equals(nextLine)) {
@@ -69,7 +76,7 @@ public class Deserializer {
         return puzzleBuilder;
     }
 
-    private static String getNextUncommentedLine(final BufferedReader reader) throws IOException {
+    private String getNextUncommentedLine(final BufferedReader reader) throws IOException {
         String line = reader.readLine();
 
         while (line != null) {
@@ -83,7 +90,7 @@ public class Deserializer {
         return END_OF_FILE;
     }
 
-    private static PuzzleBuilder parseFieldSection(final BufferedReader reader) throws IOException {
+    private void parseFieldSection(final BufferedReader reader) throws IOException {
         final String line = getNextUncommentedLine(reader);
         final Scanner scanner = new Scanner(line);
         scanner.findInLine("^(\\d+)[ ]*x[ ]*(\\d+)[ ]*\\|[ ]*(\\d+)$");
@@ -93,10 +100,12 @@ public class Deserializer {
         final int rows = Integer.parseInt(match.group(2));
         final int islands = Integer.parseInt(match.group(3));
 
-        return PuzzleBuilder.createBuilder(columns, rows, islands);
+        puzzleBuilder = PuzzleBuilder.createBuilder(columns, rows, islands);
+        puzzle = puzzleBuilder.getResult();
+        puzzleAnalyser = PuzzleAnalyserFactory.createPuzzleAnalyserFor(puzzle);
     }
 
-    private static void parseIslandsSection(BufferedReader bufferedReader, final PuzzleBuilder puzzleBuilder) throws IOException {
+    private void parseIslandsSection(BufferedReader bufferedReader, final PuzzleBuilder puzzleBuilder) throws IOException {
         final int islandsCount = puzzleBuilder.getIslandsCount();
         final Pattern islandPattern = Pattern.compile("^\\([ ]*(\\d+)[ ]*,[ ]*(\\d+)[ ]*\\|[ ]*(\\d+)[ ]*\\)$");
 
@@ -111,11 +120,12 @@ public class Deserializer {
             final int row = Integer.parseInt(match.group(2));
             final int requiredBridges = Integer.parseInt(match.group(3));
 
-            puzzleBuilder.addIsland(new Position(column, row), requiredBridges);
+            final Island island = puzzleBuilder.addIsland(new Position(column, row), requiredBridges);
+            createdIslands.add(island);
         }
     }
 
-    private static void parseBridgesSection(BufferedReader bufferedReader, PuzzleBuilder puzzleBuilder) throws IOException {
+    private void parseBridgesSection(BufferedReader bufferedReader, PuzzleBuilder puzzleBuilder) throws IOException {
         final Pattern bridgePattern = Pattern.compile("^\\([ ]*(\\d+)[ ]*,[ ]*(\\d+)[ ]*\\|[ ]*(true|false)[ ]*\\)$");
 
         // TODO: Test islandsCount != bridgesCount
@@ -126,12 +136,17 @@ public class Deserializer {
             scanner.findInLine(bridgePattern);
             final MatchResult match = scanner.match();
 
-            final int island1Index = Integer.parseInt(match.group(1));
-            final int island2Index = Integer.parseInt(match.group(2));
+            final Island island1 = createdIslands.get(Integer.parseInt(match.group(1)));
+            final Island island2 = createdIslands.get(Integer.parseInt(match.group(2)));
             final boolean doubleBridge = Boolean.parseBoolean(match.group(3));
 
-            puzzleBuilder.addBridge(island1Index, island2Index, doubleBridge);
-            line = getNextUncommentedLine(bufferedReader);
+            boolean validMove = puzzleAnalyser.isValidMove(island1, island2, doubleBridge);
+            if (validMove) {
+                puzzleBuilder.addBridge(island1, island2, doubleBridge);
+                line = getNextUncommentedLine(bufferedReader);
+            } else {
+                throw new IllegalStateException("Found invalid bridge: " + line);
+            }
         }
     }
 }

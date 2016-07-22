@@ -76,7 +76,7 @@ class DefaultPuzzleToolkit implements PuzzleToolkit {
     @Override
     public Optional<Bridge> tryBuildBridge(final Island island, final Direction direction) {
         Optional<Bridge> optionalBridge;
-        if (puzzleAnalyser.isValidMove(island, direction)) {
+        if (puzzleAnalyser.isValidMove(island, direction, false)) {
             // TODO: Can .get() without isPresent lead to an error here?
             Bridge bridge = puzzle.buildBridge(island, island.getNeighbour(direction).get(), false);
             optionalBridge = Optional.of(bridge);

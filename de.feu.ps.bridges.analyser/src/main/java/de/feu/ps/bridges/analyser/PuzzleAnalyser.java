@@ -23,7 +23,7 @@ public interface PuzzleAnalyser {
      * @return all valid destinations for a bridge starting at the given island.
      * @throws NullPointerException if island is null.
      */
-    Set<Island> getValidBridgeDestinations(final Island island);
+    Set<Island> getValidBridgeDestinations(final Island island, final boolean doubleBridge);
 
     /**
      * Indicates whether a bridge in the given direction and starting at the given island would be valid.
@@ -32,5 +32,7 @@ public interface PuzzleAnalyser {
      * @return true, if the bridge would be valid, false otherwise.
      * @throws NullPointerException if island or direction is null.
      */
-    boolean isValidMove(Island island, Direction direction);
+    boolean isValidMove(Island island, Direction direction, boolean doubleBridge);
+
+    boolean isValidMove(Island island1, Island island2, boolean doubleBridge);
 }
