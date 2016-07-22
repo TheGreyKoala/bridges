@@ -45,18 +45,6 @@ public class PuzzleBuilder {
     }
 
     /**
-     * Add a new bridge to the puzzle.
-     * @param island1Index Index of an island to be bridged.
-     * @param island2Index Index of another island to be bridged.
-     * @param doubleBridge indicates whether the new bridge should be a double bridge.
-     */
-    public void addBridge(int island1Index, int island2Index, boolean doubleBridge) {
-        final Island island1 = islands.get(island1Index);
-        final Island island2 = islands.get(island2Index);
-        addBridge(island1, island2, doubleBridge);
-    }
-
-    /**
      * Add a new bridge between the given islands.
      * @param island1 Island to be bridged.
      * @param island2 Another island to be bridged.
