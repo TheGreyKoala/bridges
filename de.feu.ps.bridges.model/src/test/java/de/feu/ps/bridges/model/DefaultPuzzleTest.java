@@ -1,6 +1,7 @@
 package de.feu.ps.bridges.model;
 
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.experimental.theories.DataPoints;
 import org.junit.experimental.theories.FromDataPoints;
 import org.junit.experimental.theories.Theories;
@@ -8,6 +9,7 @@ import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Tim Gremplewski
@@ -37,7 +39,7 @@ public class DefaultPuzzleTest {
             new IsAnyBridgeCrossingTestCase(0, 2, 0, 1, false),
             new IsAnyBridgeCrossingTestCase(0, 2, 4, 6, false),
             new IsAnyBridgeCrossingTestCase(0, 2, 2, 4, false),
-            new IsAnyBridgeCrossingTestCase(0, 2, 0, 2, true),
+            new IsAnyBridgeCrossingTestCase(0, 2, 0, 2, false),
             new IsAnyBridgeCrossingTestCase(0, 2, 0, 4, true),
             new IsAnyBridgeCrossingTestCase(0, 4, 2, 6, true),
             new IsAnyBridgeCrossingTestCase(1, 5, 2, 3, true)
@@ -48,7 +50,14 @@ public class DefaultPuzzleTest {
     public void isAnyBridgeCrossing(@FromDataPoints("isAnyBridgeCrossingTestCases") IsAnyBridgeCrossingTestCase testCase) {
         puzzle.buildBridge(islands[testCase.bridgeStartIndex], islands[testCase.bridgeEndIndex], false);
         boolean anyBridgeCrossing = puzzle.isAnyBridgeCrossing(islands[testCase.newBridgeStartIndex].getPosition(), islands[testCase.newBridgeEndIndex].getPosition());
-        assertEquals(testCase.expectedResult, anyBridgeCrossing);
+        assertEquals("Unexpected result.", testCase.expectedResult, anyBridgeCrossing);
+    }
+
+    @Test
+    public void testIsAnyBridgeCrossingPreventsTripleBridge() {
+        puzzle.buildBridge(islands[0], islands[2], true);
+        boolean anyBridgeCrossing = puzzle.isAnyBridgeCrossing(islands[0].getPosition(), islands[2].getPosition());
+        assertTrue("Expected a crossing brige.", anyBridgeCrossing);
     }
 
     private static class IsAnyBridgeCrossingTestCase {

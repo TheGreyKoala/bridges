@@ -25,10 +25,6 @@ public class PuzzleBuilder {
             throw new IllegalArgumentException("Parameter 'rows' must not be less than 1.");
         }
 
-        if (islandsCount < 2 || islandsCount > columns * rows * 0.2) {
-            throw new IllegalArgumentException("Parameter 'islands' must be between 2 and columns * rows * 0.2.");
-        }
-
         this.columns = columns;
         this.rows = rows;
         this.islandsCount = islandsCount;

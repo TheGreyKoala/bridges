@@ -155,6 +155,13 @@ class DefaultPuzzle implements ModifiablePuzzle {
             Line2D existingBridge = new Line2D.Double(existingBridgeStart, existingBridgeEnd);
 
             if (existingBridge.intersectsLine(newBridge)) {
+                // Adding a double bridge is allowed, but not a triple bridge
+                if (bridgeStart.equals(start) && bridgeEnd.equals(end)
+                    || bridgeStart.equals(end) && bridgeEnd.equals(start)) {
+
+                    return bridge.isDoubleBridge();
+                }
+
                 // It is allowed that the two bridges connect a common island to different other islands.
                 // This is the case, if they intersect in exactly one point, that must be the start or the end of the other bridge.
 
