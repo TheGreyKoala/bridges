@@ -18,6 +18,12 @@ public interface PuzzleAnalyser {
     PuzzleStatus getStatus();
 
     /**
+     * Get all islands that don't have the required amount of bridges yet.
+     * @return all islands that don't have the required amount of bridges yet.
+     */
+    Set<Island> getUnfinishedIslands();
+
+    /**
      * Get all valid destinations for a bridge starting at the given island.
      * @param island Island to start from.
      * @param doubleBridge indicates whether destinations for a single or a double bridge should be returned.

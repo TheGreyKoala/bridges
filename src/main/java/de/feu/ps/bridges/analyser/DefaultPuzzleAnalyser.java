@@ -27,10 +27,10 @@ class DefaultPuzzleAnalyser implements PuzzleAnalyser {
     @Override
     public PuzzleStatus getStatus() {
         PuzzleStatus status = PuzzleStatus.UNSOLVABLE;
-        final Set<Island> allIslands = puzzle.getIslands();
-        final Set<Island> unfinishedIslands = getUnfinishedIslands(allIslands);
+        final Set<Island> unfinishedIslands = getUnfinishedIslands();
 
         if (unfinishedIslands.isEmpty()) {
+            final Set<Island> allIslands = puzzle.getIslands();
             if (allIslandsConnected(allIslands)) {
                 status = PuzzleStatus.SOLVED;
             }
@@ -43,8 +43,9 @@ class DefaultPuzzleAnalyser implements PuzzleAnalyser {
         return status;
     }
 
-    private Set<Island> getUnfinishedIslands(final Set<Island> islands) {
-        return islands.stream()
+    @Override
+    public Set<Island> getUnfinishedIslands() {
+        return puzzle.getIslands().stream()
                 .filter(island -> islandCanTakeBridge(island, false))
                 .collect(Collectors.toSet());
     }

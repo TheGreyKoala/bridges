@@ -3,7 +3,6 @@ package de.feu.ps.bridges.model;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author Tim Gremplewski
@@ -124,13 +123,6 @@ class DefaultPuzzle implements ModifiablePuzzle {
     @Override
     public int getRowsCount() {
         return rowsCount;
-    }
-
-    @Override
-    public Set<Island> getUnfinishedIslands() {
-        return islands.stream()
-                .filter(island -> island.getRemainingBridges() > 0)
-                .collect(Collectors.toSet());
     }
 
     @Override

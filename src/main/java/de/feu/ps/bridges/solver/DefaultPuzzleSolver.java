@@ -45,7 +45,7 @@ class DefaultPuzzleSolver implements PuzzleSolver {
     }
 
     private Optional<Move> findSoleNonErrorCausingMove() {
-        Set<Island> islands = puzzle.getUnfinishedIslands();
+        Set<Island> islands = puzzleAnalyser.getUnfinishedIslands();
 
         Move nextMove =null;
 
@@ -57,7 +57,7 @@ class DefaultPuzzleSolver implements PuzzleSolver {
 
                 boolean causesConflict = false;
 
-                Set<Island> islands1 = puzzle.getUnfinishedIslands();
+                Set<Island> islands1 = puzzleAnalyser.getUnfinishedIslands();
                 for (Island island1 : islands1) {
                     Set<Island> destinationsTest = puzzleAnalyser.getValidBridgeDestinations(island1, false);
                     if (destinationsTest.isEmpty()) {
@@ -91,7 +91,7 @@ class DefaultPuzzleSolver implements PuzzleSolver {
 
         Move safeMove = null;
 
-        for (Island island : puzzle.getUnfinishedIslands()) {
+        for (Island island : puzzleAnalyser.getUnfinishedIslands()) {
             final Set<Island> possibleDestinations = puzzleAnalyser.getValidBridgeDestinations(island, false);
 
             if (!possibleDestinations.isEmpty()) {

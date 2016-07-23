@@ -48,13 +48,6 @@ public interface Puzzle {
     int getRowsCount();
 
     /**
-     * Get all islands that don't have the required amount of bridges yet.
-     * @return all islands that don't have the required amount of bridges yet.
-     */
-    //TODO Maybe move to analyzer as well.
-    Set<Island> getUnfinishedIslands();
-
-    /**
      * Indicates of any bridge crosses the path from <code>start</code> to <code>end</code>.
      * @param start Start position of the path to be checked for crossing bridges.
      * @param end End position of the path to be checked for crossing bridges.
