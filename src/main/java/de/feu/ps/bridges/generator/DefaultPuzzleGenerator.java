@@ -130,7 +130,7 @@ class DefaultPuzzleGenerator implements PuzzleGenerator {
             int border = optionalNorthNeighbour.isPresent() ? optionalNorthNeighbour.get().getPosition().getRow() + 2 : 0;
             for (int row = start.getPosition().getRow() - 2; row >= border; row--) {
                 Position position = new Position(start.getPosition().getColumn(), row);
-                if (puzzleBuilder.adjacentIslandAt(position)
+                if (!temporaryPuzzleAnalyser.isValidIslandPosition(position)
                         || temporaryPuzzleAnalyser.isAnyBridgeCrossing(start.getPosition(), position)) {
                     break;
                 } else {
@@ -142,7 +142,7 @@ class DefaultPuzzleGenerator implements PuzzleGenerator {
             int border = optionalEastNeighbour.isPresent() ? optionalEastNeighbour.get().getPosition().getColumn() - 2 : columns - 1;
             for (int column = start.getPosition().getColumn() + 2; column <= border; column++) {
                 Position position = new Position(column, start.getPosition().getRow());
-                if (puzzleBuilder.adjacentIslandAt(position)
+                if (!temporaryPuzzleAnalyser.isValidIslandPosition(position)
                         || temporaryPuzzleAnalyser.isAnyBridgeCrossing(start.getPosition(), position)) {
                     break;
                 } else {
@@ -154,7 +154,7 @@ class DefaultPuzzleGenerator implements PuzzleGenerator {
             int border = optionalSouthNeighbour.isPresent() ? optionalSouthNeighbour.get().getPosition().getRow() - 2 : rows - 1;
             for (int row = start.getPosition().getRow() + 2; row <= border; row++) {
                 Position position = new Position(start.getPosition().getColumn(), row);
-                if (puzzleBuilder.adjacentIslandAt(position)
+                if (!temporaryPuzzleAnalyser.isValidIslandPosition(position)
                         || temporaryPuzzleAnalyser.isAnyBridgeCrossing(start.getPosition(), position)) {
                     break;
                 } else {
@@ -166,7 +166,7 @@ class DefaultPuzzleGenerator implements PuzzleGenerator {
             int border = optionalWestNeighbour.isPresent() ? optionalWestNeighbour.get().getPosition().getColumn() - 2 : 0;
             for (int column = start.getPosition().getColumn() - 2; column >= border; column--) {
                 Position position = new Position(column, start.getPosition().getRow());
-                if (puzzleBuilder.adjacentIslandAt(position)
+                if (!temporaryPuzzleAnalyser.isValidIslandPosition(position)
                         || temporaryPuzzleAnalyser.isAnyBridgeCrossing(start.getPosition(), position)) {
                     break;
                 } else {

@@ -120,10 +120,14 @@ public class Deserializer {
             final int row = Integer.parseInt(match.group(2));
             final int requiredBridges = Integer.parseInt(match.group(3));
 
-            // TODO: Use analyser to validate island position
-
-            final Island island = puzzleBuilder.addIsland(new Position(column, row), requiredBridges);
-            createdIslands.add(island);
+            // TODO: Test
+            final Position position = new Position(column, row);
+            if (puzzleAnalyser.isValidIslandPosition(position)) {
+                final Island island = puzzleBuilder.addIsland(position, requiredBridges);
+                createdIslands.add(island);
+            } else {
+                throw new IllegalStateException("Found invalid island position: " + line);
+            }
         }
     }
 
@@ -142,8 +146,7 @@ public class Deserializer {
             final Island island2 = createdIslands.get(Integer.parseInt(match.group(2)));
             final boolean doubleBridge = Boolean.parseBoolean(match.group(3));
 
-            boolean validMove = puzzleAnalyser.isValidMove(island1, island2, doubleBridge);
-            if (validMove) {
+            if (puzzleAnalyser.isValidMove(island1, island2, doubleBridge)) {
                 puzzleBuilder.addBridge(island1, island2, doubleBridge);
                 line = getNextUncommentedLine(bufferedReader);
             } else {

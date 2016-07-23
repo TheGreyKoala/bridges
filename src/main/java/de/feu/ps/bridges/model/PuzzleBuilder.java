@@ -67,10 +67,6 @@ public class PuzzleBuilder {
         }
         validatePosition(position);
 
-        if (adjacentIslandAt(position)) {
-            throw new IllegalStateException("Cannot add island. There is an adjacent island.");
-        }
-
         // TODO This cast is ugly
         final ModifiableIsland island = ((ModifiableIsland) puzzle.buildIsland(position, requiredBridges));
         islands.add(island);
@@ -87,28 +83,6 @@ public class PuzzleBuilder {
         if (position.getRow() >= rows) {
             throw new IllegalArgumentException("The puzzle does not have this row: " + position.getRow());
         }
-    }
-
-    /**
-     * Indicates whether the given position has any adjacent islands.
-     * @param position Position to check.
-     * @return true, if the position has any adjacent islands, false otherwise.
-     */
-    public boolean adjacentIslandAt(final Position position) {
-        validatePosition(position);
-
-        final int column = position.getColumn();
-        final int row = position.getRow();
-
-        return islands.stream().anyMatch(island -> {
-            final int islandColumn = island.getPosition().getColumn();
-            final int islandRow = island.getPosition().getRow();
-
-            return islandColumn == column && islandRow == row - 1 // North
-                    || islandColumn == column + 1 && islandRow == row // East
-                    || islandColumn == column && islandRow == row + 1 // South
-                    || islandColumn == column - 1 && islandRow == row; // West
-        });
     }
 
     /**

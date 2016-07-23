@@ -31,7 +31,7 @@ public interface PuzzleAnalyser {
      * @return all valid destinations for a bridge starting at the given island.
      * @throws NullPointerException if island is null.
      */
-    Set<Island> getValidBridgeDestinations(final Island island, final boolean doubleBridge);
+    Set<Island> getValidBridgeDestinations(Island island, boolean doubleBridge);
 
     /**
      * Indicates if any bridge crosses the path from <code>start</code> to <code>end</code>.
@@ -40,7 +40,14 @@ public interface PuzzleAnalyser {
      * @return true, if a bridge is crossing the path from <code>start</code> to <code>end</code>, false otherwise.
      * @throws NullPointerException if <code>start</code> or <code>end</code> is null.
      */
-    boolean isAnyBridgeCrossing(final Position start, final Position end);
+    boolean isAnyBridgeCrossing(Position start, Position end);
+
+    /**
+     * TODO: JavaDoc
+     * @param position
+     * @return
+     */
+    boolean isValidIslandPosition(Position position);
 
     /**
      * Indicates whether a bridge in the given direction and starting at the given island would be valid.
