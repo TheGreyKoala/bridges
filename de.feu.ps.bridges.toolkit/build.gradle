@@ -1,7 +1,0 @@
-dependencies {
-    compile project(':de.feu.ps.bridges.analyser')
-    compile project(':de.feu.ps.bridges.generator')
-    compile project(':de.feu.ps.bridges.model')
-    compile project(':de.feu.ps.bridges.serialization')
-    compile project(':de.feu.ps.bridges.solver')
-}
