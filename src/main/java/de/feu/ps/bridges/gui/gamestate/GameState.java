@@ -225,6 +225,7 @@ public class GameState {
                 currentTask = executorService.submit(this::solvePuzzle);
             } else {
                 currentTask.cancel(true);
+                fireGameStateEvent(GameStateEventType.AUTOMATIC_SOLVING_CANCELLED_BY_USER);
             }
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while solving a puzzle.", e);
@@ -257,9 +258,7 @@ public class GameState {
                 }
             } while (optionalBridge.isPresent() && !currentTask.isCancelled());
 
-            if (currentTask.isCancelled()) {
-                Platform.runLater(() -> fireGameStateEvent(GameStateEventType.AUTOMATIC_SOLVING_CANCELLED_BY_USER));
-            } else {
+            if (!currentTask.isCancelled()) {
                 Platform.runLater(() -> fireGameStateEvent(GameStateEventType.AUTOMATIC_SOLVING_FINISHED));
             }
         } catch (Exception e) {

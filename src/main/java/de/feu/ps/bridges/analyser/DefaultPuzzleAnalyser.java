@@ -56,7 +56,7 @@ class DefaultPuzzleAnalyser implements PuzzleAnalyser {
             return allIslands.size() == findAllIndirectlyConnectedIslands(optionalIsland.get()).size();
         }
 
-        // TODO: What if puzzle has no islands?
+        // If a puzzle has no islands, it is treated as if all islands were connected
         return true;
     }
 
@@ -85,7 +85,10 @@ class DefaultPuzzleAnalyser implements PuzzleAnalyser {
     public Set<Island> getValidBridgeDestinations(final Island island, final boolean doubleBridge) {
         Objects.requireNonNull(island, "Parameter 'island' must not be null.");
 
-        //TODO Check that island belongs to puzzle
+        if (!puzzle.getIslands().contains(island)) {
+            throw new IllegalStateException("Given island does not belong to the puzzle.");
+        }
+
         final Set<Island> reachableUnfinishedNeighbours = getReachableUnfinishedNeighbours(puzzle, island, doubleBridge);
         return reachableUnfinishedNeighbours.stream()
                 .filter(island1 -> causesNoIsolation(puzzle, island, island1, doubleBridge))
@@ -111,7 +114,7 @@ class DefaultPuzzleAnalyser implements PuzzleAnalyser {
                 && getReachableUnfinishedNeighbours(puzzle, island1, doubleBridge).contains(island2);
     }
 
-    private Set<Island> getReachableUnfinishedNeighbours(Puzzle puzzle, final Island island, final boolean doubleBridge) {
+    private Set<Island> getReachableUnfinishedNeighbours(final Puzzle puzzle, final Island island, final boolean doubleBridge) {
         return island
                 .getNeighbours().stream()
                 .filter(island1 -> islandCanTakeBridge(island1, doubleBridge))
