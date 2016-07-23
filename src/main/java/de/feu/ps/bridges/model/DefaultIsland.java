@@ -47,13 +47,17 @@ class DefaultIsland implements ModifiableIsland {
             throw new IllegalArgumentException("The given bridge does not bridge this island.");
         }
 
+        if (!bridge.getBridgedIslands().stream().allMatch(island -> island == this || getNeighbours().contains(island))) {
+            throw new IllegalArgumentException("Bridged island is not a neighbour of this island.");
+        }
+
         bridges.add(bridge);
     }
 
     @Override
     public Set<Island> getBridgedNeighbours() {
         return neighbours.entrySet().stream()
-                .filter(directionIslandEntry -> isBridgedToNeighbour(directionIslandEntry.getKey()))
+                .filter(neighbourByDirection -> isBridgedToNeighbour(neighbourByDirection.getKey()))
                 .map(Map.Entry::getValue)
                 .collect(Collectors.toSet());
     }
@@ -89,6 +93,7 @@ class DefaultIsland implements ModifiableIsland {
 
     @Override
     public int getDistanceToNeighbour(final Direction direction) {
+        Objects.requireNonNull(direction, "Parameter 'direction' must not be null.");
         final Optional<Island> optionalNeighbour = getNeighbour(direction);
 
         if (optionalNeighbour.isPresent()) {
@@ -153,13 +158,16 @@ class DefaultIsland implements ModifiableIsland {
     public void setNeighbour(final Island neighbour, final Direction direction) {
         Objects.requireNonNull(neighbour, "Parameter 'neighbour' must not be null.");
         Objects.requireNonNull(direction, "Parameter 'direction' must not be null.");
+
+        // TODO Validate position of neighbour
+
         neighbours.put(direction, neighbour);
     }
 
     @Override
     public void setRequiredBridges(final int requiredBridges) {
-        if (requiredBridges < 1) {
-            throw new IllegalArgumentException("Parameter 'requiredBridges' must not be less than 1.");
+        if (requiredBridges < 1 || requiredBridges > 8) {
+            throw new IllegalArgumentException("Parameter 'requiredBridged' must be between 1 and 8.");
         }
         this.requiredBridges = requiredBridges;
     }

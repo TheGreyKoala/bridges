@@ -44,15 +44,18 @@ public class IsAnyBridgeCrossingTest {
             new IsAnyBridgeCrossingTestCase(0, 2, 4, 6, false),
             new IsAnyBridgeCrossingTestCase(0, 2, 2, 4, false),
             new IsAnyBridgeCrossingTestCase(0, 2, 0, 2, false),
-            new IsAnyBridgeCrossingTestCase(0, 2, 0, 4, true),
-            new IsAnyBridgeCrossingTestCase(0, 4, 2, 6, true),
+            // These state should not be possible
+            // new IsAnyBridgeCrossingTestCase(0, 2, 0, 4, true),
+            // new IsAnyBridgeCrossingTestCase(0, 4, 2, 6, true),
             new IsAnyBridgeCrossingTestCase(1, 5, 2, 3, true)
         };
     }
 
     @Theory
     public void isAnyBridgeCrossing(@FromDataPoints("isAnyBridgeCrossingTestCases") IsAnyBridgeCrossingTestCase testCase) {
-        puzzle.buildBridge(islands[testCase.bridgeStartIndex], islands[testCase.bridgeEndIndex], false);
+        Island island1 = islands[testCase.bridgeStartIndex];
+        Island island2 = islands[testCase.bridgeEndIndex];
+        puzzle.buildBridge(island1, island2, false);
         boolean anyBridgeCrossing = analyser.isAnyBridgeCrossing(islands[testCase.newBridgeStartIndex].getPosition(), islands[testCase.newBridgeEndIndex].getPosition());
         assertEquals("Unexpected result.", testCase.expectedResult, anyBridgeCrossing);
     }

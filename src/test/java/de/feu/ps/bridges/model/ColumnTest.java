@@ -5,6 +5,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.Optional;
+
 import static de.feu.ps.bridges.model.Direction.NORTH;
 import static de.feu.ps.bridges.model.Direction.SOUTH;
 import static org.junit.Assert.*;
@@ -93,5 +95,44 @@ public class ColumnTest {
         assertTrue("Expected north neighbour.", island3.getNeighbour(NORTH).isPresent());
         assertEquals("Expected island2 to be the north neighbour of island3.", island2, island3.getNeighbour(NORTH).get());
         assertFalse("Expected no south neighbour.", island3.getNeighbour(SOUTH).isPresent());
+    }
+
+    @Test
+    public void testGetIslandAtRow() {
+        final ModifiableIsland island1 = ModifiableIslandFactory.create(new Position(0, 0), 1);
+        final ModifiableIsland island2 = ModifiableIslandFactory.create(new Position(0, 2), 2);
+        final ModifiableIsland island3 = ModifiableIslandFactory.create(new Position(0, 4), 2);
+
+        final Column column = new Column(0);
+        column.addIsland(island1);
+        column.addIsland(island3);
+        column.addIsland(island2);
+
+        Optional<Island> islandAtRow0 = column.getIslandAtRow(0);
+        Optional<Island> islandAtRow2 = column.getIslandAtRow(2);
+        Optional<Island> islandAtRow4 = column.getIslandAtRow(4);
+
+        assertTrue("No island at row 0.", islandAtRow0.isPresent());
+        assertTrue("No island at row 2.", islandAtRow2.isPresent());
+        assertTrue("No island at row 3.", islandAtRow4.isPresent());
+
+        assertEquals("Unexpected island at row 0", island1, islandAtRow0.get());
+        assertEquals("Unexpected island at row 2", island2, islandAtRow2.get());
+        assertEquals("Unexpected island at row 4", island3, islandAtRow4.get());
+    }
+
+    @Test
+    public void testGetIslandAtEmptyRow() {
+        final ModifiableIsland island1 = ModifiableIslandFactory.create(new Position(0, 0), 1);
+        final ModifiableIsland island2 = ModifiableIslandFactory.create(new Position(0, 2), 2);
+        final ModifiableIsland island3 = ModifiableIslandFactory.create(new Position(0, 4), 2);
+
+        final Column column = new Column(0);
+        column.addIsland(island1);
+        column.addIsland(island3);
+        column.addIsland(island2);
+
+        Optional<Island> islandAtRow5 = column.getIslandAtRow(5);
+        assertFalse("Expected no island at row 5.", islandAtRow5.isPresent());
     }
 }
