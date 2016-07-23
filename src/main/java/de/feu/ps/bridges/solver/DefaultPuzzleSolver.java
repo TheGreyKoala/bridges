@@ -87,8 +87,6 @@ class DefaultPuzzleSolver implements PuzzleSolver {
     }
 
     private Optional<Move> getSafeMove() {
-        // TODO check if already solved
-
         Move safeMove = null;
 
         for (Island island : puzzleAnalyser.getUnfinishedIslands()) {
