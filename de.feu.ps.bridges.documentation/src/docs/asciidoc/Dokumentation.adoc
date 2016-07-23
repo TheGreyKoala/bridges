@@ -6,8 +6,8 @@ Tim Gremplewski <tim.gremplewski@gmail.com>
 == Architektur
 
 Die Architektur des Spiel orientiert sich an einer einfachen Schichtenarchitektur
-und besteht aus drei auf einander aufbauenden horizontalen
-sowie einer vierten unabhängigen vertikalen Schicht.
+und besteht aus mehreren aufeinander aufbauenden horizontalen
+sowie einer unabhängigen vertikalen Schicht.
 
 Eine schematische Darstellung ist in Abbildung <<architecture>> zu sehen.
 
@@ -15,9 +15,11 @@ Eine schematische Darstellung ist in Abbildung <<architecture>> zu sehen.
 .Architektur des Spiels
 image::architektur.png[]
 
-Die Quadrate stellen elementare Komponenten der Anwendung dar.
+Die Boxen stellen elementare Komponenten der Anwendung dar.
 Ihre Einfärbung spiegelt die Schicht wider, auf der sie angesiedelt sind.
 Die Pfeile repräsentieren Abhänngigkeiten zwischen den Komponenten.
+Das Dateisystem ist selbstverständlich keine Komponente der Anwendung selbst,
+muss der Vollständigkeit halber aber trotzdem dargestellt werden.
 
 Im Folgenden wird die Aufgabe jeder Komponente kurz beschrieben.
 
