@@ -53,7 +53,7 @@ class DefaultPuzzleSolver implements PuzzleSolver {
             Set<Island> destinations = puzzleAnalyser.getValidBridgeDestinations(island, false);
 
             for (Island destination : destinations) {
-                puzzle.buildBridge(island, destination, false);
+                puzzle.buildBridge(island, destination);
 
                 boolean causesConflict = false;
 

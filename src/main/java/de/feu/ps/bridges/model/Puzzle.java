@@ -12,16 +12,16 @@ public interface Puzzle {
 
     /**
      * Builds a {@link Bridge} between the given {@link Island}s.
-     * If <code>doubleBridge</code> is true, the new bridge will be a double bridge.
+     * If called twice for the same {@link Island}s, a single {@link Bridge} will become a double bridge.
      *
      * @param island1 Island to be bridged.
      * @param island2 Another island to be bridged.
-     * @param doubleBridge indicates whether the new bridge should be a double bridge or not.
      * @return a new {@link Bridge} that bridges the given {@link Island}s.
      * @throws NullPointerException if island1 or island2 is null.
      * @throws IllegalArgumentException if a bridge cannot be build between these islands.
+     * @throws IllegalStateException if a double bridge already exists between the given {@link Island}s.
      */
-    Bridge buildBridge(Island island1, Island island2, boolean doubleBridge);
+    Bridge buildBridge(Island island1, Island island2);
 
     /**
      * Get all bridges in this puzzle.

@@ -55,14 +55,15 @@ public class IsAnyBridgeCrossingTest {
     public void isAnyBridgeCrossing(@FromDataPoints("isAnyBridgeCrossingTestCases") IsAnyBridgeCrossingTestCase testCase) {
         Island island1 = islands[testCase.bridgeStartIndex];
         Island island2 = islands[testCase.bridgeEndIndex];
-        puzzle.buildBridge(island1, island2, false);
+        puzzle.buildBridge(island1, island2);
         boolean anyBridgeCrossing = analyser.isAnyBridgeCrossing(islands[testCase.newBridgeStartIndex].getPosition(), islands[testCase.newBridgeEndIndex].getPosition());
         assertEquals("Unexpected result.", testCase.expectedResult, anyBridgeCrossing);
     }
 
     @Test
     public void testIsAnyBridgeCrossingPreventsTripleBridge() {
-        puzzle.buildBridge(islands[0], islands[2], true);
+        puzzle.buildBridge(islands[0], islands[2]);
+        puzzle.buildBridge(islands[0], islands[2]);
         boolean anyBridgeCrossing = analyser.isAnyBridgeCrossing(islands[0].getPosition(), islands[2].getPosition());
         assertTrue("Expected a crossing bridge.", anyBridgeCrossing);
     }

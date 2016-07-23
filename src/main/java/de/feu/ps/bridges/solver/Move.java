@@ -39,6 +39,6 @@ public class Move {
      * @return the {@link Bridge} that was created when applying this move.
      */
     public Bridge apply() {
-        return puzzle.buildBridge(island1, island2, false);
+        return puzzle.buildBridge(island1, island2);
     }
 }

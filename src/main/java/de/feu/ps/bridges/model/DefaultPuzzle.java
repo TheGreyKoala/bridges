@@ -34,7 +34,7 @@ class DefaultPuzzle implements ModifiablePuzzle {
     }
 
     @Override
-    public Bridge buildBridge(final Island island1, final Island island2, final boolean doubleBridge) {
+    public Bridge buildBridge(final Island island1, final Island island2) {
         validateIslands(island1, island2);
 
         final ModifiableBridge bridge;
@@ -42,9 +42,14 @@ class DefaultPuzzle implements ModifiablePuzzle {
 
         if (possibleDuplicate.isPresent()) {
             bridge = possibleDuplicate.get();
-            bridge.setDoubleBridge(true);
+
+            if (bridge.isDoubleBridge()) {
+                throw new IllegalStateException("Two bridges already exist between the given islands.");
+            } else {
+                bridge.setDoubleBridge(true);
+            }
         } else {
-            bridge = ModifiableBridgeFactory.createBridge(island1, island2, doubleBridge);
+            bridge = ModifiableBridgeFactory.createBridge(island1, island2, false);
             ((ModifiableIsland) island1).addBridge(bridge);
             ((ModifiableIsland) island2).addBridge(bridge);
             bridges.add(bridge);
@@ -73,13 +78,13 @@ class DefaultPuzzle implements ModifiablePuzzle {
 
     @Override
     public Island buildIsland(final Position position, final int requiredBridges) {
-        Objects.requireNonNull(position, "Parameter 'position' must not be null.");
+        validatePosition(position);
 
         final int column = position.getColumn();
         final int row = position.getRow();
 
         if (columns[column] != null && columns[column].getIslandAtRow(row).isPresent()) {
-            throw new IllegalStateException("An islands already exists at the given position.");
+            throw new IllegalStateException("An island already exists at the given position.");
         }
 
         final ModifiableIsland island = ModifiableIslandFactory.create(position, requiredBridges);
@@ -87,6 +92,18 @@ class DefaultPuzzle implements ModifiablePuzzle {
         addToRow(island, row);
         islands.add(island);
         return island;
+    }
+
+    private void validatePosition(final Position position) {
+        Objects.requireNonNull(position, "Parameter 'position' must not be null.");
+
+        if (position.getColumn() >= columns.length) {
+            throw new IllegalArgumentException("The puzzle does not have this column: " + position.getColumn());
+        }
+
+        if (position.getRow() >= rows.length) {
+            throw new IllegalArgumentException("The puzzle does not have this row: " + position.getRow());
+        }
     }
 
     private void addToColumn(final ModifiableIsland island, final int columnIndex) {
