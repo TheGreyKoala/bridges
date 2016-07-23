@@ -171,8 +171,7 @@ public class MainController implements Initializable, GameStateListener {
                 break;
             case AUTOMATIC_SOLVING_FINISHED:
                 getNodesToLock().forEach(node -> node.setDisable(false));
-                updateStatus();
-                showInfoAfterAutomaticPuzzleSolving();
+                showInfoIfPuzzleUnsolved();
                 break;
             case AUTOMATIC_SOLVING_CANCELLED_BY_USER:
                 getNodesToLock().forEach(node -> node.setDisable(false));
@@ -225,7 +224,7 @@ public class MainController implements Initializable, GameStateListener {
         alert.showAndWait();
     }
 
-    private void showInfoAfterAutomaticPuzzleSolving() {
+    private void showInfoIfPuzzleUnsolved() {
         PuzzleStatus puzzleStatus = gameState.getPuzzleStatus();
         if (puzzleStatus == PuzzleStatus.UNSOLVED) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);

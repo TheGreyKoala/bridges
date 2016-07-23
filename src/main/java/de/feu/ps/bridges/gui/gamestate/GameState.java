@@ -235,10 +235,12 @@ public class GameState {
     private void solvePuzzle() {
         try {
             Optional<Bridge> optionalBridge;
+            boolean notEvenOneMoveFound = true;
             do {
                 optionalBridge = puzzleToolkit.nextMove();
 
                 if (optionalBridge.isPresent()) {
+                    notEvenOneMoveFound = false;
                     addedBridges.add(optionalBridge.get());
                     Platform.runLater(() -> fireGameStateEvent(GameStateEventType.NEW_PUZZLE_LOADED));
 
@@ -249,6 +251,9 @@ public class GameState {
                             currentTask.cancel(true);
                         }
                     }
+                } else if (notEvenOneMoveFound) {
+                    // If we didn't even find one move, we still want to update the status and show an info dialog
+                    Platform.runLater(() -> fireGameStateEvent(GameStateEventType.NEW_PUZZLE_LOADED));
                 }
             } while (optionalBridge.isPresent() && !currentTask.isCancelled());
 
