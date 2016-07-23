@@ -7,9 +7,9 @@ package de.feu.ps.bridges.gui.gamestate;
 public enum GameStateEventType {
 
     /**
-     * A saved puzzle has been loaded or a new one has been generated.
+     * The current puzzle has changed.
      */
-    NEW_PUZZLE_LOADED,
+    PUZZLE_CHANGED,
 
     /**
      * The automatic solving of the current puzzle has been started.
@@ -74,10 +74,5 @@ public enum GameStateEventType {
     /**
      * Tearing down a bridge failed.
      */
-    TEAR_DOWN_BRIDGE_FAILED,
-
-    /**
-     * The current puzzle has been restarted.
-     */
-    PUZZLE_RESTARTED
+    TEAR_DOWN_BRIDGE_FAILED
 }

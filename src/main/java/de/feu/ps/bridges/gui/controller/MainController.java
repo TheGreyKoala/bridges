@@ -161,8 +161,7 @@ public class MainController implements Initializable, GameStateListener {
     @Override
     public void handleGameStateEvent(GameStateEvent event) {
         switch (event.getGameStateEventType()) {
-            case NEW_PUZZLE_LOADED:
-            case PUZZLE_RESTARTED:
+            case PUZZLE_CHANGED:
                 drawPuzzle();
                 updateStatus();
                 break;
