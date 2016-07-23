@@ -43,9 +43,9 @@ public interface PuzzleAnalyser {
     boolean isAnyBridgeCrossing(Position start, Position end);
 
     /**
-     * TODO: JavaDoc
-     * @param position
-     * @return
+     * Indicates whether it would be valid to build an island at the given position.
+     * @param position Position to check
+     * @return true, if an island at the given position would be valid, false otherwise.
      */
     boolean isValidIslandPosition(Position position);
 
