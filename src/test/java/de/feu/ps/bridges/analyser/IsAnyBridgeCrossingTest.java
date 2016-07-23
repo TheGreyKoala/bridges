@@ -1,5 +1,6 @@
-package de.feu.ps.bridges.model;
+package de.feu.ps.bridges.analyser;
 
+import de.feu.ps.bridges.model.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.theories.DataPoints;
@@ -15,22 +16,25 @@ import static org.junit.Assert.assertTrue;
  * @author Tim Gremplewski
  */
 @RunWith(Theories.class)
-public class DefaultPuzzleTest {
+public class IsAnyBridgeCrossingTest {
 
-    private DefaultPuzzle puzzle;
+    private Puzzle puzzle;
     private Island[] islands;
+    private PuzzleAnalyser analyser;
 
     @Before
     public void setUp() throws Exception {
-        puzzle = new DefaultPuzzle(13, 13);
+        PuzzleBuilder builder = PuzzleBuilder.createBuilder(13, 13, 7);
+        puzzle = builder.getResult();
+        analyser = PuzzleAnalyserFactory.createPuzzleAnalyserFor(puzzle);
         islands = new Island[7];
-        islands[0] = puzzle.buildIsland(new Position(0, 0), 8);
-        islands[1] = puzzle.buildIsland(new Position(0, 4), 8);
-        islands[2] = puzzle.buildIsland(new Position(4, 0), 8);
-        islands[3] = puzzle.buildIsland(new Position(4, 8), 8);
-        islands[4] = puzzle.buildIsland(new Position(8, 0), 8);
-        islands[5] = puzzle.buildIsland(new Position(8, 4), 8);
-        islands[6] = puzzle.buildIsland(new Position(12, 0), 8);
+        islands[0] = builder.addIsland(new Position(0, 0), 8);
+        islands[1] = builder.addIsland(new Position(0, 4), 8);
+        islands[2] = builder.addIsland(new Position(4, 0), 8);
+        islands[3] = builder.addIsland(new Position(4, 8), 8);
+        islands[4] = builder.addIsland(new Position(8, 0), 8);
+        islands[5] = builder.addIsland(new Position(8, 4), 8);
+        islands[6] = builder.addIsland(new Position(12, 0), 8);
     }
 
     @DataPoints("isAnyBridgeCrossingTestCases")
@@ -49,15 +53,15 @@ public class DefaultPuzzleTest {
     @Theory
     public void isAnyBridgeCrossing(@FromDataPoints("isAnyBridgeCrossingTestCases") IsAnyBridgeCrossingTestCase testCase) {
         puzzle.buildBridge(islands[testCase.bridgeStartIndex], islands[testCase.bridgeEndIndex], false);
-        boolean anyBridgeCrossing = puzzle.isAnyBridgeCrossing(islands[testCase.newBridgeStartIndex].getPosition(), islands[testCase.newBridgeEndIndex].getPosition());
+        boolean anyBridgeCrossing = analyser.isAnyBridgeCrossing(islands[testCase.newBridgeStartIndex].getPosition(), islands[testCase.newBridgeEndIndex].getPosition());
         assertEquals("Unexpected result.", testCase.expectedResult, anyBridgeCrossing);
     }
 
     @Test
     public void testIsAnyBridgeCrossingPreventsTripleBridge() {
         puzzle.buildBridge(islands[0], islands[2], true);
-        boolean anyBridgeCrossing = puzzle.isAnyBridgeCrossing(islands[0].getPosition(), islands[2].getPosition());
-        assertTrue("Expected a crossing brige.", anyBridgeCrossing);
+        boolean anyBridgeCrossing = analyser.isAnyBridgeCrossing(islands[0].getPosition(), islands[2].getPosition());
+        assertTrue("Expected a crossing bridge.", anyBridgeCrossing);
     }
 
     private static class IsAnyBridgeCrossingTestCase {

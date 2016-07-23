@@ -120,6 +120,8 @@ public class Deserializer {
             final int row = Integer.parseInt(match.group(2));
             final int requiredBridges = Integer.parseInt(match.group(3));
 
+            // TODO: Use analyser to validate island position
+
             final Island island = puzzleBuilder.addIsland(new Position(column, row), requiredBridges);
             createdIslands.add(island);
         }

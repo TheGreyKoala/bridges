@@ -2,6 +2,7 @@ package de.feu.ps.bridges.analyser;
 
 import de.feu.ps.bridges.model.Direction;
 import de.feu.ps.bridges.model.Island;
+import de.feu.ps.bridges.model.Position;
 
 import java.util.Set;
 
@@ -31,6 +32,15 @@ public interface PuzzleAnalyser {
      * @throws NullPointerException if island is null.
      */
     Set<Island> getValidBridgeDestinations(final Island island, final boolean doubleBridge);
+
+    /**
+     * Indicates if any bridge crosses the path from <code>start</code> to <code>end</code>.
+     * @param start Start position of the path to be checked for crossing bridges.
+     * @param end End position of the path to be checked for crossing bridges.
+     * @return true, if a bridge is crossing the path from <code>start</code> to <code>end</code>, false otherwise.
+     * @throws NullPointerException if <code>start</code> or <code>end</code> is null.
+     */
+    boolean isAnyBridgeCrossing(final Position start, final Position end);
 
     /**
      * Indicates whether a bridge in the given direction and starting at the given island would be valid.

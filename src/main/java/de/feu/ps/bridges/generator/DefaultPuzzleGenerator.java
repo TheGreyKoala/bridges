@@ -1,5 +1,7 @@
 package de.feu.ps.bridges.generator;
 
+import de.feu.ps.bridges.analyser.PuzzleAnalyser;
+import de.feu.ps.bridges.analyser.PuzzleAnalyserFactory;
 import de.feu.ps.bridges.model.*;
 
 import java.util.*;
@@ -18,6 +20,8 @@ class DefaultPuzzleGenerator implements PuzzleGenerator {
     private final int islands;
     private Set<Island> startPoints;
     private RandomUtil randomUtil;
+    private Puzzle temporaryPuzzle;
+    private PuzzleAnalyser temporaryPuzzleAnalyser;
 
     /**
      * Creates a new instance.
@@ -52,6 +56,8 @@ class DefaultPuzzleGenerator implements PuzzleGenerator {
     private Optional<Puzzle> tryGenerate() {
         for (int i = 0; i < 100; i++) {
             final PuzzleBuilder puzzleBuilder = PuzzleBuilder.createBuilder(columns, rows, islands);
+            temporaryPuzzle = puzzleBuilder.getResult();
+            temporaryPuzzleAnalyser = PuzzleAnalyserFactory.createPuzzleAnalyserFor(temporaryPuzzle);
             buildInitialIsland(puzzleBuilder);
 
             int createdIslands = 1;
@@ -125,7 +131,7 @@ class DefaultPuzzleGenerator implements PuzzleGenerator {
             for (int row = start.getPosition().getRow() - 2; row >= border; row--) {
                 Position position = new Position(start.getPosition().getColumn(), row);
                 if (puzzleBuilder.adjacentIslandAt(position)
-                        || puzzleBuilder.isAnyBridgeCrossing(start.getPosition(), position)) {
+                        || temporaryPuzzleAnalyser.isAnyBridgeCrossing(start.getPosition(), position)) {
                     break;
                 } else {
                     validStartPoints.add(position);
@@ -137,7 +143,7 @@ class DefaultPuzzleGenerator implements PuzzleGenerator {
             for (int column = start.getPosition().getColumn() + 2; column <= border; column++) {
                 Position position = new Position(column, start.getPosition().getRow());
                 if (puzzleBuilder.adjacentIslandAt(position)
-                        || puzzleBuilder.isAnyBridgeCrossing(start.getPosition(), position)) {
+                        || temporaryPuzzleAnalyser.isAnyBridgeCrossing(start.getPosition(), position)) {
                     break;
                 } else {
                     validStartPoints.add(position);
@@ -149,7 +155,7 @@ class DefaultPuzzleGenerator implements PuzzleGenerator {
             for (int row = start.getPosition().getRow() + 2; row <= border; row++) {
                 Position position = new Position(start.getPosition().getColumn(), row);
                 if (puzzleBuilder.adjacentIslandAt(position)
-                        || puzzleBuilder.isAnyBridgeCrossing(start.getPosition(), position)) {
+                        || temporaryPuzzleAnalyser.isAnyBridgeCrossing(start.getPosition(), position)) {
                     break;
                 } else {
                     validStartPoints.add(position);
@@ -161,7 +167,7 @@ class DefaultPuzzleGenerator implements PuzzleGenerator {
             for (int column = start.getPosition().getColumn() - 2; column >= border; column--) {
                 Position position = new Position(column, start.getPosition().getRow());
                 if (puzzleBuilder.adjacentIslandAt(position)
-                        || puzzleBuilder.isAnyBridgeCrossing(start.getPosition(), position)) {
+                        || temporaryPuzzleAnalyser.isAnyBridgeCrossing(start.getPosition(), position)) {
                     break;
                 } else {
                     validStartPoints.add(position);

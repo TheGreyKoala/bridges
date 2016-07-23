@@ -128,18 +128,6 @@ public class PuzzleBuilder {
     }
 
     /**
-     * Indicates whether any bridge is crossing the path between <code>start</code> and <code>end</code>.
-     * @param start Start position of the path to be checked.
-     * @param end End position of the path to be checked.
-     * @return true, if any bridge is crossing the path between <code>start</code> and <code>end</code>.
-     */
-    public boolean isAnyBridgeCrossing(final Position start, final Position end) {
-        validatePosition(start);
-        validatePosition(end);
-        return puzzle.isAnyBridgeCrossing(start, end);
-    }
-
-    /**
      * For each island, set the amount of required bridges to the current amount of existing bridges.
      */
     public void setRequiredBridgesToCurrentCountOfBridges() {

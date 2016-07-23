@@ -48,16 +48,6 @@ public interface Puzzle {
     int getRowsCount();
 
     /**
-     * Indicates of any bridge crosses the path from <code>start</code> to <code>end</code>.
-     * @param start Start position of the path to be checked for crossing bridges.
-     * @param end End position of the path to be checked for crossing bridges.
-     * @return true, if a bridge is crossing the path from <code>start</code> to <code>end</code>, false otherwise.
-     * @throws NullPointerException if <code>start</code> or <code>end</code> is null.
-     */
-    // TODO: Move this method to the analyzer module
-    boolean isAnyBridgeCrossing(final Position start, final Position end);
-
-    /**
      * Remove all bridges from this puzzle.
      */
     void removeAllBridges();
