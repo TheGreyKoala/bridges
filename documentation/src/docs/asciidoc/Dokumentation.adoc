@@ -31,7 +31,7 @@ Brücken können über das Puzzle Model außerdem erstellt oder entfernt werden.
 ==== Puzzle Analysator
 Der Puzzle Analysator liefert weitergehende Informationen über ein gegebenes Puzzle,
 die eine genauere Betrachtung des Puzzles und ggf. einige logsiche Schlussfolgerungen erfordern.
-Zu diesen Informationen zählen vor allem der Status eines Puzzles und die Gültigkeit einer Brücke.
+Zu diesen Informationen zählt vor allem der Status eines Puzzles.
 
 ==== Puzzle Löser
 Der Puzzle Löser kann ein gegebenes Puzzle vollständig lösen oder lediglich einen nächsten
