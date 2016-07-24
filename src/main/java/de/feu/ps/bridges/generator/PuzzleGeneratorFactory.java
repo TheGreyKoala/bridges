@@ -4,7 +4,7 @@ package de.feu.ps.bridges.generator;
  * Factory class that creates a new {@link PuzzleGenerator}.
  * @author Tim Gremplewski
  */
-public class PuzzleGeneratorFactory {
+public final class PuzzleGeneratorFactory {
 
     private static RandomUtil randomUtil = new RandomUtil();
 

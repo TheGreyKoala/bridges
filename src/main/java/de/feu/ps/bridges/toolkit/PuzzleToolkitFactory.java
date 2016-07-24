@@ -10,7 +10,7 @@ import java.io.File;
  * Factory class that creates a new {@link PuzzleToolkit}.
  * @author Tim Gremplewski
  */
-public class PuzzleToolkitFactory {
+public final class PuzzleToolkitFactory {
 
     private PuzzleToolkitFactory() {
     }

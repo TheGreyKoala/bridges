@@ -36,7 +36,7 @@ public class Serializer {
             throw new IllegalArgumentException("Destination file must not exists.");
         }
 
-        final File destinationWithCorrectExtension = assureFileExentions(destination);
+        final File destinationWithCorrectExtension = assureFileExtension(destination);
 
         try (final PrintWriter writer = new PrintWriter(destinationWithCorrectExtension)) {
             final List<Island> sortedIslands = sortIslands(puzzle.getIslands());
@@ -54,7 +54,7 @@ public class Serializer {
         }
     }
 
-    private static File assureFileExentions(final File destination) {
+    private static File assureFileExtension(final File destination) {
         return destination.getPath().endsWith(".bgs") ? destination : new File(destination.getAbsolutePath() + ".bgs");
     }
 

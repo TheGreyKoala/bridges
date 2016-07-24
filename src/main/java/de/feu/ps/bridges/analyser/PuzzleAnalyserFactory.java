@@ -6,7 +6,7 @@ import de.feu.ps.bridges.model.Puzzle;
  * Factory class that creates a new {@link PuzzleAnalyser}.
  * @author Tim Gremplewski
  */
-public class PuzzleAnalyserFactory {
+public final class PuzzleAnalyserFactory {
 
     /**
      * Creates a new {@link PuzzleAnalyser} for the given puzzle.

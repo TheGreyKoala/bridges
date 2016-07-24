@@ -6,7 +6,7 @@ import de.feu.ps.bridges.model.Puzzle;
  * Factory class that creates a new {@link PuzzleSolver}.
  * @author Tim Gremplewski
  */
-public class PuzzleSolverFactory {
+public final class PuzzleSolverFactory {
 
     private PuzzleSolverFactory() {
     }
