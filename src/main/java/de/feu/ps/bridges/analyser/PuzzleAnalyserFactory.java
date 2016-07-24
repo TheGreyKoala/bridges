@@ -14,6 +14,9 @@ public class PuzzleAnalyserFactory {
      * @return a new {@link PuzzleAnalyser} for the given puzzle.
      */
     public static PuzzleAnalyser createPuzzleAnalyserFor(final Puzzle puzzle) {
-        return new DefaultPuzzleAnalyser(puzzle);
+        MoveAnalyser moveAnalyser = new MoveAnalyser(puzzle);
+        StatusAnalyser statusAnalyser = new StatusAnalyser(puzzle, moveAnalyser);
+        IslandPositionAnalyser islandPositionAnalyser = new IslandPositionAnalyser(puzzle);
+        return new DefaultPuzzleAnalyser(moveAnalyser, statusAnalyser, islandPositionAnalyser);
     }
 }
