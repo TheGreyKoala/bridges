@@ -16,7 +16,7 @@ public class PuzzleAnalyserFactory {
     public static PuzzleAnalyser createPuzzleAnalyserFor(final Puzzle puzzle) {
         MoveAnalyser moveAnalyser = new MoveAnalyser(puzzle);
         StatusAnalyser statusAnalyser = new StatusAnalyser(puzzle, moveAnalyser);
-        IslandPositionAnalyser islandPositionAnalyser = new IslandPositionAnalyser(puzzle);
-        return new DefaultPuzzleAnalyser(moveAnalyser, statusAnalyser, islandPositionAnalyser);
+        NewIslandAnalyser newIslandAnalyser = new NewIslandAnalyser(puzzle, moveAnalyser);
+        return new DefaultPuzzleAnalyser(moveAnalyser, statusAnalyser, newIslandAnalyser);
     }
 }

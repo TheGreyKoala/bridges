@@ -4,6 +4,7 @@ import de.feu.ps.bridges.model.Direction;
 import de.feu.ps.bridges.model.Island;
 import de.feu.ps.bridges.model.Position;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -33,6 +34,14 @@ public interface PuzzleAnalyser {
     Set<Island> getSafeBridgeDestinations(Island island);
 
     /**
+     * Returns a list of valid positions for new neighbours of the given Island in the given direction.
+     * @param island Island to check
+     * @param direction Direction to check
+     * @return a list of valid positions for new neighbours of the given Island in the given direction.
+     */
+    List<Position> getValidNeighbourPositions(Island island, Direction direction);
+
+    /**
      * Indicates if any bridge crosses the path from <code>start</code> to <code>end</code>.
      * @param start Start position of the path to be checked for crossing bridges.
      * @param end End position of the path to be checked for crossing bridges.
@@ -40,6 +49,14 @@ public interface PuzzleAnalyser {
      * @throws NullPointerException if <code>start</code> or <code>end</code> is null.
      */
     boolean isAnyBridgeCrossing(Position start, Position end);
+
+    /**
+     * Indicates whether there is enough space in the puzzle to add a neighbour to the given island in the given direction.
+     * @param island Island to check
+     * @param direction Direction to check
+     * @return true, if there is enough space in the puzzle to add a neighbour to the given island in the given direction, false otherwise
+     */
+    boolean isEnoughSpaceToAddNeighbour(Island island, Direction direction);
 
     /**
      * Indicates whether it would be valid to build an island at the given position.

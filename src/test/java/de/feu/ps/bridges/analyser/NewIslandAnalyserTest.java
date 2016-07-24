@@ -1,6 +1,7 @@
 package de.feu.ps.bridges.analyser;
 
 import de.feu.ps.bridges.model.Position;
+import de.feu.ps.bridges.model.Puzzle;
 import de.feu.ps.bridges.model.PuzzleBuilder;
 import org.junit.Before;
 import org.junit.Rule;
@@ -14,24 +15,35 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Tim Gremplewski
  */
-public class IslandPositionAnalyserTest {
+public class NewIslandAnalyserTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
-    private IslandPositionAnalyser analyser;
+    private NewIslandAnalyser analyser;
 
     @Before
     public void setUp() throws Exception {
         PuzzleBuilder puzzleBuilder = PuzzleBuilder.createBuilder(10, 10, 5);
         puzzleBuilder.addIsland(new Position(5, 5), 5);
-        analyser = new IslandPositionAnalyser(puzzleBuilder.getResult());
+        Puzzle puzzle = puzzleBuilder.getResult();
+        analyser = new NewIslandAnalyser(puzzle, new MoveAnalyser(puzzle));
     }
 
     @Test
     public void testPuzzleNull() {
         expectedException.expect(NullPointerException.class);
         expectedException.expectMessage(is("Parameter 'puzzle' must not be null."));
-        new IslandPositionAnalyser(null);
+        new NewIslandAnalyser(null, new MoveAnalyser(PuzzleBuilder.createBuilder(10, 10, 5).getResult()));
+    }
+
+    @Test
+    public void testMoveAnalyserNull() {
+        expectedException.expect(NullPointerException.class);
+        expectedException.expectMessage(is("Parameter 'moveAnalyser' must not be null."));
+        PuzzleBuilder puzzleBuilder = PuzzleBuilder.createBuilder(10, 10, 5);
+        puzzleBuilder.addIsland(new Position(5, 5), 5);
+        Puzzle puzzle = puzzleBuilder.getResult();
+        analyser = new NewIslandAnalyser(puzzle, null);
     }
 
     @Test

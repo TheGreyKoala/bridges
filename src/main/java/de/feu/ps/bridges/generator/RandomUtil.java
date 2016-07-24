@@ -1,7 +1,5 @@
 package de.feu.ps.bridges.generator;
 
-import de.feu.ps.bridges.model.Direction;
-
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.Random;
@@ -30,13 +28,15 @@ final class RandomUtil {
     }
 
     /**
-     * Return a randomly selected {@link Direction} from the given list.
-     * @param directions List of directions
-     * @return a randomly selected {@link Direction} from the given list.
+     * Return a randomly selected item from the given list.
+     * @param <T> Type of the items in the list.
+     * @param list List of items of type T.
+     * @return a randomly selected item from the given list.
+     * @
      */
-    Direction pickRandomDirectionFrom(final List<Direction> directions) {
-        final int index = randomIntBetweenZeroAnd(directions.size() - 1);
-        return directions.get(index);
+    <T> T pickRandomFrom(final List<T> list) {
+        final int index = randomIntBetweenZeroAnd(list.size() - 1);
+        return list.get(index);
     }
 
     /**
