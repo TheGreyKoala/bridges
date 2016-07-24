@@ -3,6 +3,8 @@ package de.feu.ps.bridges.analyser;
 import de.feu.ps.bridges.model.Position;
 import de.feu.ps.bridges.model.Puzzle;
 
+import java.util.Objects;
+
 /**
  * @author Tim Gremplewski
  */
@@ -11,10 +13,11 @@ class IslandPositionAnalyser {
     private final Puzzle puzzle;
 
     IslandPositionAnalyser(final Puzzle puzzle) {
-        this.puzzle = puzzle;
+        this.puzzle = Objects.requireNonNull(puzzle, "Parameter 'puzzle' must not be null.");
     }
 
     boolean isValidIslandPosition(final Position position) {
+        Objects.requireNonNull(position, "Parameter 'position' must not be null.");
         return isInsidePuzzle(position) && !adjacentIslandAt(position);
     }
 

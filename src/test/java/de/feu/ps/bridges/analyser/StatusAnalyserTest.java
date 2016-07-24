@@ -11,8 +11,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Tim Gremplewski
  */
-public class DefaultPuzzleAnalyserTest {
-
+public class StatusAnalyserTest {
     private PuzzleBuilder puzzleBuilder;
     private Island[] islands = new Island[9];
 

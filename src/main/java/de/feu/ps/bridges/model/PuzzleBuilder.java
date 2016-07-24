@@ -9,6 +9,8 @@ import java.util.List;
  */
 public class PuzzleBuilder {
 
+    // TODO: Unit tests
+
     private int islandsCount;
     private List<ModifiableIsland> islands;
     private ModifiablePuzzle puzzle;
