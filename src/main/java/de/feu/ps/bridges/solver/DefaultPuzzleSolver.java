@@ -2,11 +2,10 @@ package de.feu.ps.bridges.solver;
 
 import de.feu.ps.bridges.analyser.PuzzleAnalyser;
 import de.feu.ps.bridges.analyser.PuzzleAnalyserFactory;
+import de.feu.ps.bridges.analyser.PuzzleStatus;
 import de.feu.ps.bridges.model.*;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Default implementation of {@link PuzzleSolver}.
@@ -44,34 +43,66 @@ class DefaultPuzzleSolver implements PuzzleSolver {
         return safeMove.isPresent() ? safeMove : findSoleNonErrorCausingMove();
     }
 
-    private Optional<Move> findSoleNonErrorCausingMove() {
-        Set<Island> islands = puzzleAnalyser.getUnfinishedIslands();
+    private Optional<Move> getSafeMove() {
+        for (final Island island : puzzleAnalyser.getUnfinishedIslands()) {
+            final Set<Island> possibleDestinations = puzzleAnalyser.getSafeBridgeDestinations(island);
 
-        Move nextMove =null;
+            if (!possibleDestinations.isEmpty()) {
+                int remainingBridges = island.getRemainingBridges();
+                int existingBridgesToPossibleDestinations = getNumberOfExistingBridges(island, possibleDestinations);
 
-        for (Island island : islands) {
-            Set<Island> destinations = puzzleAnalyser.getSafeBridgeDestinations(island);
+                for (Island destination : possibleDestinations) {
+                    int existingToDestination = getNumberOfExistingBridges(island, destination);
 
-            for (Island destination : destinations) {
-                puzzle.buildBridge(island, destination);
-
-                boolean causesConflict = false;
-
-                Set<Island> islands1 = puzzleAnalyser.getUnfinishedIslands();
-                for (Island island1 : islands1) {
-                    Set<Island> destinationsTest = puzzleAnalyser.getSafeBridgeDestinations(island1);
-                    if (destinationsTest.isEmpty()) {
-                        causesConflict = true;
-                        break;
+                    if (isSave(remainingBridges + existingBridgesToPossibleDestinations, possibleDestinations.size(), existingToDestination)) {
+                        return Optional.of(Move.create(puzzle, island, destination));
                     }
                 }
+            }
+        }
 
-                puzzle.tearDownBridge(island, destination);
-                if (!causesConflict) {
+        return Optional.empty();
+    }
+
+    private int getNumberOfExistingBridges(final Island source, final Set<Island> destinations) {
+        int numberOfExistingBridges = 0;
+        for (Island destination : destinations) {
+            if (source.getBridgeTo(destination).isPresent()) {
+                // No need to check if bridge is a double bridge
+                // because an island with two existing bridges will not be returned by getSafeBridgeDestinations
+                numberOfExistingBridges++;
+            }
+        }
+        return numberOfExistingBridges;
+    }
+
+    private int getNumberOfExistingBridges(final Island source, final Island destination) {
+        Set<Island> destinations = new HashSet<>();
+        destinations.add(destination);
+        return getNumberOfExistingBridges(source, destinations);
+    }
+
+    private boolean isSave(int requiredBridges, int possibleDestinations, int existingInDirection) {
+        int saveBridgesInEveryDirection = 0;
+        if (requiredBridges == 2 * possibleDestinations) {
+            saveBridgesInEveryDirection = 2;
+        } else if (requiredBridges == 2 * possibleDestinations - 1) {
+            saveBridgesInEveryDirection = 1;
+        }
+
+        return existingInDirection < saveBridgesInEveryDirection;
+    }
+
+    private Optional<Move> findSoleNonErrorCausingMove() {
+        Move nextMove = null;
+
+        for (Island island : puzzleAnalyser.getUnfinishedIslands()) {
+            for (Island destination : puzzleAnalyser.getSafeBridgeDestinations(island)) {
+                if (!causesImmediateConflict(island, destination)) {
                     if (nextMove == null) {
                         nextMove = Move.create(puzzle, island, destination);
                     } else {
-                        // Island has more than one destination that do not lead to a direct conflict
+                        // Island has more than one destination that does not lead to a direct conflict
                         nextMove = null;
                         break;
                     }
@@ -86,51 +117,10 @@ class DefaultPuzzleSolver implements PuzzleSolver {
         return Optional.ofNullable(nextMove);
     }
 
-    private Optional<Move> getSafeMove() {
-        Move safeMove = null;
-
-        for (Island island : puzzleAnalyser.getUnfinishedIslands()) {
-            final Set<Island> possibleDestinations = puzzleAnalyser.getSafeBridgeDestinations(island);
-
-            if (!possibleDestinations.isEmpty()) {
-                int remainingBridges = island.getRemainingBridges();
-                int existingBridgesToPossibleDestinations = 0;
-
-                for (Island destination : possibleDestinations) {
-                    if (island.getBridgeTo(destination).isPresent()) {
-                        existingBridgesToPossibleDestinations++;
-                    }
-                }
-
-                for (Island destination : possibleDestinations) {
-                    int existingToDestination = 0;
-                    if (island.getBridgeTo(destination).isPresent()) {
-                        existingToDestination = 1;
-                    }
-
-                    if (isSave(remainingBridges + existingBridgesToPossibleDestinations, possibleDestinations.size(), existingToDestination)) {
-                        safeMove = Move.create(puzzle, island, destination);
-                        break;
-                    }
-                }
-
-                if (safeMove != null) {
-                    break;
-                }
-            }
-        }
-
-        return Optional.ofNullable(safeMove);
-    }
-
-    private boolean isSave(int requiredBridges, int possibleDestinations, int existingInDirection) {
-        int saveBridgesInEveryDirection = 0;
-        if (requiredBridges == 2 * possibleDestinations) {
-            saveBridgesInEveryDirection = 2;
-        } else if (requiredBridges == 2 * possibleDestinations - 1) {
-            saveBridgesInEveryDirection = 1;
-        }
-
-        return existingInDirection < saveBridgesInEveryDirection;
+    private boolean causesImmediateConflict(final Island source, final Island destination) {
+        puzzle.buildBridge(source, destination);
+        boolean causesConflict = puzzleAnalyser.getStatus() == PuzzleStatus.UNSOLVABLE;
+        puzzle.tearDownBridge(source, destination);
+        return causesConflict;
     }
 }
