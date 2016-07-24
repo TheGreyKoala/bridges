@@ -65,6 +65,6 @@ class StatusAnalyser {
     }
 
     private boolean noIsolatedIslands(final Set<Island> unfinishedIslands) {
-        return unfinishedIslands.stream().allMatch(island -> !moveAnalyser.getValidBridgeDestinations(island, false).isEmpty());
+        return unfinishedIslands.stream().allMatch(island -> !moveAnalyser.getSafeBridgeDestinations(island).isEmpty());
     }
 }

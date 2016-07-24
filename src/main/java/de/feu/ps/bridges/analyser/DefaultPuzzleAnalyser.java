@@ -37,8 +37,8 @@ class DefaultPuzzleAnalyser implements PuzzleAnalyser {
     }
 
     @Override
-    public Set<Island> getValidBridgeDestinations(final Island island, final boolean doubleBridge) {
-        return moveAnalyser.getValidBridgeDestinations(island, doubleBridge);
+    public Set<Island> getSafeBridgeDestinations(final Island island) {
+        return moveAnalyser.getSafeBridgeDestinations(island);
     }
 
     @Override

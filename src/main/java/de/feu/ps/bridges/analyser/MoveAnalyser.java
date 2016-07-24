@@ -15,34 +15,29 @@ class MoveAnalyser {
     private final Puzzle puzzle;
 
     MoveAnalyser(final Puzzle puzzle) {
-        this.puzzle = puzzle;
-    }
-
-    public Puzzle getPuzzle() {
-        return puzzle;
-    }
-
-    Set<Island> getUnfinishedIslands() {
-        return puzzle.getIslands().stream()
-                .filter(island -> islandCanTakeBridge(island, false))
-                .collect(Collectors.toSet());
+        this.puzzle = Objects.requireNonNull(puzzle, "Parameter 'puzzle' must not be null.");
     }
 
     boolean isValidMove(final Island island, final Direction direction, final boolean doubleBridge) {
-        Objects.requireNonNull(island, "Parameter 'island' must not be null");
-        Objects.requireNonNull(direction, "Parameter 'direction' must not be null");
+        Objects.requireNonNull(island, "Parameter 'island' must not be null.");
+        Objects.requireNonNull(direction, "Parameter 'direction' must not be null.");
 
         Optional<Island> neighbour = island.getNeighbour(direction);
         return neighbour.isPresent() && isValidMove(island, neighbour.get(), doubleBridge);
     }
 
     boolean isValidMove(final Island island1, final Island island2, final boolean doubleBridge) {
-        Objects.requireNonNull(island1, "Parameter 'island1' must not be null");
-        Objects.requireNonNull(island2, "Parameter 'island2' must not be null");
+        Objects.requireNonNull(island1, "Parameter 'island1' must not be null.");
+        Objects.requireNonNull(island2, "Parameter 'island2' must not be null.");
 
-        // Do not use getValidBridgeDestinations, because a move that causes isolation can still be valid (but not safe)
+        // Do not use getSafeBridgeDestinations, because a move that causes isolation can still be valid (but not safe)
         return islandCanTakeBridge(island1, doubleBridge)
-                && getReachableUnfinishedNeighbours(island1, doubleBridge).contains(island2);
+                && getReachableUnfinishedNeighbours(island1, doubleBridge)
+                    .contains(island2);
+    }
+
+    private boolean islandCanTakeBridge(Island island, boolean doubleBridge) {
+        return island.getRemainingBridges() >= (doubleBridge ? 2 : 1);
     }
 
     private Set<Island> getReachableUnfinishedNeighbours(final Island island, final boolean doubleBridge) {
@@ -59,6 +54,61 @@ class MoveAnalyser {
 
     private boolean noIntersectingBridge(Island island1, Island island2) {
         return !isAnyBridgeCrossing(island1.getPosition(), island2.getPosition());
+    }
+
+    Set<Island> getUnfinishedIslands() {
+        return puzzle.getIslands().stream()
+                .filter(island -> islandCanTakeBridge(island, false))
+                .collect(Collectors.toSet());
+    }
+
+    Set<Island> getSafeBridgeDestinations(final Island island) {
+        Objects.requireNonNull(island, "Parameter 'island' must not be null.");
+
+        if (!puzzle.getIslands().contains(island)) {
+            throw new IllegalStateException("Given island does not belong to the puzzle.");
+        }
+
+        final Set<Island> reachableUnfinishedNeighbours = getReachableUnfinishedNeighbours(island, false);
+        return reachableUnfinishedNeighbours.stream()
+                .filter(island1 -> causesNoIsolation(island, island1))
+                .collect(Collectors.toSet());
+    }
+
+    private boolean causesNoIsolation(Island island1, Island island2) {
+        Set<Island> visitedIslands = new HashSet<>();
+        Queue<Island> islandsToVisit = new LinkedList<>();
+
+        if (island1.getRemainingBridges() > 1) {
+            // If remainingBridges == 1, island1 will only be able to reach island2
+            Set<Island> reachable = getReachableUnfinishedNeighbours(island1, false);
+            islandsToVisit.addAll(reachable);
+        }
+
+        islandsToVisit.addAll(island1.getBridgedNeighbours());
+        visitedIslands.add(island1);
+
+        if (island2.getRemainingBridges() > 1) {
+            // If remainingBridges == 1, island2 will only be able to reach island1
+            Set<Island> reachable = getReachableUnfinishedNeighbours(island2, false);
+            islandsToVisit.addAll(reachable);
+        }
+
+        islandsToVisit.addAll(island2.getBridgedNeighbours());
+        visitedIslands.add(island2);
+
+        while (!islandsToVisit.isEmpty()) {
+            Island island = islandsToVisit.remove();
+            if (!visitedIslands.contains(island)) {
+                if (island.getRemainingBridges() > 0) {
+                    islandsToVisit.addAll(getReachableUnfinishedNeighbours(island, false));
+                }
+                islandsToVisit.addAll(island.getBridgedNeighbours());
+                visitedIslands.add(island);
+            }
+        }
+
+        return visitedIslands.containsAll(puzzle.getIslands());
     }
 
     boolean isAnyBridgeCrossing(final Position start, final Position end) {
@@ -112,59 +162,5 @@ class MoveAnalyser {
     private boolean intersectsPoint(Line2D line, Point2D point) {
         // A line does not have an area. Therefore contains always returns false and we have to do this workaround
         return line.intersectsLine(point.getX(), point.getY(), point.getX(), point.getY());
-    }
-
-    Set<Island> getValidBridgeDestinations(final Island island, final boolean doubleBridge) {
-        Objects.requireNonNull(island, "Parameter 'island' must not be null.");
-
-        if (!puzzle.getIslands().contains(island)) {
-            throw new IllegalStateException("Given island does not belong to the puzzle.");
-        }
-
-        final Set<Island> reachableUnfinishedNeighbours = getReachableUnfinishedNeighbours(island, doubleBridge);
-        return reachableUnfinishedNeighbours.stream()
-                .filter(island1 -> causesNoIsolation(puzzle, island, island1, doubleBridge))
-                .collect(Collectors.toSet());
-    }
-
-    private boolean causesNoIsolation(Puzzle puzzle, Island island1, Island island2, boolean doubleBridge) {
-
-        Set<Island> visitedIslands = new HashSet<>();
-        Queue<Island> islandsToVisit = new LinkedList<>();
-
-        if (island1.getRemainingBridges() > 1) {
-            // If remainingBridges == 1, island1 will only be able to reach island2
-            Set<Island> reachable = getReachableUnfinishedNeighbours(island1, doubleBridge);
-            islandsToVisit.addAll(reachable);
-        }
-
-        islandsToVisit.addAll(island1.getBridgedNeighbours());
-        visitedIslands.add(island1);
-
-        if (island2.getRemainingBridges() > 1) {
-            // If remainingBridges == 1, island2 will only be able to reach island1
-            Set<Island> reachable = getReachableUnfinishedNeighbours(island2, doubleBridge);
-            islandsToVisit.addAll(reachable);
-        }
-
-        islandsToVisit.addAll(island2.getBridgedNeighbours());
-        visitedIslands.add(island2);
-
-        while (!islandsToVisit.isEmpty()) {
-            Island island = islandsToVisit.remove();
-            if (!visitedIslands.contains(island)) {
-                if (island.getRemainingBridges() > 0) {
-                    islandsToVisit.addAll(getReachableUnfinishedNeighbours(island, doubleBridge));
-                }
-                islandsToVisit.addAll(island.getBridgedNeighbours());
-            }
-            visitedIslands.add(island);
-        }
-
-        return visitedIslands.containsAll(puzzle.getIslands());
-    }
-
-    private boolean islandCanTakeBridge(Island island, boolean doubleBridge) {
-        return island.getRemainingBridges() >= (doubleBridge ? 2 : 1);
     }
 }

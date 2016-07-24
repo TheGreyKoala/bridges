@@ -25,13 +25,12 @@ public interface PuzzleAnalyser {
     Set<Island> getUnfinishedIslands();
 
     /**
-     * Get all valid destinations for a bridge starting at the given island.
+     * Get all safe destinations for a bridge starting at the given island.
      * @param island Island to start from.
-     * @param doubleBridge indicates whether destinations for a single or a double bridge should be returned.
-     * @return all valid destinations for a bridge starting at the given island.
+     * @return all safe destinations for a bridge starting at the given island.
      * @throws NullPointerException if island is null.
      */
-    Set<Island> getValidBridgeDestinations(Island island, boolean doubleBridge);
+    Set<Island> getSafeBridgeDestinations(Island island);
 
     /**
      * Indicates if any bridge crosses the path from <code>start</code> to <code>end</code>.
