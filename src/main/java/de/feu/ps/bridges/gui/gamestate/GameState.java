@@ -55,16 +55,6 @@ public class GameState {
         gameStateListeners.add(gameStateListener);
     }
 
-    /**
-     * Remove the given {@link GameStateListener} from the list of listener that will be notified.
-     * @param gameStateListener listener to remove
-     */
-    public void removeGameStateListener(final GameStateListener gameStateListener) {
-        if (gameStateListener != null) {
-            gameStateListeners.remove(gameStateListener);
-        }
-    }
-
     private void fireGameStateEvent(GameStateEventType gameStateEventType) {
         GameStateEvent gameStateEvent = new GameStateEvent(gameStateEventType);
         gameStateListeners.forEach(gameStateListener -> gameStateListener.handleGameStateEvent(gameStateEvent));
