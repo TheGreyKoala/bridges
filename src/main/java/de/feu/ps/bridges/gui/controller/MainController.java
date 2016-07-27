@@ -1,9 +1,9 @@
 package de.feu.ps.bridges.gui.controller;
 
-import de.feu.ps.bridges.analyser.PuzzleStatus;
 import de.feu.ps.bridges.gui.components.GraphicalPuzzle;
 import de.feu.ps.bridges.gui.gamestate.GameState;
 import de.feu.ps.bridges.gui.gamestate.GameStateEvent;
+import de.feu.ps.bridges.gui.gamestate.GameStateEventType;
 import de.feu.ps.bridges.gui.gamestate.GameStateListener;
 import de.feu.ps.bridges.model.Puzzle;
 import javafx.beans.binding.Bindings;
@@ -24,6 +24,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+
+import static de.feu.ps.bridges.gui.gamestate.GameStateEventType.INVALID_MOVE;
+import static de.feu.ps.bridges.gui.gamestate.GameStateEventType.SOLVING_FAILED;
 
 /**
  * Controller for the main panel.
@@ -53,6 +56,8 @@ public class MainController implements Initializable, GameStateListener {
     private FileChooser fileChooser;
     private final GameState gameState;
     private final Stage stage;
+    private AlertHelper alertHelper;
+    private StatusBarHelper statusBarHelper;
 
     /**
      * Creates a new instance.
@@ -70,7 +75,12 @@ public class MainController implements Initializable, GameStateListener {
         bundle = ResourceBundle.getBundle("de.feu.ps.bridges.gui.bundles.Bridges");
         fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(bundle.getString("puzzleExtensionFilter.description"), "*.bgs"));
+        alertHelper = new AlertHelper(bundle, gameState);
+        statusBarHelper = new StatusBarHelper(bundle, statusLabel, gameState);
+
         gameState.addGameStateListener(this);
+        gameState.addGameStateListener(statusBarHelper);
+        gameState.addGameStateListener(alertHelper);
 
         // Center content in the scroll pane
         mainPanel.minWidthProperty().bind(Bindings.createDoubleBinding(() ->
@@ -158,103 +168,56 @@ public class MainController implements Initializable, GameStateListener {
         stage.close();
     }
 
+    /**
+     * Invoked when the user clicked the show remaining bridges checkbox.
+     * @param actionEvent the event.
+     */
+    public void showRemainingBridgesClicked(final ActionEvent actionEvent) {
+        drawPuzzle();
+    }
+
+    /**
+     * Invoked when the user clicks the solve puzzle button.
+     * @param actionEvent the event.
+     */
+    public void solve(final ActionEvent actionEvent) {
+        if (gameState.getPuzzle().isPresent()) {
+            gameState.solve();
+        }
+    }
+
+    /**
+     * Invoked when the user clicks the nex move button.
+     * @param actionEvent the event.
+     */
+    public void nextMove(ActionEvent actionEvent) {
+        if (gameState.getPuzzle().isPresent()) {
+            gameState.nextMove();
+        }
+    }
+
     @Override
     public void handleGameStateEvent(GameStateEvent event) {
-        switch (event.getGameStateEventType()) {
-            case PUZZLE_CHANGED:
-                drawPuzzle();
-                updateStatus();
-                break;
-            case AUTOMATIC_SOLVING_STARTED:
-                getNodesToLock().forEach(node -> node.setDisable(true));
-                break;
-            case AUTOMATIC_SOLVING_FINISHED:
+        GameStateEventType gameStateEventType = event.getGameStateEventType();
+        if (gameStateEventType.isErrorState() || gameStateEventType == INVALID_MOVE) {
+            if (gameStateEventType == SOLVING_FAILED) {
                 getNodesToLock().forEach(node -> node.setDisable(false));
-                showInfoIfPuzzleUnsolved();
-                break;
-            case AUTOMATIC_SOLVING_CANCELLED_BY_USER:
-                getNodesToLock().forEach(node -> node.setDisable(false));
-                updateStatus();
-                break;
-            case NO_NEXT_MOVE:
-                updateStatus();
-                showInfoWhenNoNextMove();
-                break;
-            case PUZZLE_GENERATION_FAILED:
-                showError(bundle.getString("generation.failed"));
-                break;
-            case LOADING_PUZZLE_FAILED:
-                showError(bundle.getString("loading.failed"));
-                break;
-            case SAVING_PUZZLE_FAILED:
-                showError(bundle.getString("saving.failed"));
-                break;
-            case RESTARTING_PUZZLE_FAILED:
-                showError(bundle.getString("restarting.failed"));
-                break;
-            case NEXT_MOVE_FAILED:
-                showError(bundle.getString("nextMove.failed"));
-                break;
-            case SOLVING_FAILED:
-                showError(bundle.getString("solving.failed"));
-                getNodesToLock().forEach(node -> node.setDisable(false));
-                break;
-            case BUILD_BRIDGE_FAILED:
-                showError(bundle.getString("buildBridge.failed"));
-                break;
-            case INVALID_MOVE:
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle(bundle.getString("warning.title"));
-                alert.setHeaderText(bundle.getString("invalidMoveDialog.headerText"));
-                alert.setContentText(bundle.getString("invalidMoveDialog.contentText"));
-                alert.showAndWait();
-                break;
-            case TEAR_DOWN_BRIDGE_FAILED:
-                showError(bundle.getString("tearDownBridge.failed"));
-                break;
-        }
-    }
-
-    private void showError(final String headerText) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(bundle.getString("error.title"));
-        alert.setHeaderText(headerText);
-        alert.setContentText(bundle.getString("error.content.text"));
-        alert.showAndWait();
-    }
-
-    private void showInfoIfPuzzleUnsolved() {
-        PuzzleStatus puzzleStatus = gameState.getPuzzleStatus();
-        if (puzzleStatus == PuzzleStatus.UNSOLVED) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle(bundle.getString("autoSolveDialog.unsolved.title"));
-            alert.setHeaderText(bundle.getString("autoSolveDialog.unsolved.title"));
-            alert.setContentText(bundle.getString("autoSolveDialog.unsolved.contentText"));
-            alert.showAndWait();
-        }
-    }
-
-    private void updateStatus() {
-        PuzzleStatus puzzleStatus = gameState.getPuzzleStatus();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        switch (puzzleStatus) {
-            case SOLVED:
-                statusLabel.setText(bundle.getString("puzzle.status.solved"));
-                alert.setTitle(bundle.getString("autoSolveDialog.solved.title"));
-                alert.setHeaderText(bundle.getString("autoSolveDialog.solved.title"));
-                alert.setContentText(bundle.getString("autoSolveDialog.solved.contentText"));
-                alert.showAndWait();
-                break;
-            case UNSOLVED:
-                statusLabel.setText(bundle.getString("puzzle.status.unsolved"));
-                break;
-            case UNSOLVABLE:
-                statusLabel.setText(bundle.getString("puzzle.status.unsolvable"));
-                alert.setTitle(bundle.getString("autoSolveDialog.unsolved.title"));
-                alert.setHeaderText(bundle.getString("autoSolveDialog.unsolved.title"));
-                alert.setContentText(bundle.getString("autoSolveDialog.unsolvable.contentText"));
-                alert.showAndWait();
-                break;
+            }
+        } else {
+            switch (gameStateEventType) {
+                case PUZZLE_CHANGED:
+                    drawPuzzle();
+                    break;
+                case AUTOMATIC_SOLVING_STARTED:
+                    getNodesToLock().forEach(node -> node.setDisable(true));
+                    break;
+                case AUTOMATIC_SOLVING_FINISHED:
+                    getNodesToLock().forEach(node -> node.setDisable(false));
+                    break;
+                case AUTOMATIC_SOLVING_CANCELLED_BY_USER:
+                    getNodesToLock().forEach(node -> node.setDisable(false));
+                    break;
+            }
         }
     }
 
@@ -269,40 +232,5 @@ public class MainController implements Initializable, GameStateListener {
 
     private List<Node> getNodesToLock() {
         return Arrays.asList(menuBar, showRemainingBridgesCheckBox, nextMoveButton, mainPanel);
-    }
-
-    public void nextMove(ActionEvent actionEvent) {
-        if (gameState.getPuzzle().isPresent()) {
-            gameState.nextMove();
-        }
-    }
-
-    private void showInfoWhenNoNextMove() {
-        PuzzleStatus puzzleStatus = gameState.getPuzzleStatus();
-        if (puzzleStatus == PuzzleStatus.UNSOLVED) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle(bundle.getString("autoSolveDialog.unsolved.title"));
-            alert.setHeaderText(bundle.getString("autoSolveDialog.unsolved.title"));
-            alert.setContentText(bundle.getString("noNextMoveDialog.contentText"));
-            alert.showAndWait();
-        }
-    }
-
-    /**
-     * Invoked when the user clicks the solve puzzle button.
-     * @param actionEvent the event.
-     */
-    public void solve(final ActionEvent actionEvent) {
-        if (gameState.getPuzzle().isPresent()) {
-            gameState.solve();
-        }
-    }
-
-    /**
-     * Invoked when the user clicked the show remaining bridges checkbox.
-     * @param actionEvent the event.
-     */
-    public void showRemainingBridgesClicked(final ActionEvent actionEvent) {
-        drawPuzzle();
     }
 }

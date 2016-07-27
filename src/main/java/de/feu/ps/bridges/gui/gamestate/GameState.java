@@ -31,7 +31,7 @@ public class GameState {
     private final ExecutorService executorService;
     private Puzzle puzzle;
     private File sourceFile;
-    private final Set<GameStateListener> gameStateListeners;
+    private final List<GameStateListener> gameStateListeners;
     private Future<?> currentTask;
     private LinkedList<Bridge> addedBridges;
     private PuzzleToolkit puzzleToolkit;
@@ -40,7 +40,7 @@ public class GameState {
      * Creates a new instance.
      */
     public GameState() {
-        this.gameStateListeners = new HashSet<>();
+        this.gameStateListeners = new LinkedList<>();
         executorService = Executors.newWorkStealingPool();
         addedBridges = new LinkedList<>();
     }
@@ -58,6 +58,10 @@ public class GameState {
     private void fireGameStateEvent(GameStateEventType gameStateEventType) {
         GameStateEvent gameStateEvent = new GameStateEvent(gameStateEventType);
         gameStateListeners.forEach(gameStateListener -> gameStateListener.handleGameStateEvent(gameStateEvent));
+
+        // TODO: Fire this event less often
+        GameStateEvent puzzleStatusChangedEvent = new GameStateEvent(GameStateEventType.PUZZLE_STATUS_CHANGED);
+        gameStateListeners.forEach(gameStateListener -> gameStateListener.handleGameStateEvent(puzzleStatusChangedEvent));
     }
 
     /**
