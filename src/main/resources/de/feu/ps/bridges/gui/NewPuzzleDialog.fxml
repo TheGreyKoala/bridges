@@ -19,8 +19,8 @@
         <ToggleGroup fx:id="modesToggleGroup"/>
     </fx:define>
     <children>
-        <RadioButton fx:id="autoGenerateRadioButton" mnemonicParsing="false" text="%controls.newPuzzle.autoGenerate" toggleGroup="$modesToggleGroup" onAction="#autoModeSelected"/>
-        <RadioButton fx:id="manualSettingsRadioButton" mnemonicParsing="false" text="%controls.newPuzzle.manualSettings" toggleGroup="$modesToggleGroup" onAction="#manualModeSelected"/>
+        <RadioButton fx:id="autoGenerateRadioButton" mnemonicParsing="false" text="%controls.newPuzzle.autoGenerate" toggleGroup="$modesToggleGroup" onAction="#updateSelectedMode"/>
+        <RadioButton fx:id="manualSettingsRadioButton" mnemonicParsing="false" text="%controls.newPuzzle.manualSettings" toggleGroup="$modesToggleGroup" onAction="#updateSelectedMode"/>
         <GridPane fx:id="manualSettingsGridPane" prefHeight="120.0" prefWidth="100.0">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="249.0" minWidth="10.0" prefWidth="82.0"/>
@@ -41,7 +41,7 @@
                 <Spinner fx:id="columnsSpinner" prefWidth="1000.0" GridPane.columnIndex="1"/>
                 <Spinner fx:id="rowsSpinner" prefWidth="1000.0" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                 <CheckBox fx:id="manualIslandsCountCheckBox" mnemonicParsing="false" text="%controls.newPuzzle.manualIslandsCount" GridPane.columnSpan="2"
-                          GridPane.rowIndex="2" onAction="#manualIslandsCountClicked"/>
+                          GridPane.rowIndex="2" onAction="#updateManualIslandsArea"/>
                 <Label text="%controls.newPuzzle.islandsCount" GridPane.rowIndex="3"/>
                 <Spinner fx:id="islandsSpinner" prefWidth="1000.0" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
             </children>

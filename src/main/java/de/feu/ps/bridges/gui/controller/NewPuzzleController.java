@@ -4,10 +4,7 @@ import de.feu.ps.bridges.gui.gamestate.GameState;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -48,14 +45,13 @@ public class NewPuzzleController implements Initializable {
      * @param stage the {@link Stage} to use.
      * @throws NullPointerException if gameState or stage is null.
      */
-    public NewPuzzleController(final GameState gameState, final Stage stage) {
+    NewPuzzleController(final GameState gameState, final Stage stage) {
         this.gameState = Objects.requireNonNull(gameState, "Parameter 'gameState' must not be null.");
         this.stage = Objects.requireNonNull(stage, "Parameter 'stage' must not be null.");
     }
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        // TODO Can this be done in the fxml file?
         columnsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(4, 25));
         columnsSpinner.valueProperty().addListener((a, b, c) -> updateValidIslandsRange());
 
@@ -65,10 +61,10 @@ public class NewPuzzleController implements Initializable {
         updateValidIslandsRange();
 
         autoGenerateRadioButton.setSelected(true);
-        autoModeSelected(null);
+        updateSelectedMode(null);
 
         manualIslandsCountCheckBox.setSelected(false);
-        manualIslandsCountClicked(null);
+        updateManualIslandsArea(null);
     }
 
     private void updateValidIslandsRange() {
@@ -80,25 +76,16 @@ public class NewPuzzleController implements Initializable {
      * Invoked when the user selected the auto generation mode.
      * @param actionEvent the event.
      */
-    public void autoModeSelected(final ActionEvent actionEvent) {
-        manualSettingsGridPane.setDisable(true);
-    }
-
-    /**
-     * Invoked when the user selected the manual generation mode.
-     * @param actionEvent the event.
-     */
-    public void manualModeSelected(final ActionEvent actionEvent) {
-        manualSettingsGridPane.setDisable(false);
+    public void updateSelectedMode(final ActionEvent actionEvent) {
+        manualSettingsGridPane.setDisable(autoGenerateRadioButton.isSelected());
     }
 
     /**
      * Invoked when the user clicked the manual islands count checkbox.
      * @param actionEvent the event.
      */
-    public void manualIslandsCountClicked(final ActionEvent actionEvent) {
-        boolean manualIslandsCount = manualIslandsCountCheckBox.isSelected();
-        islandsSpinner.setDisable(!manualIslandsCount);
+    public void updateManualIslandsArea(final ActionEvent actionEvent) {
+        islandsSpinner.setDisable(!manualIslandsCountCheckBox.isSelected());
     }
 
     /**
