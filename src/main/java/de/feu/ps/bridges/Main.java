@@ -2,6 +2,7 @@ package de.feu.ps.bridges;
 
 import de.feu.ps.bridges.gui.controller.MainController;
 import de.feu.ps.bridges.gui.gamestate.GameState;
+import de.feu.ps.bridges.gui.listeners.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -40,15 +41,35 @@ public class Main extends Application {
 
     @Override
     public void start(final Stage primaryStage) throws IOException {
-        ResourceBundle bundle = ResourceBundle.getBundle("de.feu.ps.bridges.gui.bundles.Bridges");
+        final ResourceBundle bundle = ResourceBundle.getBundle("de.feu.ps.bridges.gui.bundles.Bridges");
+        final GameState gameState = new GameState();
+        final MainController mainController = new MainController(gameState, primaryStage);
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/de/feu/ps/bridges/gui/MainFrame.fxml"), bundle);
-        fxmlLoader.<MainController>setControllerFactory(param -> new MainController(new GameState(), primaryStage));
+        registerEventListeners(gameState, mainController, bundle);
 
-        Parent root = fxmlLoader.load();
+        final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/de/feu/ps/bridges/gui/MainFrame.fxml"), bundle);
+        fxmlLoader.<MainController>setController(mainController);
+
+        final Parent root = fxmlLoader.load();
         primaryStage.setTitle(bundle.getString("mainFrame.title"));
         primaryStage.setScene(new Scene(root));
         primaryStage.setMaximized(true);
         primaryStage.show();
+    }
+
+    private static void registerEventListeners(final GameState gameState, final MainController mainController, final ResourceBundle bundle) {
+        EventAlert eventAlert = new EventAlert(bundle);
+        PuzzleStatusAlert puzzleStatusAlert = new PuzzleStatusAlert(bundle, gameState);
+        ErrorAlert errorAlert = new ErrorAlert(bundle);
+        PuzzleStatusLabelUpdate puzzleStatusLabelUpdate = new PuzzleStatusLabelUpdate(bundle, mainController::setStatusBarLabel, gameState);
+        AutomatedSolvingStatusUpdate automatedSolvingStatusUpdate = new AutomatedSolvingStatusUpdate(mainController::setNonAutomatedSolvingControlsDisabled);
+        PuzzleRedraw puzzleRedraw = new PuzzleRedraw(gameState, mainController::setVisiblePuzzle);
+
+        gameState.addGameStateListener(puzzleStatusLabelUpdate);
+        gameState.addAutomatedSolvingEventListener(automatedSolvingStatusUpdate);
+        gameState.addGameStateListener(puzzleRedraw);
+        gameState.addGameStateListener(eventAlert);
+        gameState.addGameStateListener(puzzleStatusAlert);
+        gameState.addErrorEventListener(errorAlert);
     }
 }

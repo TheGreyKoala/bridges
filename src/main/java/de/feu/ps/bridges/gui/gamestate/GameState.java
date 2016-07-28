@@ -1,6 +1,12 @@
 package de.feu.ps.bridges.gui.gamestate;
 
 import de.feu.ps.bridges.analyser.PuzzleStatus;
+import de.feu.ps.bridges.gui.events.AutomatedSolvingEvent;
+import de.feu.ps.bridges.gui.events.ErrorEvent;
+import de.feu.ps.bridges.gui.events.GameStateEvent;
+import de.feu.ps.bridges.gui.listeners.AutomatedSolvingEventListener;
+import de.feu.ps.bridges.gui.listeners.ErrorEventListener;
+import de.feu.ps.bridges.gui.listeners.GameStateEventListener;
 import de.feu.ps.bridges.model.Bridge;
 import de.feu.ps.bridges.model.Direction;
 import de.feu.ps.bridges.model.Island;
@@ -10,7 +16,10 @@ import de.feu.ps.bridges.toolkit.PuzzleToolkitFactory;
 import javafx.application.Platform;
 
 import java.io.File;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -31,7 +40,9 @@ public class GameState {
     private final ExecutorService executorService;
     private Puzzle puzzle;
     private File sourceFile;
-    private final List<GameStateListener> gameStateListeners;
+    private final List<GameStateEventListener> gameStateListeners;
+    private final List<ErrorEventListener> errorEventListeners;
+    private final List<AutomatedSolvingEventListener> autoSolvingListeners;
     private Future<?> currentTask;
     private LinkedList<Bridge> addedBridges;
     private PuzzleToolkit puzzleToolkit;
@@ -40,28 +51,53 @@ public class GameState {
      * Creates a new instance.
      */
     public GameState() {
-        this.gameStateListeners = new LinkedList<>();
+        gameStateListeners = new LinkedList<>();
+        errorEventListeners = new LinkedList<>();
+        autoSolvingListeners = new LinkedList<>();
         executorService = Executors.newWorkStealingPool();
         addedBridges = new LinkedList<>();
     }
 
+    // TODO: Add generic add listener method
+
     /**
-     * Add a new {@link GameStateListener} that will be notified on events.
+     * Add a new {@link GameStateEventListener} that will be notified on game state events.
      * @param gameStateListener listener to add.
      * @throws NullPointerException if gameStateListener is null.
      */
-    public void addGameStateListener(final GameStateListener gameStateListener) {
+    public void addGameStateListener(final GameStateEventListener gameStateListener) {
         Objects.requireNonNull(gameStateListener, "Parameter 'gameStateListener' must not be null.");
         gameStateListeners.add(gameStateListener);
     }
 
-    private void fireGameStateEvent(GameStateEventType gameStateEventType) {
-        GameStateEvent gameStateEvent = new GameStateEvent(gameStateEventType);
-        gameStateListeners.forEach(gameStateListener -> gameStateListener.handleGameStateEvent(gameStateEvent));
+    /**
+     * Add a new {@link ErrorEventListener} that will be notified on error events.
+     * @param errorEventEventListener listener to add.
+     * @throws NullPointerException if gameStateListener is null.
+     */
+    public void addErrorEventListener(final ErrorEventListener errorEventEventListener) {
+        Objects.requireNonNull(errorEventEventListener, "Parameter 'errorEventEventListener' must not be null.");
+        errorEventListeners.add(errorEventEventListener);
+    }
+
+    public void addAutomatedSolvingEventListener(final AutomatedSolvingEventListener automatedSolvingEventEventListener) {
+        Objects.requireNonNull(automatedSolvingEventEventListener, "Parameter 'automatedSolvingEventEventListener' must not be null.");
+        autoSolvingListeners.add(automatedSolvingEventEventListener);
+    }
+
+    private void fireGameStateEvent(final GameStateEvent gameStateEvent) {
+        broadcastGameStateEvent(gameStateEvent);
 
         // TODO: Fire this event less often
-        GameStateEvent puzzleStatusChangedEvent = new GameStateEvent(GameStateEventType.PUZZLE_STATUS_CHANGED);
-        gameStateListeners.forEach(gameStateListener -> gameStateListener.handleGameStateEvent(puzzleStatusChangedEvent));
+        broadcastGameStateEvent(GameStateEvent.PUZZLE_STATUS_CHANGED);
+    }
+
+    public void broadcastGameStateEvent(final GameStateEvent event) {
+        gameStateListeners.forEach(gameStateListener -> gameStateListener.handleEvent(event));
+    }
+
+    public void broadcastGameStateEvent(final GameStateEvent event, final Object eventParameter) {
+        gameStateListeners.forEach(gameStateListener -> gameStateListener.handleEvent(event, eventParameter));
     }
 
     /**
@@ -82,7 +118,7 @@ public class GameState {
     }
 
     /**
-     * Generates a new random puzzle and fires a {@link GameStateEventType#PUZZLE_CHANGED} event.
+     * Generates a new random puzzle and fires a {@link GameStateEvent#PUZZLE_CHANGED} event.
      */
     public void newPuzzle() {
         try {
@@ -90,14 +126,18 @@ public class GameState {
             initAfterNewPuzzle();
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while generating a random puzzle.", e);
-            fireGameStateEvent(GameStateEventType.PUZZLE_GENERATION_FAILED);
+            fireErrorEvent(ErrorEvent.PUZZLE_GENERATION_FAILED);
         }
+    }
+
+    private void fireErrorEvent(final ErrorEvent errorEvent) {
+        errorEventListeners.forEach(listener -> listener.handleEvent(errorEvent));
     }
 
     private void initAfterNewPuzzle() {
         puzzle = puzzleToolkit.getPuzzle();
         addedBridges.clear();
-        fireGameStateEvent(GameStateEventType.PUZZLE_CHANGED);
+        fireGameStateEvent(GameStateEvent.PUZZLE_CHANGED);
     }
 
     /**
@@ -111,7 +151,7 @@ public class GameState {
             initAfterNewPuzzle();
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while generating a random puzzle.", e);
-            fireGameStateEvent(GameStateEventType.PUZZLE_GENERATION_FAILED);
+            fireErrorEvent(ErrorEvent.PUZZLE_GENERATION_FAILED);
         }
     }
 
@@ -127,7 +167,7 @@ public class GameState {
             initAfterNewPuzzle();
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while generating a random puzzle.", e);
-            fireGameStateEvent(GameStateEventType.PUZZLE_GENERATION_FAILED);
+            fireErrorEvent(ErrorEvent.PUZZLE_GENERATION_FAILED);
         }
     }
 
@@ -142,7 +182,7 @@ public class GameState {
             initAfterNewPuzzle();
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while loading a puzzle.", e);
-            fireGameStateEvent(GameStateEventType.LOADING_PUZZLE_FAILED);
+            fireErrorEvent(ErrorEvent.LOADING_PUZZLE_FAILED);
         }
     }
 
@@ -154,7 +194,7 @@ public class GameState {
             savePuzzleAs(sourceFile);
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while saving a puzzle.", e);
-            fireGameStateEvent(GameStateEventType.SAVING_PUZZLE_FAILED);
+            fireErrorEvent(ErrorEvent.SAVING_PUZZLE_FAILED);
         }
     }
 
@@ -167,7 +207,7 @@ public class GameState {
             puzzleToolkit.savePuzzle(destinationFile);
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while saving a puzzle.", e);
-            fireGameStateEvent(GameStateEventType.SAVING_PUZZLE_FAILED);
+            fireErrorEvent(ErrorEvent.SAVING_PUZZLE_FAILED);
         }
     }
 
@@ -180,7 +220,7 @@ public class GameState {
             initAfterNewPuzzle();
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while restarting a puzzle.", e);
-            fireGameStateEvent(GameStateEventType.RESTARTING_PUZZLE_FAILED);
+            fireErrorEvent(ErrorEvent.RESTARTING_PUZZLE_FAILED);
         }
     }
 
@@ -192,13 +232,13 @@ public class GameState {
             Optional<Bridge> optionalBridge = puzzleToolkit.nextMove();
             if (optionalBridge.isPresent()) {
                 addedBridges.add(optionalBridge.get());
-                fireGameStateEvent(GameStateEventType.PUZZLE_CHANGED);
+                fireGameStateEvent(GameStateEvent.PUZZLE_CHANGED);
             } else {
-                fireGameStateEvent(GameStateEventType.NO_NEXT_MOVE);
+                fireGameStateEvent(GameStateEvent.NO_NEXT_MOVE);
             }
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while applying a next safe move.", e);
-            fireGameStateEvent(GameStateEventType.NEXT_MOVE_FAILED);
+            fireErrorEvent(ErrorEvent.NEXT_MOVE_FAILED);
         }
     }
 
@@ -208,16 +248,20 @@ public class GameState {
     public void solve() {
         try {
             if (currentTask == null || currentTask.isDone()) {
-                Platform.runLater(() -> fireGameStateEvent(GameStateEventType.AUTOMATIC_SOLVING_STARTED));
+                Platform.runLater(() -> fireAutomatedSolvingEvent(AutomatedSolvingEvent.STARTED));
                 currentTask = executorService.submit(this::solvePuzzle);
             } else {
                 currentTask.cancel(true);
-                fireGameStateEvent(GameStateEventType.AUTOMATIC_SOLVING_CANCELLED_BY_USER);
+                fireAutomatedSolvingEvent(AutomatedSolvingEvent.STARTED);
             }
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while solving a puzzle.", e);
-            fireGameStateEvent(GameStateEventType.SOLVING_FAILED);
+            fireErrorEvent(ErrorEvent.SOLVING_FAILED);
         }
+    }
+
+    private void fireAutomatedSolvingEvent(final AutomatedSolvingEvent event) {
+        autoSolvingListeners.forEach(listener -> listener.handleEvent(event));
     }
 
     private void solvePuzzle() {
@@ -230,7 +274,7 @@ public class GameState {
                 if (optionalBridge.isPresent()) {
                     notEvenOneMoveFound = false;
                     addedBridges.add(optionalBridge.get());
-                    Platform.runLater(() -> fireGameStateEvent(GameStateEventType.PUZZLE_CHANGED));
+                    Platform.runLater(() -> fireGameStateEvent(GameStateEvent.PUZZLE_CHANGED));
 
                     if (getPuzzleStatus() == PuzzleStatus.UNSOLVED && !currentTask.isCancelled()) {
                         try {
@@ -241,16 +285,16 @@ public class GameState {
                     }
                 } else if (notEvenOneMoveFound) {
                     // If we didn't even find one move, we still want to update the status and show an info dialog
-                    Platform.runLater(() -> fireGameStateEvent(GameStateEventType.PUZZLE_CHANGED));
+                    Platform.runLater(() -> fireGameStateEvent(GameStateEvent.PUZZLE_CHANGED));
                 }
             } while (optionalBridge.isPresent() && !currentTask.isCancelled());
 
             if (!currentTask.isCancelled()) {
-                Platform.runLater(() -> fireGameStateEvent(GameStateEventType.AUTOMATIC_SOLVING_FINISHED));
+                Platform.runLater(() -> fireAutomatedSolvingEvent(AutomatedSolvingEvent.STARTED));
             }
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while solving a puzzle.", e);
-            Platform.runLater(() -> fireGameStateEvent(GameStateEventType.SOLVING_FAILED));
+            Platform.runLater(() -> fireErrorEvent(ErrorEvent.SOLVING_FAILED));
         }
     }
 
@@ -264,13 +308,13 @@ public class GameState {
             Optional<Bridge> optionalBridge = puzzleToolkit.tryBuildBridge(island, direction);
             if (optionalBridge.isPresent()) {
                 addedBridges.add(optionalBridge.get());
-                fireGameStateEvent(GameStateEventType.PUZZLE_CHANGED);
+                fireGameStateEvent(GameStateEvent.PUZZLE_CHANGED);
             } else {
-                fireGameStateEvent(GameStateEventType.INVALID_MOVE);
+                fireGameStateEvent(GameStateEvent.INVALID_MOVE);
             }
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while building a bridge.", e);
-            fireGameStateEvent(GameStateEventType.BUILD_BRIDGE_FAILED);
+            fireErrorEvent(ErrorEvent.BUILD_BRIDGE_FAILED);
         }
     }
 
@@ -284,11 +328,11 @@ public class GameState {
             Optional<Bridge> optionalBridge = puzzleToolkit.tearDownBridge(island, direction);
             if (optionalBridge.isPresent()) {
                 addedBridges.removeLastOccurrence(optionalBridge.get());
-                fireGameStateEvent(GameStateEventType.PUZZLE_CHANGED);
+                fireGameStateEvent(GameStateEvent.PUZZLE_CHANGED);
             }
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while tearing down a bridge.", e);
-            fireGameStateEvent(GameStateEventType.TEAR_DOWN_BRIDGE_FAILED);
+            fireErrorEvent(ErrorEvent.TEAR_DOWN_BRIDGE_FAILED);
         }
     }
 

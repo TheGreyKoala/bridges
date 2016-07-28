@@ -15,7 +15,7 @@
 
 <?import javafx.scene.layout.StackPane?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.72"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.feu.ps.bridges.gui.controller.MainController">
+            xmlns:fx="http://javafx.com/fxml/1">
     <top>
         <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
             <menus>

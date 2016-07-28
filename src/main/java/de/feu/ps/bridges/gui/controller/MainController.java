@@ -1,11 +1,7 @@
 package de.feu.ps.bridges.gui.controller;
 
-import de.feu.ps.bridges.gui.components.GraphicalPuzzle;
 import de.feu.ps.bridges.gui.gamestate.GameState;
-import de.feu.ps.bridges.gui.gamestate.GameStateEvent;
-import de.feu.ps.bridges.gui.gamestate.GameStateEventType;
-import de.feu.ps.bridges.gui.gamestate.GameStateListener;
-import de.feu.ps.bridges.model.Puzzle;
+import de.feu.ps.bridges.gui.events.GameStateEvent;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,16 +19,16 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
-
-import static de.feu.ps.bridges.gui.gamestate.GameStateEventType.INVALID_MOVE;
-import static de.feu.ps.bridges.gui.gamestate.GameStateEventType.SOLVING_FAILED;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 /**
  * Controller for the main panel.
  * @author Tim Gremplewski
  */
-public class MainController implements Initializable, GameStateListener {
+public class MainController implements Initializable {
 
     @FXML
     private StackPane mainPanel;
@@ -56,8 +52,6 @@ public class MainController implements Initializable, GameStateListener {
     private FileChooser fileChooser;
     private final GameState gameState;
     private final Stage stage;
-    private AlertHelper alertHelper;
-    private StatusBarHelper statusBarHelper;
 
     /**
      * Creates a new instance.
@@ -75,12 +69,6 @@ public class MainController implements Initializable, GameStateListener {
         bundle = ResourceBundle.getBundle("de.feu.ps.bridges.gui.bundles.Bridges");
         fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(bundle.getString("puzzleExtensionFilter.description"), "*.bgs"));
-        alertHelper = new AlertHelper(bundle, gameState);
-        statusBarHelper = new StatusBarHelper(bundle, statusLabel, gameState);
-
-        gameState.addGameStateListener(this);
-        gameState.addGameStateListener(statusBarHelper);
-        gameState.addGameStateListener(alertHelper);
 
         // Center content in the scroll pane
         mainPanel.minWidthProperty().bind(Bindings.createDoubleBinding(() ->
@@ -173,7 +161,7 @@ public class MainController implements Initializable, GameStateListener {
      * @param actionEvent the event.
      */
     public void showRemainingBridgesClicked(final ActionEvent actionEvent) {
-        drawPuzzle();
+        gameState.broadcastGameStateEvent(GameStateEvent.SHOW_REMAINING_BRIDGES_OPTION_CHANGED, showRemainingBridgesCheckBox.isSelected());
     }
 
     /**
@@ -196,41 +184,32 @@ public class MainController implements Initializable, GameStateListener {
         }
     }
 
-    @Override
-    public void handleGameStateEvent(GameStateEvent event) {
-        GameStateEventType gameStateEventType = event.getGameStateEventType();
-        if (gameStateEventType.isErrorState() || gameStateEventType == INVALID_MOVE) {
-            if (gameStateEventType == SOLVING_FAILED) {
-                getNodesToLock().forEach(node -> node.setDisable(false));
-            }
-        } else {
-            switch (gameStateEventType) {
-                case PUZZLE_CHANGED:
-                    drawPuzzle();
-                    break;
-                case AUTOMATIC_SOLVING_STARTED:
-                    getNodesToLock().forEach(node -> node.setDisable(true));
-                    break;
-                case AUTOMATIC_SOLVING_FINISHED:
-                    getNodesToLock().forEach(node -> node.setDisable(false));
-                    break;
-                case AUTOMATIC_SOLVING_CANCELLED_BY_USER:
-                    getNodesToLock().forEach(node -> node.setDisable(false));
-                    break;
-            }
-        }
+    /**
+     * Set the label text of the status bar.
+     * @param statusBarLabel new text for the status bar.
+     */
+    public void setStatusBarLabel(final String statusBarLabel) {
+        statusLabel.setText(statusBarLabel);
     }
 
-    private void drawPuzzle() {
+    /**
+     * Enables or disables all components, that should not be accessible
+     * during an automated solving of the puzzle.
+     * @param setDisabled if true, the components will be disabled, otherwise they will be enabled.
+     */
+    public void setNonAutomatedSolvingControlsDisabled(final boolean setDisabled) {
+        Arrays.asList(menuBar, showRemainingBridgesCheckBox, nextMoveButton, mainPanel)
+                .forEach(component -> component.setDisable(setDisabled));
+    }
+
+    /**
+     * Set the puzzle component, that should be drawn.
+     * @param puzzleNode Node containing all components of the puzzle and that should be displayed.
+     */
+    public void setVisiblePuzzle(final Optional<Node> puzzleNode) {
         mainPanel.getChildren().clear();
-        Optional<Puzzle> puzzle = gameState.getPuzzle();
-        if (puzzle.isPresent()) {
-            Node puzzleNode = GraphicalPuzzle.createPuzzle(puzzle.get(), gameState, showRemainingBridgesCheckBox.isSelected());
-            mainPanel.getChildren().addAll(puzzleNode);
+        if (puzzleNode.isPresent()) {
+            mainPanel.getChildren().add(puzzleNode.get());
         }
-    }
-
-    private List<Node> getNodesToLock() {
-        return Arrays.asList(menuBar, showRemainingBridgesCheckBox, nextMoveButton, mainPanel);
     }
 }
