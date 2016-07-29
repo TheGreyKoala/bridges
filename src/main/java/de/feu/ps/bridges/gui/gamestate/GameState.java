@@ -252,7 +252,7 @@ public class GameState {
                 currentTask = executorService.submit(this::solvePuzzle);
             } else {
                 currentTask.cancel(true);
-                fireAutomatedSolvingEvent(AutomatedSolvingEvent.STARTED);
+                fireAutomatedSolvingEvent(AutomatedSolvingEvent.CANCELLED_BY_USER);
             }
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while solving a puzzle.", e);

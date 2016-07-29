@@ -5,7 +5,6 @@ import de.feu.ps.bridges.gui.events.ErrorEvent;
 
 import java.util.function.Consumer;
 
-import static de.feu.ps.bridges.gui.events.AutomatedSolvingEvent.CANCELLED_BY_USER;
 import static de.feu.ps.bridges.gui.events.AutomatedSolvingEvent.STARTED;
 
 /**
@@ -21,11 +20,7 @@ public class AutomatedSolvingStatusUpdate implements AutomatedSolvingEventListen
 
     @Override
     public void handleEvent(final AutomatedSolvingEvent event) {
-        if (event == AutomatedSolvingEvent.FINISHED || event == CANCELLED_BY_USER) {
-            consumer.accept(false);
-        } else if (event == STARTED) {
-            consumer.accept(true);
-        }
+        consumer.accept(event == STARTED);
     }
 
     @Override
