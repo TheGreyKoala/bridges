@@ -1,6 +1,6 @@
 package de.feu.ps.bridges.gui.components;
 
-import de.feu.ps.bridges.gui.gamestate.GameState;
+import de.feu.ps.bridges.gui.model.Model;
 import de.feu.ps.bridges.model.Bridge;
 import de.feu.ps.bridges.model.Island;
 import de.feu.ps.bridges.model.Puzzle;
@@ -35,11 +35,11 @@ public class GraphicalPuzzle {
     /**
      * Create a new {@link Pane} and draw the given puzzle into it.
      * @param puzzle {@link Puzzle} to draw.
-     * @param gameState {@link GameState} to use.
+     * @param model {@link Model} to use.
      * @param showRemainingBridges Indicates if islands should display the number of remaining bridges.
      * @return a new {@link Pane} that contains a graphical representation of the given {@link Puzzle}.
      */
-    public static Pane createPuzzle(final Puzzle puzzle, final GameState gameState, final boolean showRemainingBridges) {
+    public static Pane createPuzzle(final Puzzle puzzle, final Model model, final boolean showRemainingBridges) {
         StackPane pane = new StackPane();
 
         GridPane gridPane = new GridPane();
@@ -48,8 +48,8 @@ public class GraphicalPuzzle {
         initColumnConstraints(gridPane, puzzle.getColumnsCount());
         initRowsConstraints(gridPane, puzzle.getRowsCount());
 
-        Map<Island, Node> islandGraphicalIslandMap = addIslands(gridPane, puzzle.getIslands(), gameState, showRemainingBridges);
-        addBridges(pane, puzzle.getBridges(), gameState, islandGraphicalIslandMap);
+        Map<Island, Node> islandGraphicalIslandMap = addIslands(gridPane, puzzle.getIslands(), model, showRemainingBridges);
+        addBridges(pane, puzzle.getBridges(), model, islandGraphicalIslandMap);
 
         pane.getChildren().add(gridPane);
 
@@ -70,23 +70,23 @@ public class GraphicalPuzzle {
         }
     }
 
-    private static Map<Island, Node> addIslands(final GridPane gridPane, final Set<Island> islands, final GameState gameState, final boolean showRemainingBridges) {
+    private static Map<Island, Node> addIslands(final GridPane gridPane, final Set<Island> islands, final Model model, final boolean showRemainingBridges) {
         final Map<Island, Node> island2GraphicalIsland = new HashMap<>();
 
         for (Island island : islands) {
-            Node graphicalIsland = GraphicalIsland.createIsland(island, gameState, showRemainingBridges);
+            Node graphicalIsland = GraphicalIsland.createIsland(island, model, showRemainingBridges);
             island2GraphicalIsland.put(island, graphicalIsland);
             gridPane.add(graphicalIsland, island.getPosition().getColumn(), island.getPosition().getRow());
         }
         return island2GraphicalIsland;
     }
 
-    private static void addBridges(final Pane pane, final Set<Bridge> bridges, final GameState gameState, Map<Island, Node> islandGraphicalIslandMap) {
+    private static void addBridges(final Pane pane, final Set<Bridge> bridges, final Model model, Map<Island, Node> islandGraphicalIslandMap) {
         bridges.forEach(bridge -> {
             Node graphicalIsland1 = islandGraphicalIslandMap.get(bridge.getIsland1());
             Node graphicalIsland2 = islandGraphicalIslandMap.get(bridge.getIsland2());
 
-            pane.getChildren().add(GraphicalBridge.createBridge(bridge, graphicalIsland1, graphicalIsland2, gameState));
+            pane.getChildren().add(GraphicalBridge.createBridge(bridge, graphicalIsland1, graphicalIsland2, model));
         });
     }
 }

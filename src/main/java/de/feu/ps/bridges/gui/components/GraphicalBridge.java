@@ -1,6 +1,6 @@
 package de.feu.ps.bridges.gui.components;
 
-import de.feu.ps.bridges.gui.gamestate.GameState;
+import de.feu.ps.bridges.gui.model.Model;
 import de.feu.ps.bridges.model.Bridge;
 import de.feu.ps.bridges.model.Island;
 import javafx.scene.Node;
@@ -25,10 +25,10 @@ public class GraphicalBridge {
      * @param bridge {@link Bridge} to be drawn.
      * @param island1 Graphical representation of the first bridged {@link Island}
      * @param island2 Graphical representation of the second bridged {@link Island}
-     * @param gameState {@link GameState} to use
+     * @param model {@link Model} to use
      * @return A graphical representation of the given {@link Bridge}.
      */
-    public static Node createBridge(final Bridge bridge, final Node island1, final Node island2, final GameState gameState) {
+    public static Node createBridge(final Bridge bridge, final Node island1, final Node island2, final Model model) {
         final Pane pane = new Pane();
 
         if (bridge.isDoubleBridge()) {
@@ -37,7 +37,7 @@ public class GraphicalBridge {
             addSingleBridge(pane, island1, island2);
         }
 
-        if (gameState.isLatestBridge(bridge)) {
+        if (model.getGameState().isLatestBridge(bridge)) {
             ((Line) pane.getChildren().get(0)).setStroke(Color.BLUE);
         }
 

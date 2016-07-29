@@ -4,7 +4,7 @@ import de.feu.ps.bridges.analyser.PuzzleStatus;
 import de.feu.ps.bridges.gui.events.AutomatedSolvingEvent;
 import de.feu.ps.bridges.gui.events.GameStateEvent;
 import de.feu.ps.bridges.gui.events.PuzzleEvent;
-import de.feu.ps.bridges.gui.gamestate.GameState;
+import de.feu.ps.bridges.gui.model.GameState;
 import javafx.scene.control.Alert;
 
 import java.util.ResourceBundle;
@@ -21,10 +21,12 @@ public class PuzzleStatusAlert implements GameStateEventListener, AutomatedSolvi
 
     private final ResourceBundle resourceBundle;
     private final GameState gameState;
+    private boolean automatedSolvingRunning;
 
     public PuzzleStatusAlert(final ResourceBundle resourceBundle, final GameState gameState) {
         this.resourceBundle = resourceBundle;
         this.gameState = gameState;
+        automatedSolvingRunning = false;
     }
 
     @Override
@@ -36,14 +38,19 @@ public class PuzzleStatusAlert implements GameStateEventListener, AutomatedSolvi
 
     @Override
     public void handleEvent(final AutomatedSolvingEvent event) {
+        automatedSolvingRunning = event == STARTED;
         if (event != STARTED) {
+            // Show an alert showing the puzzle status when the automated solving was finished or cancelled
             showPuzzleStatusAlert();
         }
     }
 
     @Override
     public void handleEvent(final PuzzleEvent event) {
-        if (event == PUZZLE_STATUS_CHANGED && gameState.getPuzzleStatus() != UNSOLVED) {
+        if (event == PUZZLE_STATUS_CHANGED
+            && !automatedSolvingRunning
+            && gameState.getPuzzleStatus() != UNSOLVED) {
+
             showPuzzleStatusAlert();
         }
     }

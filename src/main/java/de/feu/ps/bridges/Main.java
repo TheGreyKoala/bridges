@@ -1,8 +1,9 @@
 package de.feu.ps.bridges;
 
 import de.feu.ps.bridges.gui.controller.MainController;
-import de.feu.ps.bridges.gui.gamestate.GameState;
+import de.feu.ps.bridges.gui.model.GameState;
 import de.feu.ps.bridges.gui.listeners.*;
+import de.feu.ps.bridges.gui.model.Model;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -43,7 +44,8 @@ public class Main extends Application {
     public void start(final Stage primaryStage) throws IOException {
         final ResourceBundle bundle = ResourceBundle.getBundle("de.feu.ps.bridges.gui.bundles.Bridges");
         final GameState gameState = new GameState();
-        final MainController mainController = new MainController(gameState, primaryStage);
+        final Model model = new Model(gameState);
+        final MainController mainController = new MainController(model, primaryStage);
 
         registerEventListeners(gameState, mainController, bundle);
 

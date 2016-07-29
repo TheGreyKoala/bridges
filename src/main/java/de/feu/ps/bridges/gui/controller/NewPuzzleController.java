@@ -1,10 +1,14 @@
 package de.feu.ps.bridges.gui.controller;
 
-import de.feu.ps.bridges.gui.gamestate.GameState;
+import de.feu.ps.bridges.gui.model.GameState;
+import de.feu.ps.bridges.gui.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -36,17 +40,17 @@ public class NewPuzzleController implements Initializable {
     @FXML
     private CheckBox manualIslandsCountCheckBox;
 
-    private final GameState gameState;
+    private final Model model;
     private final Stage stage;
 
     /**
      * Creates a new instance.
-     * @param gameState the {@link GameState} to use.
+     * @param model the {@link GameState} to use.
      * @param stage the {@link Stage} to use.
-     * @throws NullPointerException if gameState or stage is null.
+     * @throws NullPointerException if model or stage is null.
      */
-    NewPuzzleController(final GameState gameState, final Stage stage) {
-        this.gameState = Objects.requireNonNull(gameState, "Parameter 'gameState' must not be null.");
+    NewPuzzleController(final Model model, final Stage stage) {
+        this.model = Objects.requireNonNull(model, "Parameter 'model' must not be null.");
         this.stage = Objects.requireNonNull(stage, "Parameter 'stage' must not be null.");
     }
 
@@ -102,16 +106,16 @@ public class NewPuzzleController implements Initializable {
      */
     public void ok(final ActionEvent actionEvent) {
         if (autoGenerateRadioButton.isSelected()) {
-            gameState.newPuzzle();
+            model.newPuzzle();
         } else {
             int columns = columnsSpinner.getValue();
             int rows = rowsSpinner.getValue();
 
             if (manualIslandsCountCheckBox.isSelected()) {
                 int islands = islandsSpinner.getValue();
-                gameState.newPuzzle(columns, rows, islands);
+                model.newPuzzle(columns, rows, islands);
             } else {
-                gameState.newPuzzle(columns, rows);
+                model.newPuzzle(columns, rows);
             }
         }
         stage.close();

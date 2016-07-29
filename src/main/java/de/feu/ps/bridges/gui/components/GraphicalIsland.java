@@ -1,6 +1,6 @@
 package de.feu.ps.bridges.gui.components;
 
-import de.feu.ps.bridges.gui.gamestate.GameState;
+import de.feu.ps.bridges.gui.model.Model;
 import de.feu.ps.bridges.model.Direction;
 import de.feu.ps.bridges.model.Island;
 import javafx.event.EventHandler;
@@ -42,11 +42,11 @@ public class GraphicalIsland {
     /**
      * Create a new graphical representation of the given {@link Island}.
      * @param island {@link Island} to be drawn.
-     * @param gameState {@link GameState} to use.
+     * @param model {@link Model} to use.
      * @param showRemainingBridges Indicates if the island should display the number of remaining bridges.
      * @return a new {@link Node} that contains the drawn island.
      */
-    public static Node createIsland(final Island island, final GameState gameState, final boolean showRemainingBridges) {
+    public static Node createIsland(final Island island, final Model model, final boolean showRemainingBridges) {
         Color color = island.getRemainingBridges() == 0 ? Color.GREEN : Color.BLACK;
         Circle circle = new Circle(ISLAND_RADIUS, color);
 
@@ -58,12 +58,12 @@ public class GraphicalIsland {
         text.setFill(Color.WHITE);
 
         StackPane stackPane = new StackPane(circle, text);
-        stackPane.setOnMouseClicked(createClickHandler(island, gameState));
+        stackPane.setOnMouseClicked(createClickHandler(island, model));
 
         return stackPane;
     }
 
-    private static EventHandler<MouseEvent> createClickHandler(final Island island, final GameState gameState) {
+    private static EventHandler<MouseEvent> createClickHandler(final Island island, final Model model) {
         return (event -> {
             Point2D pointWhenCircleCenterOrigin = translate.transform(event.getX(), event.getY());
             Point2D pointOnCartesianSystem = rotate.transform(pointWhenCircleCenterOrigin);
@@ -73,9 +73,9 @@ public class GraphicalIsland {
                 Direction direction = getDirection(pointOnCartesianSystem.getX(), pointOnCartesianSystem.getY());
 
                 if (addBridge) {
-                    gameState.tryBuildBridge(island, direction);
+                    model.tryBuildBridge(island, direction);
                 } else {
-                    gameState.tearDownBridge(island, direction);
+                    model.tearDownBridge(island, direction);
                 }
             }
         });

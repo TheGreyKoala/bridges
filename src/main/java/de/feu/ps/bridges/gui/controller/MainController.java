@@ -1,7 +1,8 @@
 package de.feu.ps.bridges.gui.controller;
 
-import de.feu.ps.bridges.gui.gamestate.GameState;
-import de.feu.ps.bridges.gui.events.GameStateEvent;
+import de.feu.ps.bridges.gui.components.GraphicalPuzzle;
+import de.feu.ps.bridges.gui.model.Model;
+import de.feu.ps.bridges.model.Puzzle;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,7 +22,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -50,17 +50,17 @@ public class MainController implements Initializable {
 
     private ResourceBundle bundle;
     private FileChooser fileChooser;
-    private final GameState gameState;
+    private final Model model;
     private final Stage stage;
 
     /**
      * Creates a new instance.
-     * @param gameState the {@link GameState} to use.
+     * @param model the {@link Model} to use.
      * @param stage the {@link Stage} to use.
-     * @throws NullPointerException if gameState or stage is null.
+     * @throws NullPointerException if model or stage is null.
      */
-    public MainController(final GameState gameState, final Stage stage) {
-        this.gameState = Objects.requireNonNull(gameState, "Parameter 'gameState' must not be null.");
+    public MainController(final Model model, final Stage stage) {
+        this.model = Objects.requireNonNull(model, "Parameter 'model' must not be null.");
         this.stage = Objects.requireNonNull(stage, "Parameter 'stage' must not be null.");
     }
 
@@ -90,7 +90,7 @@ public class MainController implements Initializable {
         dialogStage.initOwner(stage);
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/de/feu/ps/bridges/gui/NewPuzzleDialog.fxml"), bundle);
-        fxmlLoader.setControllerFactory(param -> new NewPuzzleController(gameState, dialogStage));
+        fxmlLoader.setControllerFactory(param -> new NewPuzzleController(model, dialogStage));
         Parent root = fxmlLoader.load();
 
         Scene scene = new Scene(root);
@@ -103,9 +103,7 @@ public class MainController implements Initializable {
      * @param actionEvent the event.
      */
     public void restartPuzzle(final ActionEvent actionEvent) {
-        if (gameState.getPuzzle().isPresent()) {
-            gameState.restartPuzzle();
-        }
+        model.restartPuzzle();
     }
 
     /**
@@ -117,7 +115,7 @@ public class MainController implements Initializable {
         File sourceFile = fileChooser.showOpenDialog(mainPanel.getScene().getWindow());
 
         if (sourceFile != null) {
-            gameState.loadPuzzle(sourceFile);
+            model.loadPuzzle(sourceFile);
             fileChooser.setInitialDirectory(sourceFile.getParentFile());
         }
     }
@@ -127,8 +125,8 @@ public class MainController implements Initializable {
      * @param actionEvent the event.
      */
     public void savePuzzle(final ActionEvent actionEvent) {
-        if (gameState.isPuzzleSourceFileKnown()) {
-            gameState.savePuzzle();
+        if (model.getGameState().isPuzzleSourceFileKnown()) {
+            model.savePuzzle();
         } else {
             savePuzzleAs(actionEvent);
         }
@@ -143,7 +141,7 @@ public class MainController implements Initializable {
         File destinationFile = fileChooser.showSaveDialog(mainPanel.getScene().getWindow());
 
         if (destinationFile != null) {
-            gameState.savePuzzleAs(destinationFile);
+            model.savePuzzleAs(destinationFile);
             fileChooser.setInitialDirectory(destinationFile.getParentFile());
         }
     }
@@ -161,7 +159,7 @@ public class MainController implements Initializable {
      * @param actionEvent the event.
      */
     public void showRemainingBridgesClicked(final ActionEvent actionEvent) {
-        gameState.broadcastEvent(GameStateEvent.SHOW_REMAINING_BRIDGES_OPTION_CHANGED, showRemainingBridgesCheckBox.isSelected());
+        model.setShowRemainingBridges(showRemainingBridgesCheckBox.isSelected());
     }
 
     /**
@@ -169,9 +167,7 @@ public class MainController implements Initializable {
      * @param actionEvent the event.
      */
     public void solve(final ActionEvent actionEvent) {
-        if (gameState.getPuzzle().isPresent()) {
-            gameState.solve();
-        }
+        model.solve();
     }
 
     /**
@@ -179,9 +175,7 @@ public class MainController implements Initializable {
      * @param actionEvent the event.
      */
     public void nextMove(ActionEvent actionEvent) {
-        if (gameState.getPuzzle().isPresent()) {
-            gameState.nextMove();
-        }
+        model.nextMove();
     }
 
     /**
@@ -203,13 +197,13 @@ public class MainController implements Initializable {
     }
 
     /**
+     * TODO: JAVADOC
      * Set the puzzle component, that should be drawn.
-     * @param puzzleNode Node containing all components of the puzzle and that should be displayed.
+     * @param puzzle Node containing all components of the puzzle and that should be displayed.
      */
-    public void setVisiblePuzzle(final Optional<Node> puzzleNode) {
+    public void setVisiblePuzzle(final Puzzle puzzle, final boolean showRemainingBridges) {
+        Node puzzleNode = GraphicalPuzzle.createPuzzle(puzzle, model, showRemainingBridges);
         mainPanel.getChildren().clear();
-        if (puzzleNode.isPresent()) {
-            mainPanel.getChildren().add(puzzleNode.get());
-        }
+        mainPanel.getChildren().add(puzzleNode);
     }
 }

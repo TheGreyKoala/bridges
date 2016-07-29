@@ -1,4 +1,4 @@
-package de.feu.ps.bridges.gui.gamestate;
+package de.feu.ps.bridges.gui.model;
 
 import de.feu.ps.bridges.gui.events.AutomatedSolvingEvent;
 import de.feu.ps.bridges.gui.events.ErrorEvent;
@@ -8,6 +8,7 @@ import de.feu.ps.bridges.gui.listeners.AutomatedSolvingEventListener;
 import de.feu.ps.bridges.gui.listeners.ErrorEventListener;
 import de.feu.ps.bridges.gui.listeners.GameStateEventListener;
 import de.feu.ps.bridges.gui.listeners.PuzzleEventListener;
+import javafx.application.Platform;
 
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -16,14 +17,14 @@ import java.util.Set;
 /**
  * @author Tim Gremplewski
  */
-public class EventBroadcaster {
+class EventBroadcaster {
 
     private final Set<AutomatedSolvingEventListener> automatedSolvingEventListeners;
     private final Set<ErrorEventListener> errorEventListeners;
     private final Set<GameStateEventListener> gameStateEventListeners;
     private final Set<PuzzleEventListener> puzzleEventListeners;
 
-    public EventBroadcaster() {
+    EventBroadcaster() {
         automatedSolvingEventListeners = new LinkedHashSet<>();
         errorEventListeners = new LinkedHashSet<>();
         gameStateEventListeners = new LinkedHashSet<>();
@@ -50,23 +51,33 @@ public class EventBroadcaster {
         puzzleEventListeners.add(listener);
     }
 
-    public void broadcastEvent(final AutomatedSolvingEvent event) {
-        automatedSolvingEventListeners.forEach(listener -> listener.handleEvent(event));
+    void broadcastEvent(final AutomatedSolvingEvent event) {
+        Platform.runLater(() -> {
+            automatedSolvingEventListeners.forEach(listener -> listener.handleEvent(event));
+        });
     }
 
-    public void broadcastEvent(final ErrorEvent event) {
-        errorEventListeners.forEach(listener -> listener.handleEvent(event));
+    void broadcastEvent(final ErrorEvent event) {
+        Platform.runLater(() -> {
+            errorEventListeners.forEach(listener -> listener.handleEvent(event));
+        });
     }
 
-    public void broadcastEvent(final GameStateEvent event) {
-        gameStateEventListeners.forEach(listener -> listener.handleEvent(event));
+    void broadcastEvent(final GameStateEvent event) {
+        Platform.runLater(() -> {
+            gameStateEventListeners.forEach(listener -> listener.handleEvent(event));
+        });
     }
 
-    public void broadcastEvent(final GameStateEvent event, final Object eventParameter) {
-        gameStateEventListeners.forEach(listener -> listener.handleEvent(event, eventParameter));
+    void broadcastEvent(final GameStateEvent event, final Object eventParameter) {
+        Platform.runLater(() -> {
+            gameStateEventListeners.forEach(listener -> listener.handleEvent(event, eventParameter));
+        });
     }
 
-    public void broadcastEvent(final PuzzleEvent event) {
-        puzzleEventListeners.forEach(listener -> listener.handleEvent(event));
+    void broadcastEvent(final PuzzleEvent event) {
+        Platform.runLater(() -> {
+            puzzleEventListeners.forEach(listener -> listener.handleEvent(event));
+        });
     }
 }

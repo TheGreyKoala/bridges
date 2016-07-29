@@ -2,7 +2,7 @@ package de.feu.ps.bridges.gui.listeners;
 
 import de.feu.ps.bridges.analyser.PuzzleStatus;
 import de.feu.ps.bridges.gui.events.PuzzleEvent;
-import de.feu.ps.bridges.gui.gamestate.GameState;
+import de.feu.ps.bridges.gui.model.GameState;
 
 import java.util.ResourceBundle;
 import java.util.function.Consumer;

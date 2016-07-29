@@ -1,14 +1,12 @@
 package de.feu.ps.bridges.gui.listeners;
 
-import de.feu.ps.bridges.gui.components.GraphicalPuzzle;
 import de.feu.ps.bridges.gui.events.GameStateEvent;
 import de.feu.ps.bridges.gui.events.PuzzleEvent;
-import de.feu.ps.bridges.gui.gamestate.GameState;
+import de.feu.ps.bridges.gui.model.GameState;
 import de.feu.ps.bridges.model.Puzzle;
-import javafx.scene.Node;
 
 import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 import static de.feu.ps.bridges.gui.events.GameStateEvent.SHOW_REMAINING_BRIDGES_OPTION_CHANGED;
 import static de.feu.ps.bridges.gui.events.PuzzleEvent.PUZZLE_CHANGED;
@@ -19,10 +17,10 @@ import static de.feu.ps.bridges.gui.events.PuzzleEvent.PUZZLE_CHANGED;
 public class PuzzleRedraw implements PuzzleEventListener, GameStateEventListener {
 
     private final GameState gameState;
-    private final Consumer<Optional<Node>> consumer;
+    private final BiConsumer<Puzzle, Boolean> consumer;
     private boolean showRemainingBridges;
 
-    public PuzzleRedraw(final GameState gameState, final Consumer<Optional<Node>> consumer) {
+    public PuzzleRedraw(final GameState gameState, final BiConsumer<Puzzle, Boolean> consumer) {
         this.gameState = gameState;
         this.consumer = consumer;
         this.showRemainingBridges = false;
@@ -50,8 +48,7 @@ public class PuzzleRedraw implements PuzzleEventListener, GameStateEventListener
     private void redrawPuzzle() {
         Optional<Puzzle> puzzle = gameState.getPuzzle();
         if (puzzle.isPresent()) {
-            Node puzzleNode = GraphicalPuzzle.createPuzzle(puzzle.get(), gameState, showRemainingBridges);
-            consumer.accept(Optional.ofNullable(puzzleNode));
+            consumer.accept(puzzle.get(), showRemainingBridges);
         }
     }
 }
