@@ -7,11 +7,6 @@ package de.feu.ps.bridges.gui.events;
 public enum GameStateEvent {
 
     /**
-     * The current puzzle has changed.
-     */
-    PUZZLE_CHANGED,
-
-    /**
      * No next safe move can be applied to the puzzle.
      */
     NO_NEXT_MOVE,
@@ -20,11 +15,6 @@ public enum GameStateEvent {
      * The move to be applied is invalid,
      */
     INVALID_MOVE,
-
-    /**
-     * The status of the puzzle changed.
-     */
-    PUZZLE_STATUS_CHANGED,
 
     /**
      * The option to display the remaining bridges changed.

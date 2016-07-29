@@ -161,7 +161,7 @@ public class MainController implements Initializable {
      * @param actionEvent the event.
      */
     public void showRemainingBridgesClicked(final ActionEvent actionEvent) {
-        gameState.broadcastGameStateEvent(GameStateEvent.SHOW_REMAINING_BRIDGES_OPTION_CHANGED, showRemainingBridgesCheckBox.isSelected());
+        gameState.broadcastEvent(GameStateEvent.SHOW_REMAINING_BRIDGES_OPTION_CHANGED, showRemainingBridgesCheckBox.isSelected());
     }
 
     /**

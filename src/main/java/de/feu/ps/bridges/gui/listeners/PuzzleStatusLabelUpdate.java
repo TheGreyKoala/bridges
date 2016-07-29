@@ -1,16 +1,18 @@
 package de.feu.ps.bridges.gui.listeners;
 
 import de.feu.ps.bridges.analyser.PuzzleStatus;
+import de.feu.ps.bridges.gui.events.PuzzleEvent;
 import de.feu.ps.bridges.gui.gamestate.GameState;
-import de.feu.ps.bridges.gui.events.GameStateEvent;
 
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import static de.feu.ps.bridges.gui.events.PuzzleEvent.PUZZLE_STATUS_CHANGED;
+
 /**
  * @author Tim Gremplewski
  */
-public class PuzzleStatusLabelUpdate implements GameStateEventListener {
+public class PuzzleStatusLabelUpdate implements PuzzleEventListener {
 
     private final ResourceBundle resourceBundle;
     private final Consumer<String> consumer;
@@ -25,15 +27,11 @@ public class PuzzleStatusLabelUpdate implements GameStateEventListener {
     }
 
     @Override
-    public void handleEvent(final GameStateEvent event) {
+    public void handleEvent(final PuzzleEvent event) {
         // TODO: Fire event in GameState
-        if (event == GameStateEvent.PUZZLE_STATUS_CHANGED) {
+        if (event == PUZZLE_STATUS_CHANGED) {
             updateStatusBar(gameState.getPuzzleStatus());
         }
-    }
-
-    @Override
-    public void handleEvent(GameStateEvent event, Object eventParameter) {
     }
 
     private void updateStatusBar(final PuzzleStatus puzzleStatus) {

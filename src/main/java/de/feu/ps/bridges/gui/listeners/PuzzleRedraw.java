@@ -2,6 +2,7 @@ package de.feu.ps.bridges.gui.listeners;
 
 import de.feu.ps.bridges.gui.components.GraphicalPuzzle;
 import de.feu.ps.bridges.gui.events.GameStateEvent;
+import de.feu.ps.bridges.gui.events.PuzzleEvent;
 import de.feu.ps.bridges.gui.gamestate.GameState;
 import de.feu.ps.bridges.model.Puzzle;
 import javafx.scene.Node;
@@ -9,13 +10,13 @@ import javafx.scene.Node;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static de.feu.ps.bridges.gui.events.GameStateEvent.PUZZLE_CHANGED;
 import static de.feu.ps.bridges.gui.events.GameStateEvent.SHOW_REMAINING_BRIDGES_OPTION_CHANGED;
+import static de.feu.ps.bridges.gui.events.PuzzleEvent.PUZZLE_CHANGED;
 
 /**
  * @author Tim Gremplewski
  */
-public class PuzzleRedraw implements GameStateEventListener {
+public class PuzzleRedraw implements PuzzleEventListener, GameStateEventListener {
 
     private final GameState gameState;
     private final Consumer<Optional<Node>> consumer;
@@ -28,10 +29,14 @@ public class PuzzleRedraw implements GameStateEventListener {
     }
 
     @Override
-    public void handleEvent(final GameStateEvent event) {
+    public void handleEvent(final PuzzleEvent event) {
         if (event == PUZZLE_CHANGED) {
             redrawPuzzle();
         }
+    }
+
+    @Override
+    public void handleEvent(final GameStateEvent event) {
     }
 
     @Override

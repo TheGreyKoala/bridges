@@ -2,20 +2,22 @@ package de.feu.ps.bridges.gui.listeners;
 
 import de.feu.ps.bridges.analyser.PuzzleStatus;
 import de.feu.ps.bridges.gui.events.AutomatedSolvingEvent;
-import de.feu.ps.bridges.gui.gamestate.GameState;
 import de.feu.ps.bridges.gui.events.GameStateEvent;
+import de.feu.ps.bridges.gui.events.PuzzleEvent;
+import de.feu.ps.bridges.gui.gamestate.GameState;
 import javafx.scene.control.Alert;
 
 import java.util.ResourceBundle;
 
-import static de.feu.ps.bridges.gui.events.AutomatedSolvingEvent.CANCELLED_BY_USER;
-import static de.feu.ps.bridges.gui.events.AutomatedSolvingEvent.FINISHED;
-import static de.feu.ps.bridges.gui.events.GameStateEvent.*;
+import static de.feu.ps.bridges.analyser.PuzzleStatus.UNSOLVED;
+import static de.feu.ps.bridges.gui.events.AutomatedSolvingEvent.STARTED;
+import static de.feu.ps.bridges.gui.events.GameStateEvent.NO_NEXT_MOVE;
+import static de.feu.ps.bridges.gui.events.PuzzleEvent.PUZZLE_STATUS_CHANGED;
 
 /**
  * @author Tim Gremplewski
  */
-public class PuzzleStatusAlert implements GameStateEventListener, AutomatedSolvingEventListener {
+public class PuzzleStatusAlert implements GameStateEventListener, AutomatedSolvingEventListener, PuzzleEventListener {
 
     private final ResourceBundle resourceBundle;
     private final GameState gameState;
@@ -27,40 +29,30 @@ public class PuzzleStatusAlert implements GameStateEventListener, AutomatedSolvi
 
     @Override
     public void handleEvent(final GameStateEvent event) {
-        final PuzzleStatus puzzleStatus = gameState.getPuzzleStatus();
-
-        if (event == NO_NEXT_MOVE && puzzleStatus == PuzzleStatus.UNSOLVED) {
-            getStatusInformationAlert(PuzzleStatus.UNSOLVED, resourceBundle.getString("noNextMoveDialog.contentText"))
-                .showAndWait();
-        } else if (event == PUZZLE_CHANGED && puzzleStatus != PuzzleStatus.UNSOLVED) {
-            getStatusInformationAlert(puzzleStatus)
-                .showAndWait();
+        if (event == NO_NEXT_MOVE) {
+            showPuzzleStatusAlert();
         }
-    }
-
-    @Override
-    public void handleEvent(final GameStateEvent event, final Object eventParameter) {
     }
 
     @Override
     public void handleEvent(final AutomatedSolvingEvent event) {
-        final PuzzleStatus puzzleStatus = gameState.getPuzzleStatus();
-
-        if ((event == CANCELLED_BY_USER && puzzleStatus != PuzzleStatus.UNSOLVED)
-            || (event == FINISHED && puzzleStatus == PuzzleStatus.UNSOLVED)) {
-
-            getStatusInformationAlert(puzzleStatus)
-                .showAndWait();
+        if (event != STARTED) {
+            showPuzzleStatusAlert();
         }
     }
 
-    private Alert getStatusInformationAlert(final PuzzleStatus puzzleStatus, final String customContentText) {
-        final Alert statusInformationAlert = getStatusInformationAlert(puzzleStatus);
-        statusInformationAlert.setContentText(customContentText);
-        return statusInformationAlert;
+    @Override
+    public void handleEvent(final PuzzleEvent event) {
+        if (event == PUZZLE_STATUS_CHANGED && gameState.getPuzzleStatus() != UNSOLVED) {
+            showPuzzleStatusAlert();
+        }
     }
 
-    private Alert getStatusInformationAlert(final PuzzleStatus puzzleStatus) {
+    private void showPuzzleStatusAlert() {
+        showPuzzleStatusAlert(gameState.getPuzzleStatus());
+    }
+
+    private void showPuzzleStatusAlert(final PuzzleStatus puzzleStatus) {
         final Alert alert = new Alert(Alert.AlertType.INFORMATION);
         switch (puzzleStatus) {
             case SOLVED:
@@ -79,6 +71,10 @@ public class PuzzleStatusAlert implements GameStateEventListener, AutomatedSolvi
                 alert.setContentText(resourceBundle.getString("autoSolveDialog.unsolvable.contentText"));
                 break;
         }
-        return alert;
+        alert.showAndWait();
+    }
+
+    @Override
+    public void handleEvent(final GameStateEvent event, final Object eventParameter) {
     }
 }

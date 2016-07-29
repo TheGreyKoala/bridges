@@ -65,11 +65,15 @@ public class Main extends Application {
         AutomatedSolvingStatusUpdate automatedSolvingStatusUpdate = new AutomatedSolvingStatusUpdate(mainController::setNonAutomatedSolvingControlsDisabled);
         PuzzleRedraw puzzleRedraw = new PuzzleRedraw(gameState, mainController::setVisiblePuzzle);
 
-        gameState.addGameStateListener(puzzleStatusLabelUpdate);
         gameState.addAutomatedSolvingEventListener(automatedSolvingStatusUpdate);
-        gameState.addGameStateListener(puzzleRedraw);
-        gameState.addGameStateListener(eventAlert);
-        gameState.addGameStateListener(puzzleStatusAlert);
+        gameState.addAutomatedSolvingEventListener(puzzleStatusAlert);
+        gameState.addGameStateEventListener(puzzleRedraw);
+        gameState.addGameStateEventListener(eventAlert);
+        gameState.addGameStateEventListener(puzzleStatusAlert);
+        gameState.addPuzzleEventListener(puzzleRedraw);
+        gameState.addPuzzleEventListener(puzzleStatusAlert);
+        gameState.addPuzzleEventListener(puzzleStatusLabelUpdate);
         gameState.addErrorEventListener(errorAlert);
+        gameState.addErrorEventListener(automatedSolvingStatusUpdate);
     }
 }
