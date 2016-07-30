@@ -5,8 +5,6 @@ import de.feu.ps.bridges.model.Island;
 
 import java.io.File;
 
-import static de.feu.ps.bridges.gui.events.GameOptionsEvent.SHOW_REMAINING_BRIDGES_OPTION_CHANGED;
-
 /**
  * @author Tim Gremplewski
  */
@@ -40,10 +38,6 @@ public class Model {
 
     public void savePuzzleAs(final File destinationFile) {
         puzzleIo.savePuzzleAs(destinationFile);
-    }
-
-    public void setShowRemainingBridges(final boolean isShowRemainingBridges) {
-        gameState.broadcastEvent(SHOW_REMAINING_BRIDGES_OPTION_CHANGED, isShowRemainingBridges);
     }
 
     public void solve() {

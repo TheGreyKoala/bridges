@@ -13,6 +13,7 @@ import static de.feu.ps.bridges.gui.events.AutomatedSolvingEvent.STARTED;
 import static de.feu.ps.bridges.gui.events.PuzzleEvent.PUZZLE_STATUS_CHANGED;
 
 /**
+ * Listener that shows an information dialog about the status of a puzzle, when appropriate.
  * @author Tim Gremplewski
  */
 public class PuzzleStatusAlert implements AutomatedSolvingEventListener, PuzzleEventListener {
@@ -21,7 +22,12 @@ public class PuzzleStatusAlert implements AutomatedSolvingEventListener, PuzzleE
     private final GameState gameState;
     private boolean automatedSolvingRunning;
 
-    public PuzzleStatusAlert(final ResourceBundle resourceBundle, final GameState gameState) {
+    /**
+     * Create a new instance that uses the given {@link GameState} to query the puzzle status.
+     * @param gameState {@link GameState} to query the puzzle status.
+     * @param resourceBundle {@link ResourceBundle} that will be used to localize the dialog.
+     */
+    public PuzzleStatusAlert(final GameState gameState, final ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         this.gameState = gameState;
         automatedSolvingRunning = false;

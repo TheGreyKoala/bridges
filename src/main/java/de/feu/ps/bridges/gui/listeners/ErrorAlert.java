@@ -6,11 +6,17 @@ import javafx.scene.control.Alert;
 import java.util.ResourceBundle;
 
 /**
+ * Listener that shows an error dialog whenever an error event occurs.
  * @author Tim Gremplewski
  */
 public class ErrorAlert implements ErrorEventListener {
+
     private final ResourceBundle resourceBundle;
 
+    /**
+     * Create a new instance that uses the given {@link ResourceBundle} to localize the error dialog.
+     * @param resourceBundle {@link ResourceBundle} that will be used to localize the error dialog.
+     */
     public ErrorAlert(final ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
     }

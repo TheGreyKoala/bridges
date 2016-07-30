@@ -15,14 +15,12 @@ class EventBroadcaster {
 
     private final Set<AutomatedSolvingEventListener> automatedSolvingEventListeners;
     private final Set<ErrorEventListener> errorEventListeners;
-    private final Set<GameOptionsEventListener> gameOptionsEventListeners;
     private final Set<PuzzleEventListener> puzzleEventListeners;
     private final Set<GamePlayEventListener> gamePlayEventListeners;
 
     EventBroadcaster() {
         automatedSolvingEventListeners = new LinkedHashSet<>();
         errorEventListeners = new LinkedHashSet<>();
-        gameOptionsEventListeners = new LinkedHashSet<>();
         puzzleEventListeners = new LinkedHashSet<>();
         gamePlayEventListeners = new LinkedHashSet<>();
     }
@@ -35,11 +33,6 @@ class EventBroadcaster {
     public void addErrorEventListener(final ErrorEventListener listener) {
         Objects.requireNonNull(listener, "Parameter 'listener' must not be null.");
         errorEventListeners.add(listener);
-    }
-
-    public void addGameOptionsEventListener(final GameOptionsEventListener listener) {
-        Objects.requireNonNull(listener, "Parameter 'listener' must not be null.");
-        gameOptionsEventListeners.add(listener);
     }
 
     public void addGamePlayEventListener(final GamePlayEventListener listener) {
@@ -67,12 +60,6 @@ class EventBroadcaster {
     void broadcastEvent(final GamePlayEvent event) {
         Platform.runLater(() -> {
             gamePlayEventListeners.forEach(listener -> listener.handleEvent(event));
-        });
-    }
-
-    void broadcastEvent(final GameOptionsEvent event, final Object eventParameter) {
-        Platform.runLater(() -> {
-            gameOptionsEventListeners.forEach(listener -> listener.handleEvent(event, eventParameter));
         });
     }
 

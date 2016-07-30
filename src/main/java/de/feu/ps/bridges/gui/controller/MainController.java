@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -159,7 +160,19 @@ public class MainController implements Initializable {
      * @param actionEvent the event.
      */
     public void showRemainingBridgesClicked(final ActionEvent actionEvent) {
-        model.setShowRemainingBridges(showRemainingBridgesCheckBox.isSelected());
+        drawPuzzle();
+    }
+
+    /**
+     * Redraw the puzzle.
+     */
+    public void drawPuzzle() {
+        mainPanel.getChildren().clear();
+        Optional<Puzzle> puzzle = model.getGameState().getPuzzle();
+        if (puzzle.isPresent()) {
+            Node puzzleNode = PuzzleNodeFactory.createPuzzle(puzzle.get(), model, showRemainingBridgesCheckBox.isSelected());
+            mainPanel.getChildren().add(puzzleNode);
+        }
     }
 
     /**
@@ -194,16 +207,5 @@ public class MainController implements Initializable {
     public void setNonAutomatedSolvingControlsDisabled(final boolean setDisabled) {
         Arrays.asList(menuBar, showRemainingBridgesCheckBox, nextMoveButton, mainPanel)
                 .forEach(component -> component.setDisable(setDisabled));
-    }
-
-    /**
-     * Draws the given puzzle.
-     * @param puzzle Puzzle that should be drawn.
-     * @param showRemainingBridges Indicates if islands should display their amount of remaining bridges.
-     */
-    public void drawPuzzle(final Puzzle puzzle, final boolean showRemainingBridges) {
-        Node puzzleNode = PuzzleNodeFactory.createPuzzle(puzzle, model, showRemainingBridges);
-        mainPanel.getChildren().clear();
-        mainPanel.getChildren().add(puzzleNode);
     }
 }

@@ -61,17 +61,16 @@ public class Main extends Application {
 
     private static void registerEventListeners(final GameState gameState, final MainController mainController, final ResourceBundle bundle) {
         GamePlayAlert gamePlayAlert = new GamePlayAlert(bundle);
-        PuzzleStatusAlert puzzleStatusAlert = new PuzzleStatusAlert(bundle, gameState);
+        PuzzleStatusAlert puzzleStatusAlert = new PuzzleStatusAlert(gameState, bundle);
         ErrorAlert errorAlert = new ErrorAlert(bundle);
-        PuzzleStatusLabelUpdate puzzleStatusLabelUpdate = new PuzzleStatusLabelUpdate(bundle, mainController::setStatusBarLabel, gameState);
+        PuzzleStatusLabelUpdate puzzleStatusLabelUpdate = new PuzzleStatusLabelUpdate(gameState, mainController::setStatusBarLabel, bundle);
         AutomatedSolvingStatusUpdate automatedSolvingStatusUpdate = new AutomatedSolvingStatusUpdate(mainController::setNonAutomatedSolvingControlsDisabled);
-        PuzzleRedraw puzzleRedraw = new PuzzleRedraw(gameState, mainController::drawPuzzle);
+        PuzzleUpdate puzzleUpdate = new PuzzleUpdate(mainController::drawPuzzle);
 
         gameState.addAutomatedSolvingEventListener(automatedSolvingStatusUpdate);
         gameState.addAutomatedSolvingEventListener(puzzleStatusAlert);
-        gameState.addGameOptionsEventListener(puzzleRedraw);
         gameState.addGamePlayEventListener(gamePlayAlert);
-        gameState.addPuzzleEventListener(puzzleRedraw);
+        gameState.addPuzzleEventListener(puzzleUpdate);
         gameState.addPuzzleEventListener(puzzleStatusAlert);
         gameState.addPuzzleEventListener(puzzleStatusLabelUpdate);
         gameState.addErrorEventListener(errorAlert);

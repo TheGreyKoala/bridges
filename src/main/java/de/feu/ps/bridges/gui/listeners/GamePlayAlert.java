@@ -8,12 +8,17 @@ import java.util.ResourceBundle;
 import static de.feu.ps.bridges.gui.events.GamePlayEvent.INVALID_MOVE;
 
 /**
+ * Listener that shows information dialogs when game play events occur.
  * @author Tim Gremplewski
  */
 public class GamePlayAlert implements GamePlayEventListener {
 
     private final ResourceBundle resourceBundle;
 
+    /**
+     * Create a new instance that uses the given {@link ResourceBundle} to localize the dialog.
+     * @param resourceBundle {@link ResourceBundle} that will be used to localize the dialog.
+     */
     public GamePlayAlert(final ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
     }

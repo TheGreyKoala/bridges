@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 import static de.feu.ps.bridges.gui.events.PuzzleEvent.PUZZLE_STATUS_CHANGED;
 
 /**
+ * Listener that tells a given client which text to display to visualize the changed puzzle status.
  * @author Tim Gremplewski
  */
 public class PuzzleStatusLabelUpdate implements PuzzleEventListener {
@@ -18,17 +19,21 @@ public class PuzzleStatusLabelUpdate implements PuzzleEventListener {
     private final Consumer<String> consumer;
     private final GameState gameState;
 
-    public PuzzleStatusLabelUpdate(final ResourceBundle resourceBundle, final Consumer<String> consumer, final GameState gameState) {
+    /**
+     * Creates a new instance, that uses the given {@link GameState} to query the puzzle status
+     * and informs the given {@link Consumer} which text to display.
+     * @param gameState {@link GameState} that will be used to query the puzzle status.
+     * @param consumer {@link Consumer} that will be told which text to display.
+     * @param resourceBundle {@link ResourceBundle} to localize the text.
+     */
+    public PuzzleStatusLabelUpdate(final GameState gameState, final Consumer<String> consumer, final ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         this.consumer = consumer;
         this.gameState = gameState;
-        // TODO: Create a new Listener that only listens on PuzzleStatus changes.
-        // That way we get rid of the dependency to GameState
     }
 
     @Override
     public void handleEvent(final PuzzleEvent event) {
-        // TODO: Fire event in GameState
         if (event == PUZZLE_STATUS_CHANGED) {
             updateStatusBar(gameState.getPuzzleStatus());
         }
