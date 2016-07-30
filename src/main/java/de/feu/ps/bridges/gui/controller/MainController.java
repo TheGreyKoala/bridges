@@ -1,6 +1,6 @@
 package de.feu.ps.bridges.gui.controller;
 
-import de.feu.ps.bridges.gui.components.GraphicalPuzzle;
+import de.feu.ps.bridges.gui.components.PuzzleNodeFactory;
 import de.feu.ps.bridges.gui.model.Model;
 import de.feu.ps.bridges.model.Puzzle;
 import javafx.beans.binding.Bindings;
@@ -202,7 +202,7 @@ public class MainController implements Initializable {
      * @param puzzle Node containing all components of the puzzle and that should be displayed.
      */
     public void setVisiblePuzzle(final Puzzle puzzle, final boolean showRemainingBridges) {
-        Node puzzleNode = GraphicalPuzzle.createPuzzle(puzzle, model, showRemainingBridges);
+        Node puzzleNode = PuzzleNodeFactory.createPuzzle(puzzle, model, showRemainingBridges);
         mainPanel.getChildren().clear();
         mainPanel.getChildren().add(puzzleNode);
     }
