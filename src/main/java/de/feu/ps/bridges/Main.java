@@ -65,7 +65,7 @@ public class Main extends Application {
         ErrorAlert errorAlert = new ErrorAlert(bundle);
         PuzzleStatusLabelUpdate puzzleStatusLabelUpdate = new PuzzleStatusLabelUpdate(bundle, mainController::setStatusBarLabel, gameState);
         AutomatedSolvingStatusUpdate automatedSolvingStatusUpdate = new AutomatedSolvingStatusUpdate(mainController::setNonAutomatedSolvingControlsDisabled);
-        PuzzleRedraw puzzleRedraw = new PuzzleRedraw(gameState, mainController::setVisiblePuzzle);
+        PuzzleRedraw puzzleRedraw = new PuzzleRedraw(gameState, mainController::drawPuzzle);
 
         gameState.addAutomatedSolvingEventListener(automatedSolvingStatusUpdate);
         gameState.addAutomatedSolvingEventListener(puzzleStatusAlert);

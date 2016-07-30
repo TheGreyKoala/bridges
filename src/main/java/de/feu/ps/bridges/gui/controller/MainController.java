@@ -197,11 +197,11 @@ public class MainController implements Initializable {
     }
 
     /**
-     * TODO: JAVADOC
-     * Set the puzzle component, that should be drawn.
-     * @param puzzle Node containing all components of the puzzle and that should be displayed.
+     * Draws the given puzzle.
+     * @param puzzle Puzzle that should be drawn.
+     * @param showRemainingBridges Indicates if islands should display their amount of remaining bridges.
      */
-    public void setVisiblePuzzle(final Puzzle puzzle, final boolean showRemainingBridges) {
+    public void drawPuzzle(final Puzzle puzzle, final boolean showRemainingBridges) {
         Node puzzleNode = PuzzleNodeFactory.createPuzzle(puzzle, model, showRemainingBridges);
         mainPanel.getChildren().clear();
         mainPanel.getChildren().add(puzzleNode);
