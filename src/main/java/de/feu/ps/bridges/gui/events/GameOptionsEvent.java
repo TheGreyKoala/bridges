@@ -1,7 +1,7 @@
 package de.feu.ps.bridges.gui.events;
 
 /**
- * Types of events that can occur.
+ * Events that occur when game options change.
  * @author Tim Gremplewski
  */
 public enum GameOptionsEvent {

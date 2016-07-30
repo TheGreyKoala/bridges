@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static de.feu.ps.bridges.gui.events.AutomatedSolvingEvent.*;
-import static de.feu.ps.bridges.gui.events.ErrorEvent.NEXT_MOVE_FAILED;
+import static de.feu.ps.bridges.gui.events.ErrorEvent.APPLYING_NEXT_MOVE_FAILED;
 import static de.feu.ps.bridges.gui.events.ErrorEvent.SOLVING_FAILED;
 
 /**
@@ -45,7 +45,7 @@ class AutomatedSolving {
                 }
             } catch (final Exception e) {
                 LOGGER.log(Level.SEVERE, "Unexpected error while applying a next safe move.", e);
-                gameState.broadcastEvent(NEXT_MOVE_FAILED);
+                gameState.broadcastEvent(APPLYING_NEXT_MOVE_FAILED);
             }
         }
     }

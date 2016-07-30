@@ -5,7 +5,7 @@ import de.feu.ps.bridges.toolkit.PuzzleToolkitFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static de.feu.ps.bridges.gui.events.ErrorEvent.PUZZLE_GENERATION_FAILED;
+import static de.feu.ps.bridges.gui.events.ErrorEvent.GENERATING_PUZZLE_FAILED;
 
 /**
  * @author Tim Gremplewski
@@ -26,7 +26,7 @@ class PuzzleGeneration {
             gameState.setPuzzleToolkit(PuzzleToolkitFactory.createForGeneratedPuzzle());
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while generating a random puzzle.", e);
-            gameState.broadcastEvent(PUZZLE_GENERATION_FAILED);
+            gameState.broadcastEvent(GENERATING_PUZZLE_FAILED);
         }
     }
 
@@ -40,7 +40,7 @@ class PuzzleGeneration {
             gameState.setPuzzleToolkit(PuzzleToolkitFactory.createForGeneratedPuzzle(columns, rows));
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while generating a random puzzle.", e);
-            gameState.broadcastEvent(PUZZLE_GENERATION_FAILED);
+            gameState.broadcastEvent(GENERATING_PUZZLE_FAILED);
         }
     }
 
@@ -55,7 +55,7 @@ class PuzzleGeneration {
             gameState.setPuzzleToolkit(PuzzleToolkitFactory.createForGeneratedPuzzle(columns, rows, islands));
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while generating a random puzzle.", e);
-            gameState.broadcastEvent(PUZZLE_GENERATION_FAILED);
+            gameState.broadcastEvent(GENERATING_PUZZLE_FAILED);
         }
     }
 }

@@ -23,7 +23,7 @@ public class ErrorAlert implements ErrorEventListener {
 
     private Alert getErrorAlert(final ErrorEvent errorEventType) {
         switch (errorEventType) {
-            case PUZZLE_GENERATION_FAILED:
+            case GENERATING_PUZZLE_FAILED:
                 return getErrorAlert(resourceBundle.getString("generation.failed"));
             case LOADING_PUZZLE_FAILED:
                 return getErrorAlert(resourceBundle.getString("loading.failed"));
@@ -31,13 +31,13 @@ public class ErrorAlert implements ErrorEventListener {
                 return getErrorAlert(resourceBundle.getString("saving.failed"));
             case RESTARTING_PUZZLE_FAILED:
                 return getErrorAlert(resourceBundle.getString("restarting.failed"));
-            case NEXT_MOVE_FAILED:
+            case APPLYING_NEXT_MOVE_FAILED:
                 return getErrorAlert(resourceBundle.getString("nextMove.failed"));
             case SOLVING_FAILED:
                 return getErrorAlert(resourceBundle.getString("solving.failed"));
-            case BUILD_BRIDGE_FAILED:
+            case BUILDING_BRIDGE_FAILED:
                 return getErrorAlert(resourceBundle.getString("buildBridge.failed"));
-            case TEAR_DOWN_BRIDGE_FAILED:
+            case TEARING_DOWN_BRIDGE_FAILED:
                 return getErrorAlert(resourceBundle.getString("tearDownBridge.failed"));
             default:
                 return getErrorAlert("");

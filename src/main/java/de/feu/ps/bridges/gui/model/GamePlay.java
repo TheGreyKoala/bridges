@@ -50,7 +50,7 @@ class GamePlay {
             }
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while building a bridge.", e);
-            gameState.broadcastEvent(BUILD_BRIDGE_FAILED);
+            gameState.broadcastEvent(BUILDING_BRIDGE_FAILED);
         }
     }
 
@@ -67,7 +67,7 @@ class GamePlay {
             }
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while tearing down a bridge.", e);
-            gameState.broadcastEvent(TEAR_DOWN_BRIDGE_FAILED);
+            gameState.broadcastEvent(TEARING_DOWN_BRIDGE_FAILED);
         }
     }
 }

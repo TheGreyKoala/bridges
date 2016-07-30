@@ -1,12 +1,13 @@
 package de.feu.ps.bridges.gui.events;
 
 /**
+ * Events that can occur when the puzzle changes.
  * @author Tim Gremplewski
  */
-public enum  PuzzleEvent {
+public enum PuzzleEvent {
 
     /**
-     * The current puzzle has changed.
+     * The puzzle itself changed, e.g. a bridge was added.
      */
     PUZZLE_CHANGED,
 

@@ -1,13 +1,25 @@
 package de.feu.ps.bridges.gui.events;
 
 /**
+ * Error events that can occur.
  * @author Tim Gremplewski
  */
 public enum ErrorEvent {
+
     /**
-     * The generation of a new puzzle failed.
+     * Applying a next safe move to the puzzle failed.
      */
-    PUZZLE_GENERATION_FAILED,
+    APPLYING_NEXT_MOVE_FAILED,
+
+    /**
+     * Building a bridge failed.
+     */
+    BUILDING_BRIDGE_FAILED,
+
+    /**
+     * Generating a new puzzle failed.
+     */
+    GENERATING_PUZZLE_FAILED,
 
     /**
      * Loading a puzzle from a file failed.
@@ -15,19 +27,14 @@ public enum ErrorEvent {
     LOADING_PUZZLE_FAILED,
 
     /**
-     * Saving a puzzle to a file failed.
-     */
-    SAVING_PUZZLE_FAILED,
-
-    /**
      * Restarting the puzzle failed.
      */
     RESTARTING_PUZZLE_FAILED,
 
     /**
-     * Applying a next safe move to the puzzle failed.
+     * Saving the puzzle to a file failed.
      */
-    NEXT_MOVE_FAILED,
+    SAVING_PUZZLE_FAILED,
 
     /**
      * Solving the puzzle failed.
@@ -35,12 +42,7 @@ public enum ErrorEvent {
     SOLVING_FAILED,
 
     /**
-     * Building a bridge failed.
-     */
-    BUILD_BRIDGE_FAILED,
-
-    /**
      * Tearing down a bridge failed.
      */
-    TEAR_DOWN_BRIDGE_FAILED
+    TEARING_DOWN_BRIDGE_FAILED
 }
