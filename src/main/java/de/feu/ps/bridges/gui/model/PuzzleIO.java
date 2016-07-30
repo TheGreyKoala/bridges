@@ -10,19 +10,24 @@ import static de.feu.ps.bridges.gui.events.ErrorEvent.LOADING_PUZZLE_FAILED;
 import static de.feu.ps.bridges.gui.events.ErrorEvent.SAVING_PUZZLE_FAILED;
 
 /**
+ * Helper class that offers operations to save and load puzzles.
  * @author Tim Gremplewski
  */
 class PuzzleIO {
-    private static final Logger LOGGER = Logger.getLogger(PuzzleIO.class.getName());
 
+    private static final Logger LOGGER = Logger.getLogger(PuzzleIO.class.getName());
     private final GameState gameState;
 
+    /**
+     * Creates a new instance that operates on the given {@link GameState}.
+     * @param gameState {@link GameState} to operate on.
+     */
     PuzzleIO(final GameState gameState) {
         this.gameState = gameState;
     }
 
     /**
-     * Load the puzzle from the file file.
+     * Load the puzzle from the given file.
      * @param sourceFile location of the puzzle to be loaded.
      */
     void loadPuzzle(final File sourceFile) {
@@ -38,7 +43,7 @@ class PuzzleIO {
     /**
      * Save the current puzzle in the file it was loaded from.
      */
-    public void savePuzzle() {
+    void savePuzzle() {
         try {
             savePuzzleAs(gameState.getSourceFile());
         } catch (final Exception e) {

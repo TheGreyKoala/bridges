@@ -8,12 +8,18 @@ import java.util.logging.Logger;
 import static de.feu.ps.bridges.gui.events.ErrorEvent.GENERATING_PUZZLE_FAILED;
 
 /**
+ * Helper class that offers operations to generate new puzzles.
  * @author Tim Gremplewski
  */
 class PuzzleGeneration {
+
     private static final Logger LOGGER = Logger.getLogger(PuzzleGeneration.class.getName());
     private final GameState gameState;
 
+    /**
+     * Creates a new instance that operates on the given {@link GameState}.
+     * @param gameState {@link GameState} to operate on.
+     */
     PuzzleGeneration(final GameState gameState) {
         this.gameState = gameState;
     }
@@ -50,7 +56,7 @@ class PuzzleGeneration {
      * @param rows amount of rows of the new puzzle.
      * @param islands amount of islands in the new puzzle.
      */
-    public void newPuzzle(final int columns, final int rows, final int islands) {
+    void newPuzzle(final int columns, final int rows, final int islands) {
         try {
             gameState.setPuzzleToolkit(PuzzleToolkitFactory.createForGeneratedPuzzle(columns, rows, islands));
         } catch (final Exception e) {

@@ -12,6 +12,7 @@ import static de.feu.ps.bridges.gui.events.ErrorEvent.*;
 import static de.feu.ps.bridges.gui.events.GamePlayEvent.INVALID_MOVE;
 
 /**
+ * Helper class that offers operations to build or remove bridges.
  * @author Tim Gremplewski
  */
 class GamePlay {
@@ -19,12 +20,16 @@ class GamePlay {
     private static final Logger LOGGER = Logger.getLogger(GamePlay.class.getName());
     private final GameState gameState;
 
+    /**
+     * Creates a new instance that operates on the given {@link GameState}.
+     * @param gameState {@link GameState} to operate on.
+     */
     GamePlay(final GameState gameState) {
         this.gameState = gameState;
     }
 
     /**
-     * Restart the current puzzle.
+     * Restart the puzzle.
      */
     void restartPuzzle() {
         try {
@@ -40,7 +45,7 @@ class GamePlay {
      * @param island {@link} Island to add a bridge to.
      * @param direction {@link Direction} to build the bridge.
      */
-    public void tryBuildBridge(final Island island, final Direction direction) {
+    void tryBuildBridge(final Island island, final Direction direction) {
         try {
             Optional<Bridge> optionalBridge = gameState.getPuzzleToolkit().tryBuildBridge(island, direction);
             if (optionalBridge.isPresent()) {
@@ -59,7 +64,7 @@ class GamePlay {
      * @param island island to remove the bridge from.
      * @param direction direction of the bridge to remove.
      */
-    public void tearDownBridge(final Island island, final Direction direction) {
+    void tearDownBridge(final Island island, final Direction direction) {
         try {
             Optional<Bridge> optionalBridge = gameState.getPuzzleToolkit().tearDownBridge(island, direction);
             if (optionalBridge.isPresent()) {

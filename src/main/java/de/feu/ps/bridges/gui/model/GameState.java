@@ -15,18 +15,22 @@ import static de.feu.ps.bridges.gui.events.PuzzleEvent.PUZZLE_CHANGED;
 import static de.feu.ps.bridges.gui.events.PuzzleEvent.PUZZLE_STATUS_CHANGED;
 
 /**
+ * Class that stores the current state of the game.
  * @author Tim Gremplewski
  */
 public class GameState extends EventBroadcaster {
+
     private static final Logger LOGGER = Logger.getLogger(GameState.class.getName());
-
-
     private Puzzle puzzle;
     private File sourceFile;
     private PuzzleToolkit puzzleToolkit;
     private PuzzleStatus puzzleStatus;
     private LinkedList<Bridge> addedBridges;
 
+    /**
+     * Set the {@link PuzzleToolkit}.
+     * @param puzzleToolkit the puzzle toolkit.
+     */
     void setPuzzleToolkit(final PuzzleToolkit puzzleToolkit) {
         this.puzzleToolkit = puzzleToolkit;
         puzzle = puzzleToolkit.getPuzzle();
@@ -40,22 +44,43 @@ public class GameState extends EventBroadcaster {
         broadcastEvent(PUZZLE_CHANGED);
     }
 
+    /**
+     * Get the current puzzle.
+     * If no puzzle has been set yet, the returned {@link Optional} will be empty.
+     * @return {@link Optional} containing the current puzzle.
+     */
     public Optional<Puzzle> getPuzzle() {
         return Optional.ofNullable(puzzle);
     }
 
-    public File getSourceFile() {
+    /**
+     * Get the file from which the current puzzle was loaded.
+     * @return the file from which the current puzzle was loaded.
+     */
+    File getSourceFile() {
         return sourceFile;
     }
 
-    public PuzzleToolkit getPuzzleToolkit() {
+    /**
+     * Get the current puzzle toolkit.
+     * @return the current puzzle toolkit.
+     */
+    PuzzleToolkit getPuzzleToolkit() {
         return puzzleToolkit;
     }
 
+    /**
+     * Get the status of the current puzzle.
+     * @return the status of the current puzzle.
+     */
     public PuzzleStatus getPuzzleStatus() {
         return puzzleStatus;
     }
 
+    /**
+     * Set the file from where the current puzzle was loaded.
+     * @param sourceFile the file from where the current puzzle was loaded.
+     */
     void setSourceFile(File sourceFile) {
         this.sourceFile = sourceFile;
     }
@@ -77,6 +102,9 @@ public class GameState extends EventBroadcaster {
         return !addedBridges.isEmpty() && addedBridges.getLast().equals(bridge);
     }
 
+    /**
+     * Remove all bridges from the current puzzle.
+     */
     void removeAllBridges() {
         if (getPuzzle().isPresent()) {
             puzzle.removeAllBridges();
@@ -84,12 +112,20 @@ public class GameState extends EventBroadcaster {
         clearAddedBridgesAndBroadcastEvents();
     }
 
+    /**
+     * Add the given bridge to the current puzzle.
+     * @param bridge bridge to add.
+     */
     void addBridge(final Bridge bridge) {
         addedBridges.add(bridge);
         broadcastEvent(PUZZLE_CHANGED);
         refreshPuzzleStatus();
     }
 
+    /**
+     * Remove the given bridge from the current puzzle.
+     * @param bridge bridge to remove.
+     */
     void removeBridge(final Bridge bridge) {
         addedBridges.removeLastOccurrence(bridge);
         broadcastEvent(PUZZLE_CHANGED);

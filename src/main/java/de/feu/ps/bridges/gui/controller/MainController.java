@@ -188,7 +188,7 @@ public class MainController implements Initializable {
      * @param actionEvent the event.
      */
     public void nextMove(ActionEvent actionEvent) {
-        model.nextMove();
+        model.applyNextMove();
     }
 
     /**

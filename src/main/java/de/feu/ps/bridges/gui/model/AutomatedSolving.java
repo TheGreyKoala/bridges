@@ -16,25 +16,29 @@ import static de.feu.ps.bridges.gui.events.ErrorEvent.APPLYING_NEXT_MOVE_FAILED;
 import static de.feu.ps.bridges.gui.events.ErrorEvent.SOLVING_FAILED;
 
 /**
+ * Helper class that offers operations to automatically solve the puzzle of a given {@link GameState}.
  * @author Tim Gremplewski
  */
 class AutomatedSolving {
 
     private static final Logger LOGGER = Logger.getLogger(AutomatedSolving.class.getName());
-
     private final ExecutorService executorService;
     private final GameState gameState;
     private Future<?> currentTask;
 
+    /**
+     * Creates a new instance that operates on the given {@link GameState}.
+     * @param gameState {@link GameState} to operate on.
+     */
     AutomatedSolving(final GameState gameState) {
         this.gameState = gameState;
         executorService = Executors.newWorkStealingPool();
     }
 
     /**
-     * Perform a next save move on the current puzzle, if any can be found.
+     * Apply a next save move on the puzzle, if any can be found.
      */
-    public void nextMove() {
+    void applyNextMove() {
         if (gameState.getPuzzle().isPresent()) {
             try {
                 Optional<Bridge> optionalBridge = gameState.getPuzzleToolkit().nextMove();
@@ -51,9 +55,9 @@ class AutomatedSolving {
     }
 
     /**
-     * Solve the current puzzle as far as possible.
+     * Solve the puzzle as far as possible.
      */
-    public void solve() {
+    void solve() {
         if (gameState.getPuzzle().isPresent()) {
             try {
                 if (currentTask == null || currentTask.isDone()) {
@@ -75,7 +79,6 @@ class AutomatedSolving {
             Optional<Bridge> optionalBridge;
             do {
                 optionalBridge = gameState.getPuzzleToolkit().nextMove();
-
                 if (optionalBridge.isPresent()) {
                     gameState.addBridge(optionalBridge.get());
 
