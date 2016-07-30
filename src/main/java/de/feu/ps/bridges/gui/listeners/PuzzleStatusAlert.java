@@ -53,11 +53,8 @@ public class PuzzleStatusAlert implements AutomatedSolvingEventListener, PuzzleE
     }
 
     private void showPuzzleStatusAlert() {
-        showPuzzleStatusAlert(gameState.getPuzzleStatus());
-    }
-
-    private void showPuzzleStatusAlert(final PuzzleStatus puzzleStatus) {
         final Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        final PuzzleStatus puzzleStatus = gameState.getPuzzleStatus();
         switch (puzzleStatus) {
             case SOLVED:
                 alert.setTitle(resourceBundle.getString("autoSolveDialog.solved.title"));
