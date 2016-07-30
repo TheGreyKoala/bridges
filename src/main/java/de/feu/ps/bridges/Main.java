@@ -8,6 +8,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -49,13 +50,14 @@ public class Main extends Application {
 
         registerEventListeners(gameState, mainController, bundle);
 
-        final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/de/feu/ps/bridges/gui/MainFrame.fxml"), bundle);
+        final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui/MainFrame.fxml"), bundle);
         fxmlLoader.<MainController>setController(mainController);
 
         final Parent root = fxmlLoader.load();
         primaryStage.setTitle(bundle.getString("mainFrame.title"));
         primaryStage.setScene(new Scene(root));
         primaryStage.setMaximized(true);
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("bridges.png")));
         primaryStage.show();
     }
 
