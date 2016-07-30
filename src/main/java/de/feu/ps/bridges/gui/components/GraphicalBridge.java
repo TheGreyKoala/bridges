@@ -62,24 +62,28 @@ public class GraphicalBridge {
     }
 
     private static Line initLine(final Node island1, final Node island2, final int xOffset, final int yOffset) {
-        Line line = new Line();
+        final Line line = new Line(
+                getBridgePosition(island1.getLayoutX(), xOffset),
+                getBridgePosition(island1.getLayoutX(), yOffset),
+                getBridgePosition(island2.getLayoutX(), xOffset),
+                getBridgePosition(island2.getLayoutX(), yOffset));
 
-        island1.layoutXProperty().addListener((observable, oldValue, newValue) -> {
-            line.setStartX(newValue.doubleValue() + HALF_CELL_SIZE + xOffset);
-        });
+        island1.layoutXProperty().addListener(
+            (observable, oldValue, newValue) -> line.setStartX(getBridgePosition(newValue.doubleValue(), xOffset)));
 
-        island1.layoutYProperty().addListener((observable, oldValue, newValue) -> {
-            line.setStartY(newValue.doubleValue() + HALF_CELL_SIZE + yOffset);
-        });
+        island1.layoutYProperty().addListener(
+            (observable, oldValue, newValue) -> line.setStartY(getBridgePosition(newValue.doubleValue(), yOffset)));
 
-        island2.layoutXProperty().addListener((observable, oldValue, newValue) -> {
-            line.setEndX(newValue.doubleValue() + HALF_CELL_SIZE + xOffset);
-        });
+        island2.layoutXProperty().addListener(
+            (observable, oldValue, newValue) -> line.setEndX(getBridgePosition(newValue.doubleValue(), xOffset)));
 
-        island2.layoutYProperty().addListener((observable, oldValue, newValue) -> {
-            line.setEndY(newValue.doubleValue() + HALF_CELL_SIZE + yOffset);
-        });
+        island2.layoutYProperty().addListener(
+            (observable, oldValue, newValue) -> line.setEndY(getBridgePosition(newValue.doubleValue(), yOffset)));
 
         return line;
+    }
+
+    private static double getBridgePosition(final double cellPosition, final int offset) {
+        return cellPosition + HALF_CELL_SIZE + offset;
     }
 }
