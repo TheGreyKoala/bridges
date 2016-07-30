@@ -71,7 +71,6 @@ public class Main extends Application {
         gameState.addAutomatedSolvingEventListener(puzzleStatusAlert);
         gameState.addGameStateEventListener(puzzleRedraw);
         gameState.addGameStateEventListener(eventAlert);
-        gameState.addGameStateEventListener(puzzleStatusAlert);
         gameState.addPuzzleEventListener(puzzleRedraw);
         gameState.addPuzzleEventListener(puzzleStatusAlert);
         gameState.addPuzzleEventListener(puzzleStatusLabelUpdate);

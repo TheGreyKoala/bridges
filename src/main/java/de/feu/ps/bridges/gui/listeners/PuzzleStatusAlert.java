@@ -2,7 +2,6 @@ package de.feu.ps.bridges.gui.listeners;
 
 import de.feu.ps.bridges.analyser.PuzzleStatus;
 import de.feu.ps.bridges.gui.events.AutomatedSolvingEvent;
-import de.feu.ps.bridges.gui.events.GameStateEvent;
 import de.feu.ps.bridges.gui.events.PuzzleEvent;
 import de.feu.ps.bridges.gui.model.GameState;
 import javafx.scene.control.Alert;
@@ -11,13 +10,12 @@ import java.util.ResourceBundle;
 
 import static de.feu.ps.bridges.analyser.PuzzleStatus.UNSOLVED;
 import static de.feu.ps.bridges.gui.events.AutomatedSolvingEvent.STARTED;
-import static de.feu.ps.bridges.gui.events.GameStateEvent.NO_NEXT_MOVE;
 import static de.feu.ps.bridges.gui.events.PuzzleEvent.PUZZLE_STATUS_CHANGED;
 
 /**
  * @author Tim Gremplewski
  */
-public class PuzzleStatusAlert implements GameStateEventListener, AutomatedSolvingEventListener, PuzzleEventListener {
+public class PuzzleStatusAlert implements AutomatedSolvingEventListener, PuzzleEventListener {
 
     private final ResourceBundle resourceBundle;
     private final GameState gameState;
@@ -27,13 +25,6 @@ public class PuzzleStatusAlert implements GameStateEventListener, AutomatedSolvi
         this.resourceBundle = resourceBundle;
         this.gameState = gameState;
         automatedSolvingRunning = false;
-    }
-
-    @Override
-    public void handleEvent(final GameStateEvent event) {
-        if (event == NO_NEXT_MOVE) {
-            showPuzzleStatusAlert();
-        }
     }
 
     @Override
@@ -79,9 +70,5 @@ public class PuzzleStatusAlert implements GameStateEventListener, AutomatedSolvi
                 break;
         }
         alert.showAndWait();
-    }
-
-    @Override
-    public void handleEvent(final GameStateEvent event, final Object eventParameter) {
     }
 }

@@ -3,7 +3,6 @@ package de.feu.ps.bridges.gui.model;
 import de.feu.ps.bridges.analyser.PuzzleStatus;
 import de.feu.ps.bridges.gui.events.AutomatedSolvingEvent;
 import de.feu.ps.bridges.model.Bridge;
-import javafx.application.Platform;
 
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -12,11 +11,9 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static de.feu.ps.bridges.gui.events.AutomatedSolvingEvent.CANCELLED_BY_USER;
-import static de.feu.ps.bridges.gui.events.AutomatedSolvingEvent.STARTED;
+import static de.feu.ps.bridges.gui.events.AutomatedSolvingEvent.*;
 import static de.feu.ps.bridges.gui.events.ErrorEvent.NEXT_MOVE_FAILED;
 import static de.feu.ps.bridges.gui.events.ErrorEvent.SOLVING_FAILED;
-import static de.feu.ps.bridges.gui.events.GameStateEvent.NO_NEXT_MOVE;
 
 /**
  * @author Tim Gremplewski

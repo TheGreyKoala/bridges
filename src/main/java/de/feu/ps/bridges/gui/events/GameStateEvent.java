@@ -6,10 +6,7 @@ package de.feu.ps.bridges.gui.events;
  */
 public enum GameStateEvent {
 
-    /**
-     * No next safe move can be applied to the puzzle.
-     */
-    NO_NEXT_MOVE,
+
 
     /**
      * The move to be applied is invalid,
