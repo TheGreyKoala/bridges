@@ -44,7 +44,7 @@ public class MoveAnalyserTest {
     public void testIsValidMoveIslandNull() {
         expectedException.expect(NullPointerException.class);
         expectedException.expectMessage(is("Parameter 'island' must not be null."));
-        analyser.isValidMove(null, Direction.NORTH, false);
+        analyser.isValidMove(null, Direction.NORTH);
     }
 
     @Test
@@ -52,12 +52,12 @@ public class MoveAnalyserTest {
         expectedException.expect(NullPointerException.class);
         expectedException.expectMessage(is("Parameter 'direction' must not be null."));
         Direction direction = null;
-        analyser.isValidMove(island, direction, false);
+        analyser.isValidMove(island, direction);
     }
 
     @Test
     public void testIsValidMoveNoNeighbourInDirection() {
-        boolean validMove = analyser.isValidMove(island, Direction.NORTH, false);
+        boolean validMove = analyser.isValidMove(island, Direction.NORTH);
         assertFalse("Expected move to be invalid", validMove);
     }
 

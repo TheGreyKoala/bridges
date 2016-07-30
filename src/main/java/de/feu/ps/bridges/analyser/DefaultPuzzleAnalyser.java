@@ -63,8 +63,8 @@ class DefaultPuzzleAnalyser implements PuzzleAnalyser {
     }
 
     @Override
-    public boolean isValidMove(final Island island, final Direction direction, final boolean doubleBridge) {
-        return moveAnalyser.isValidMove(island, direction, doubleBridge);
+    public boolean isValidMove(final Island island, final Direction direction) {
+        return moveAnalyser.isValidMove(island, direction);
     }
 
     @Override

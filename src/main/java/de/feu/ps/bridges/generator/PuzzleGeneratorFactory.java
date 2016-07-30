@@ -6,7 +6,7 @@ package de.feu.ps.bridges.generator;
  */
 public final class PuzzleGeneratorFactory {
 
-    private static RandomUtil randomUtil = new RandomUtil();
+    private static final RandomUtil RANDOM_UTIL = new RandomUtil();
 
     private PuzzleGeneratorFactory() {
     }
@@ -17,7 +17,7 @@ public final class PuzzleGeneratorFactory {
      * @return a new {@link PuzzleGenerator}.
      */
     public static PuzzleGenerator createPuzzleGenerator() {
-        final int[] dimensions = randomUtil.getRandom().ints(2, 4, 25).toArray();
+        final int[] dimensions = RANDOM_UTIL.getRandom().ints(2, 4, 25).toArray();
         return createPuzzleGenerator(dimensions[0], dimensions[1]);
     }
 
@@ -43,7 +43,7 @@ public final class PuzzleGeneratorFactory {
         lowerLimit = Math.min(lowerLimit, upperLimit);
         upperLimit = Math.max(lowerLimit, upperLimit);
 
-        int islands = randomUtil.randomIntBetween(lowerLimit, upperLimit);
+        int islands = RANDOM_UTIL.randomIntBetween(lowerLimit, upperLimit);
         if (islands < 2) {
             islands = 2;
         }
@@ -52,7 +52,7 @@ public final class PuzzleGeneratorFactory {
     }
 
     /**
-     * Creates a new {@link PuzzleGenerator} that generates puzzles with a defiend
+     * Creates a new {@link PuzzleGenerator} that generates puzzles with a defined
      * amount of columns, rows and islands.
      * @param columns Number of columns the {@link PuzzleGenerator} should use.
      * @param rows Number of rows the {@link PuzzleGenerator} should use.

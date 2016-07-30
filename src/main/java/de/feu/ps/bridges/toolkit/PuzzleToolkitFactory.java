@@ -20,7 +20,7 @@ public final class PuzzleToolkitFactory {
      * @param puzzle puzzle to use.
      * @return a new instance.
      */
-    public static PuzzleToolkit createFor(final Puzzle puzzle) {
+    private static PuzzleToolkit createFor(final Puzzle puzzle) {
         return new DefaultPuzzleToolkit(puzzle);
     }
 

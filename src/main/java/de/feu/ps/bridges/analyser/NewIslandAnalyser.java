@@ -11,7 +11,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static de.feu.ps.bridges.model.Direction.*;
-import static de.feu.ps.bridges.model.Direction.WEST;
 
 /**
  * @author Tim Gremplewski

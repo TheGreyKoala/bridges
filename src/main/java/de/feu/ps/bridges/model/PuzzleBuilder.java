@@ -11,9 +11,9 @@ public class PuzzleBuilder {
 
     // TODO: Unit tests
 
-    private int islandsCount;
-    private List<ModifiableIsland> islands;
-    private ModifiablePuzzle puzzle;
+    private final int islandsCount;
+    private final List<ModifiableIsland> islands;
+    private final ModifiablePuzzle puzzle;
 
     private PuzzleBuilder(final int columns, final int rows, final int islandsCount) {
         this.islandsCount = islandsCount;

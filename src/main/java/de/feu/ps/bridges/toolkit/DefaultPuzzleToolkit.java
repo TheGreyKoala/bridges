@@ -78,7 +78,7 @@ class DefaultPuzzleToolkit implements PuzzleToolkit {
         Optional<Bridge> optionalBridge;
         Optional<Island> optionalNeighbour = island.getNeighbour(direction);
 
-        if (optionalNeighbour.isPresent() && puzzleAnalyser.isValidMove(island, direction, false)) {
+        if (optionalNeighbour.isPresent() && puzzleAnalyser.isValidMove(island, direction)) {
             Bridge bridge = puzzle.buildBridge(island, optionalNeighbour.get());
             optionalBridge = Optional.of(bridge);
         } else {

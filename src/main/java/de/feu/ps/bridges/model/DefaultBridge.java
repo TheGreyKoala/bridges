@@ -33,6 +33,7 @@ class DefaultBridge implements ModifiableBridge {
     DefaultBridge(final Island island1, final Island island2, final boolean doubleBridge) {
         this.island1 = Objects.requireNonNull(island1, "Parameter 'island1' must not be null.");
         this.island2 = Objects.requireNonNull(island2, "Parameter 'island2' must not be null.");
+        this.doubleBridge = doubleBridge;
 
         if (island1.equals(island2)) {
             throw new IllegalArgumentException("Bridged islands must not be equal.");
@@ -45,7 +46,6 @@ class DefaultBridge implements ModifiableBridge {
         islands = new HashSet<>(2);
         islands.add(island1);
         islands.add(island2);
-        this.doubleBridge = doubleBridge;
     }
 
     private boolean lieInTheSameRow(final Island island1, final Island island2) {

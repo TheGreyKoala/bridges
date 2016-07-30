@@ -10,7 +10,7 @@ import java.util.Random;
  */
 final class RandomUtil {
 
-    private Random random;
+    private final Random random;
 
     /**
      * Create a new instance.

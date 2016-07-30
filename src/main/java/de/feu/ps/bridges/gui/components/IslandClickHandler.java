@@ -20,8 +20,8 @@ import static de.feu.ps.bridges.gui.components.PuzzleNodeFactory.HALF_CELL_SIZE;
  * @author Tim Gremplewski
  */
 class IslandClickHandler implements EventHandler<MouseEvent> {
-    private static Rotate rotate45DegreesClockwise = Transform.rotate(45, 0, 0);
-    private static Translate translateOriginToCircleCenter = Transform.translate(-HALF_CELL_SIZE, -HALF_CELL_SIZE);
+    private static final Rotate ROTATE_45_DEGREES_CLOCKWISE = Transform.rotate(45, 0, 0);
+    private static final Translate TRANSLATE_ORIGIN_TO_CIRCLE_CENTER = Transform.translate(-HALF_CELL_SIZE, -HALF_CELL_SIZE);
 
     private final Island island;
     private final Model model;
@@ -39,8 +39,8 @@ class IslandClickHandler implements EventHandler<MouseEvent> {
 
     @Override
     public void handle(final MouseEvent event) {
-        final Point2D pointWhenCircleCenterOrigin = translateOriginToCircleCenter.transform(event.getX(), event.getY());
-        final Point2D pointOnCartesianSystem = rotate45DegreesClockwise.transform(pointWhenCircleCenterOrigin);
+        final Point2D pointWhenCircleCenterOrigin = TRANSLATE_ORIGIN_TO_CIRCLE_CENTER.transform(event.getX(), event.getY());
+        final Point2D pointOnCartesianSystem = ROTATE_45_DEGREES_CLOCKWISE.transform(pointWhenCircleCenterOrigin);
 
         if (event.getButton() == MouseButton.PRIMARY
             || event.getButton() == MouseButton.SECONDARY) {

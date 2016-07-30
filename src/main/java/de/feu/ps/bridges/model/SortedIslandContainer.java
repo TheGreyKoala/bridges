@@ -33,7 +33,7 @@ abstract class SortedIslandContainer {
      * @param island {@link Island} to be added.
      * @throws NullPointerException if <code>island</code> is null.
      */
-    public void addIsland(final ModifiableIsland island) {
+    void addIsland(final ModifiableIsland island) {
         Objects.requireNonNull(island, "Parameter 'island' must not be null.");
         if (!islands.contains(island)) {
             islands.add(island);
@@ -77,7 +77,7 @@ abstract class SortedIslandContainer {
      * The returned {@link Set} might not keep the order of the islands in this container.
      * @return All {@link Island}s in this container.
      */
-    public Set<Island> getIslands() {
+    Set<Island> getIslands() {
         return new HashSet<>(islands);
     }
 }

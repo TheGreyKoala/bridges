@@ -16,11 +16,10 @@ class DefaultPuzzleGenerator implements PuzzleGenerator {
     private final int columns;
     private final int rows;
     private final int islands;
-    private Set<Island> startPoints;
-    private RandomUtil randomUtil;
+    private final Set<Island> startPoints;
+    private final RandomUtil randomUtil;
     private PuzzleAnalyser temporaryPuzzleAnalyser;
     private PuzzleBuilder puzzleBuilder;
-    private Puzzle puzzle;
 
     /**
      * Creates a new instance.
@@ -68,8 +67,7 @@ class DefaultPuzzleGenerator implements PuzzleGenerator {
 
     private void initFieldsForNextRun() {
         puzzleBuilder = PuzzleBuilder.createBuilder(columns, rows, islands);
-        puzzle = puzzleBuilder.getResult();
-        temporaryPuzzleAnalyser = PuzzleAnalyserFactory.createPuzzleAnalyserFor(puzzle);
+        temporaryPuzzleAnalyser = PuzzleAnalyserFactory.createPuzzleAnalyserFor(puzzleBuilder.getResult());
     }
 
     private void buildInitialIsland() {

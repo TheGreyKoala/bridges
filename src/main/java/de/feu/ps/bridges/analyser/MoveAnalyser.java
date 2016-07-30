@@ -18,12 +18,12 @@ class MoveAnalyser {
         this.puzzle = Objects.requireNonNull(puzzle, "Parameter 'puzzle' must not be null.");
     }
 
-    boolean isValidMove(final Island island, final Direction direction, final boolean doubleBridge) {
+    boolean isValidMove(final Island island, final Direction direction) {
         Objects.requireNonNull(island, "Parameter 'island' must not be null.");
         Objects.requireNonNull(direction, "Parameter 'direction' must not be null.");
 
         Optional<Island> neighbour = island.getNeighbour(direction);
-        return neighbour.isPresent() && isValidMove(island, neighbour.get(), doubleBridge);
+        return neighbour.isPresent() && isValidMove(island, neighbour.get(), false);
     }
 
     boolean isValidMove(final Island island1, final Island island2, final boolean doubleBridge) {

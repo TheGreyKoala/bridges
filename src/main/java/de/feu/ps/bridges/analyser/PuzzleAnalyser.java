@@ -69,11 +69,10 @@ public interface PuzzleAnalyser {
      * Indicates whether a bridge in the given direction and starting at the given island would be valid.
      * @param island Island to start the bridge at.
      * @param direction Direction to where to build the bridge.
-     * @param doubleBridge Indicates whether the move should add a single or a double bridge.
      * @return true, if the bridge would be valid, false otherwise.
      * @throws NullPointerException if island or direction is null.
      */
-    boolean isValidMove(Island island, Direction direction, boolean doubleBridge);
+    boolean isValidMove(Island island, Direction direction);
 
     /**
      * Indicates whether a bridge between the given islands would be valid.

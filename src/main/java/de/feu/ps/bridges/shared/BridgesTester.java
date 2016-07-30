@@ -15,7 +15,7 @@ public interface BridgesTester {
     void testGeneratePuzzle(String filePath, int width, int height, int isles);
 
     /**
-     * Load a puzzle from the given file, solve it and save the solution in the given filel.
+     * Load a puzzle from the given file, solve it and save the solution in the given file.
      * @param puzzlePath Location from where the puzzle should be loaded.
      * @param solutionPath Location where to save the solution.
      */

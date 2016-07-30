@@ -29,7 +29,6 @@ public class Deserializer {
     private static final String END_OF_FILE = "EOF";
     private final List<Island> createdIslands;
     private PuzzleBuilder puzzleBuilder;
-    private Puzzle puzzle;
     private PuzzleAnalyser puzzleAnalyser;
 
     private Deserializer() {
@@ -102,8 +101,7 @@ public class Deserializer {
             final int islands = Integer.parseInt(match.group(3));
 
             puzzleBuilder = PuzzleBuilder.createBuilder(columns, rows, islands);
-            puzzle = puzzleBuilder.getResult();
-            puzzleAnalyser = PuzzleAnalyserFactory.createPuzzleAnalyserFor(puzzle);
+            puzzleAnalyser = PuzzleAnalyserFactory.createPuzzleAnalyserFor(puzzleBuilder.getResult());
         }
     }
 
