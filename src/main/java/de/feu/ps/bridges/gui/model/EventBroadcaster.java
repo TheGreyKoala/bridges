@@ -1,13 +1,7 @@
 package de.feu.ps.bridges.gui.model;
 
-import de.feu.ps.bridges.gui.events.AutomatedSolvingEvent;
-import de.feu.ps.bridges.gui.events.ErrorEvent;
-import de.feu.ps.bridges.gui.events.GameStateEvent;
-import de.feu.ps.bridges.gui.events.PuzzleEvent;
-import de.feu.ps.bridges.gui.listeners.AutomatedSolvingEventListener;
-import de.feu.ps.bridges.gui.listeners.ErrorEventListener;
-import de.feu.ps.bridges.gui.listeners.GameStateEventListener;
-import de.feu.ps.bridges.gui.listeners.PuzzleEventListener;
+import de.feu.ps.bridges.gui.events.*;
+import de.feu.ps.bridges.gui.listeners.*;
 import javafx.application.Platform;
 
 import java.util.LinkedHashSet;
@@ -21,14 +15,16 @@ class EventBroadcaster {
 
     private final Set<AutomatedSolvingEventListener> automatedSolvingEventListeners;
     private final Set<ErrorEventListener> errorEventListeners;
-    private final Set<GameStateEventListener> gameStateEventListeners;
+    private final Set<GameOptionsEventListener> gameOptionsEventListeners;
     private final Set<PuzzleEventListener> puzzleEventListeners;
+    private final Set<GamePlayEventListener> gamePlayEventListeners;
 
     EventBroadcaster() {
         automatedSolvingEventListeners = new LinkedHashSet<>();
         errorEventListeners = new LinkedHashSet<>();
-        gameStateEventListeners = new LinkedHashSet<>();
+        gameOptionsEventListeners = new LinkedHashSet<>();
         puzzleEventListeners = new LinkedHashSet<>();
+        gamePlayEventListeners = new LinkedHashSet<>();
     }
 
     public void addAutomatedSolvingEventListener(final AutomatedSolvingEventListener listener) {
@@ -41,9 +37,14 @@ class EventBroadcaster {
         errorEventListeners.add(listener);
     }
 
-    public void addGameStateEventListener(final GameStateEventListener listener) {
+    public void addGameOptionsEventListener(final GameOptionsEventListener listener) {
         Objects.requireNonNull(listener, "Parameter 'listener' must not be null.");
-        gameStateEventListeners.add(listener);
+        gameOptionsEventListeners.add(listener);
+    }
+
+    public void addGamePlayEventListener(final GamePlayEventListener listener) {
+        Objects.requireNonNull(listener, "Parameter 'listener' must not be null.");
+        gamePlayEventListeners.add(listener);
     }
 
     public void addPuzzleEventListener(final PuzzleEventListener listener) {
@@ -63,15 +64,15 @@ class EventBroadcaster {
         });
     }
 
-    void broadcastEvent(final GameStateEvent event) {
+    void broadcastEvent(final GamePlayEvent event) {
         Platform.runLater(() -> {
-            gameStateEventListeners.forEach(listener -> listener.handleEvent(event));
+            gamePlayEventListeners.forEach(listener -> listener.handleEvent(event));
         });
     }
 
-    void broadcastEvent(final GameStateEvent event, final Object eventParameter) {
+    void broadcastEvent(final GameOptionsEvent event, final Object eventParameter) {
         Platform.runLater(() -> {
-            gameStateEventListeners.forEach(listener -> listener.handleEvent(event, eventParameter));
+            gameOptionsEventListeners.forEach(listener -> listener.handleEvent(event, eventParameter));
         });
     }
 

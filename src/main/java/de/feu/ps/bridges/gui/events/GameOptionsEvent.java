@@ -4,14 +4,7 @@ package de.feu.ps.bridges.gui.events;
  * Types of events that can occur.
  * @author Tim Gremplewski
  */
-public enum GameStateEvent {
-
-
-
-    /**
-     * The move to be applied is invalid,
-     */
-    INVALID_MOVE,
+public enum GameOptionsEvent {
 
     /**
      * The option to display the remaining bridges changed.

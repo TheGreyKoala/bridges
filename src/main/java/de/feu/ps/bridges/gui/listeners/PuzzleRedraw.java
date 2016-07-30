@@ -1,6 +1,6 @@
 package de.feu.ps.bridges.gui.listeners;
 
-import de.feu.ps.bridges.gui.events.GameStateEvent;
+import de.feu.ps.bridges.gui.events.GameOptionsEvent;
 import de.feu.ps.bridges.gui.events.PuzzleEvent;
 import de.feu.ps.bridges.gui.model.GameState;
 import de.feu.ps.bridges.model.Puzzle;
@@ -8,13 +8,13 @@ import de.feu.ps.bridges.model.Puzzle;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
-import static de.feu.ps.bridges.gui.events.GameStateEvent.SHOW_REMAINING_BRIDGES_OPTION_CHANGED;
+import static de.feu.ps.bridges.gui.events.GameOptionsEvent.SHOW_REMAINING_BRIDGES_OPTION_CHANGED;
 import static de.feu.ps.bridges.gui.events.PuzzleEvent.PUZZLE_CHANGED;
 
 /**
  * @author Tim Gremplewski
  */
-public class PuzzleRedraw implements PuzzleEventListener, GameStateEventListener {
+public class PuzzleRedraw implements PuzzleEventListener, GameOptionsEventListener {
 
     private final GameState gameState;
     private final BiConsumer<Puzzle, Boolean> consumer;
@@ -34,11 +34,11 @@ public class PuzzleRedraw implements PuzzleEventListener, GameStateEventListener
     }
 
     @Override
-    public void handleEvent(final GameStateEvent event) {
+    public void handleEvent(final GameOptionsEvent event) {
     }
 
     @Override
-    public void handleEvent(final GameStateEvent event, final Object eventParameter) {
+    public void handleEvent(final GameOptionsEvent event, final Object eventParameter) {
         if (event == SHOW_REMAINING_BRIDGES_OPTION_CHANGED && eventParameter instanceof Boolean) {
             showRemainingBridges = (Boolean) eventParameter;
             redrawPuzzle();

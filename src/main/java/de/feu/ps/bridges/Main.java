@@ -60,7 +60,7 @@ public class Main extends Application {
     }
 
     private static void registerEventListeners(final GameState gameState, final MainController mainController, final ResourceBundle bundle) {
-        EventAlert eventAlert = new EventAlert(bundle);
+        GamePlayAlert gamePlayAlert = new GamePlayAlert(bundle);
         PuzzleStatusAlert puzzleStatusAlert = new PuzzleStatusAlert(bundle, gameState);
         ErrorAlert errorAlert = new ErrorAlert(bundle);
         PuzzleStatusLabelUpdate puzzleStatusLabelUpdate = new PuzzleStatusLabelUpdate(bundle, mainController::setStatusBarLabel, gameState);
@@ -69,8 +69,8 @@ public class Main extends Application {
 
         gameState.addAutomatedSolvingEventListener(automatedSolvingStatusUpdate);
         gameState.addAutomatedSolvingEventListener(puzzleStatusAlert);
-        gameState.addGameStateEventListener(puzzleRedraw);
-        gameState.addGameStateEventListener(eventAlert);
+        gameState.addGameOptionsEventListener(puzzleRedraw);
+        gameState.addGamePlayEventListener(gamePlayAlert);
         gameState.addPuzzleEventListener(puzzleRedraw);
         gameState.addPuzzleEventListener(puzzleStatusAlert);
         gameState.addPuzzleEventListener(puzzleStatusLabelUpdate);
