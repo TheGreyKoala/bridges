@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Helper class to create a graphical representation of a puzzle in the gui application.
+ * Factory class that creates a new {@link Pane} that visualizes a {@link Puzzle}.
  *
  * @author Tim Gremplewski
  */
@@ -23,7 +23,7 @@ public class PuzzleNodeFactory {
     private static final int CELL_SIZE = 40;
 
     /**
-     * Half of {@link #CELL_SIZE}.
+     * Half width and height of a cell containing an island.
      */
     static final int HALF_CELL_SIZE = CELL_SIZE / 2;
 
@@ -31,11 +31,11 @@ public class PuzzleNodeFactory {
     }
 
     /**
-     * Create a new {@link Pane} and draw the given puzzle into it.
-     * @param puzzle {@link Puzzle} to draw.
-     * @param model {@link Model} to use.
+     * Create a new {@link Pane} that visualizes the given {@link Puzzle}.
+     * @param puzzle {@link Puzzle} to visualizes.
+     * @param model {@link Model} whose {@link GameState} will be used and that will be triggered on island click events.
      * @param showRemainingBridges Indicates if islands should display the number of remaining bridges.
-     * @return a new {@link Pane} that contains a graphical representation of the given {@link Puzzle}.
+     * @return a new {@link Pane} that visualizes the given {@link Puzzle}.
      */
     public static Pane createPuzzle(final Puzzle puzzle, final Model model, final boolean showRemainingBridges) {
         final Map<Island, Node> islandNodes = createIslandNodes(puzzle.getIslands(), model, showRemainingBridges);
@@ -73,7 +73,7 @@ public class PuzzleNodeFactory {
     private static Map<Island, Node> createIslandNodes(final Set<Island> islands, final Model model, final boolean showRemainingBridges) {
         final Map<Island, Node> islandNodes = new HashMap<>();
         for (final Island island : islands) {
-            final Node islandNode = IslandNodeFactory.createIsland(island, model, showRemainingBridges);
+            final Node islandNode = IslandNodeFactory.createIslandNode(island, model, showRemainingBridges);
             islandNodes.put(island, islandNode);
         }
         return islandNodes;
@@ -83,7 +83,7 @@ public class PuzzleNodeFactory {
         final Map<Bridge, Node> bridgeNodes = new HashMap<>();
         bridges.forEach(bridge -> {
             boolean latestBridge = gameState.isLatestBridge(bridge);
-            Node bridgeNode = BridgeNodeFactory.createBridge(bridge, islandNodes.get(bridge.getIsland1()), islandNodes.get(bridge.getIsland2()), latestBridge);
+            Node bridgeNode = BridgeNodeFactory.createBridgeNode(bridge, islandNodes.get(bridge.getIsland1()), islandNodes.get(bridge.getIsland2()), latestBridge);
             bridgeNodes.put(bridge, bridgeNode);
         });
         return bridgeNodes;

@@ -11,7 +11,7 @@ import static de.feu.ps.bridges.gui.components.IslandNodeFactory.ISLAND_RADIUS;
 import static de.feu.ps.bridges.gui.components.PuzzleNodeFactory.HALF_CELL_SIZE;
 
 /**
- * Helper class to create a graphical representation of a {@link Bridge}.
+ * Factory class that creates a new {@link Node} that visualizes a {@link Bridge}.
  * @author Tim Gremplewski
  */
 class BridgeNodeFactory {
@@ -20,14 +20,14 @@ class BridgeNodeFactory {
     }
 
     /**
-     * Create a new graphical representation of the given {@link Bridge}.
+     * Create a new a new {@link Node} that visualizes the given {@link Bridge}.
      * @param bridge {@link Bridge} to be drawn.
-     * @param island1 Graphical representation of the first bridged {@link Island}
-     * @param island2 Graphical representation of the second bridged {@link Island}
-     * @param latestBridge if true, the bridge will be highlighted
-     * @return A graphical representation of the given {@link Bridge}.
+     * @param island1 {@link Node} that visualizes the first bridged {@link Island}
+     * @param island2 {@link Node} that visualizes the second bridged {@link Island}
+     * @param latestBridge Indicates whether the given bridge is the latest one.
+     * @return a new a new {@link Node} that visualizes the given {@link Bridge}.
      */
-    static Node createBridge(final Bridge bridge, final Node island1, final Node island2, final boolean latestBridge) {
+    static Node createBridgeNode(final Bridge bridge, final Node island1, final Node island2, final boolean latestBridge) {
         final Pane pane = new Pane();
 
         if (bridge.isDoubleBridge()) {

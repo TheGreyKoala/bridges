@@ -14,6 +14,9 @@ import javafx.scene.transform.Translate;
 import static de.feu.ps.bridges.gui.components.PuzzleNodeFactory.HALF_CELL_SIZE;
 
 /**
+ * {@link EventHandler} for click events on an island.
+ * Handles clicks of the primary (typically left) and secondary (typically right) button.
+ *
  * @author Tim Gremplewski
  */
 class IslandClickHandler implements EventHandler<MouseEvent> {
@@ -23,6 +26,12 @@ class IslandClickHandler implements EventHandler<MouseEvent> {
     private final Island island;
     private final Model model;
 
+    /**
+     * Create a new click handler that will trigger methods of the given {@link Model}
+     * and use the given {@link Island} as the counterpart of the clicked graphical island.
+     * @param island {@link Island} that will be used as the counterpart for the clicked graphical island.
+     * @param model {@link Model} which will be triggered on click events.
+     */
     IslandClickHandler(final Island island, final Model model) {
         this.island = island;
         this.model = model;

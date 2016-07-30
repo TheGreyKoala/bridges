@@ -11,15 +11,15 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextBoundsType;
 
 /**
- * Helper class to create a graphical representation of an {@link Island}.
- * The created {@link Node} will contain a mouse clicked listener that builds and tears down bridges.
+ * Factory class that creates a new {@link Node} that visualizes an {@link Island}.
+ * The {@link Node} will have a click handler to build and tear down bridges.
  *
  * @author Tim Gremplewski
  */
 class IslandNodeFactory {
 
     /**
-     * The radius of a drawn island.
+     * The radius of an island.
      */
     static final int ISLAND_RADIUS = 10;
 
@@ -27,13 +27,13 @@ class IslandNodeFactory {
     }
 
     /**
-     * Create a new graphical representation of the given {@link Island}.
-     * @param island {@link Island} to be drawn.
-     * @param model {@link Model} to use.
+     * Create a new {@link Node} that visualizes the given {@link Island}.
+     * @param island {@link Island} to be visualized.
+     * @param model {@link Model} that will be triggered on click events.
      * @param showRemainingBridges Indicates if the island should display the number of remaining bridges.
-     * @return a new {@link Node} that contains the drawn island.
+     * @return a new {@link Node} that visualizes the given {@link Island}.
      */
-    static Node createIsland(final Island island, final Model model, final boolean showRemainingBridges) {
+    static Node createIslandNode(final Island island, final Model model, final boolean showRemainingBridges) {
         final Circle circle = createCircle(island.getRemainingBridges());
         final Text text = createText(island, showRemainingBridges);
 
