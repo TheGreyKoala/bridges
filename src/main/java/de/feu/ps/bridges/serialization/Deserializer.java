@@ -92,17 +92,19 @@ public class Deserializer {
 
     private void parseFieldSection(final BufferedReader reader) throws IOException {
         final String line = getNextUncommentedLine(reader);
-        final Scanner scanner = new Scanner(line);
-        scanner.findInLine("^(\\d+)[ ]*x[ ]*(\\d+)[ ]*\\|[ ]*(\\d+)$");
-        final MatchResult match = scanner.match();
 
-        final int columns = Integer.parseInt(match.group(1));
-        final int rows = Integer.parseInt(match.group(2));
-        final int islands = Integer.parseInt(match.group(3));
+        try (final Scanner scanner = new Scanner(line)) {
+            scanner.findInLine("^(\\d+)[ ]*x[ ]*(\\d+)[ ]*\\|[ ]*(\\d+)$");
+            final MatchResult match = scanner.match();
 
-        puzzleBuilder = PuzzleBuilder.createBuilder(columns, rows, islands);
-        puzzle = puzzleBuilder.getResult();
-        puzzleAnalyser = PuzzleAnalyserFactory.createPuzzleAnalyserFor(puzzle);
+            final int columns = Integer.parseInt(match.group(1));
+            final int rows = Integer.parseInt(match.group(2));
+            final int islands = Integer.parseInt(match.group(3));
+
+            puzzleBuilder = PuzzleBuilder.createBuilder(columns, rows, islands);
+            puzzle = puzzleBuilder.getResult();
+            puzzleAnalyser = PuzzleAnalyserFactory.createPuzzleAnalyserFor(puzzle);
+        }
     }
 
     private void parseIslandsSection(BufferedReader bufferedReader, final PuzzleBuilder puzzleBuilder) throws IOException {
@@ -112,21 +114,22 @@ public class Deserializer {
         for (int i = 0; i < islandsCount; i++) {
             final String line = getNextUncommentedLine(bufferedReader);
 
-            final Scanner scanner = new Scanner(line);
-            scanner.findInLine(islandPattern);
-            final MatchResult match = scanner.match();
+            try (final Scanner scanner = new Scanner(line)) {
+                scanner.findInLine(islandPattern);
+                final MatchResult match = scanner.match();
 
-            final int column = Integer.parseInt(match.group(1));
-            final int row = Integer.parseInt(match.group(2));
-            final int requiredBridges = Integer.parseInt(match.group(3));
+                final int column = Integer.parseInt(match.group(1));
+                final int row = Integer.parseInt(match.group(2));
+                final int requiredBridges = Integer.parseInt(match.group(3));
 
-            // TODO: Test
-            final Position position = new Position(column, row);
-            if (puzzleAnalyser.isValidIslandPosition(position)) {
-                final Island island = puzzleBuilder.addIsland(position, requiredBridges);
-                createdIslands.add(island);
-            } else {
-                throw new IllegalStateException("Found invalid island position: " + line);
+                // TODO: Test
+                final Position position = new Position(column, row);
+                if (puzzleAnalyser.isValidIslandPosition(position)) {
+                    final Island island = puzzleBuilder.addIsland(position, requiredBridges);
+                    createdIslands.add(island);
+                } else {
+                    throw new IllegalStateException("Found invalid island position: " + line);
+                }
             }
         }
     }
@@ -138,19 +141,20 @@ public class Deserializer {
 
         String line = getNextUncommentedLine(bufferedReader);
         while (!END_OF_FILE.equals(line)) {
-            final Scanner scanner = new Scanner(line);
-            scanner.findInLine(bridgePattern);
-            final MatchResult match = scanner.match();
+            try (final Scanner scanner = new Scanner(line)) {
+                scanner.findInLine(bridgePattern);
+                final MatchResult match = scanner.match();
 
-            final Island island1 = createdIslands.get(Integer.parseInt(match.group(1)));
-            final Island island2 = createdIslands.get(Integer.parseInt(match.group(2)));
-            final boolean doubleBridge = Boolean.parseBoolean(match.group(3));
+                final Island island1 = createdIslands.get(Integer.parseInt(match.group(1)));
+                final Island island2 = createdIslands.get(Integer.parseInt(match.group(2)));
+                final boolean doubleBridge = Boolean.parseBoolean(match.group(3));
 
-            if (puzzleAnalyser.isValidMove(island1, island2, doubleBridge)) {
-                puzzleBuilder.addBridge(island1, island2, doubleBridge);
-                line = getNextUncommentedLine(bufferedReader);
-            } else {
-                throw new IllegalStateException("Found invalid bridge: " + line);
+                if (puzzleAnalyser.isValidMove(island1, island2, doubleBridge)) {
+                    puzzleBuilder.addBridge(island1, island2, doubleBridge);
+                    line = getNextUncommentedLine(bufferedReader);
+                } else {
+                    throw new IllegalStateException("Found invalid bridge: " + line);
+                }
             }
         }
     }
