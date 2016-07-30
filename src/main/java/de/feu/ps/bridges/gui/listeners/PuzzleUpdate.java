@@ -33,6 +33,10 @@ public class PuzzleUpdate implements PuzzleEventListener {
      */
     @FunctionalInterface
     public interface Client {
+
+        /**
+         * Handle the puzzle update.
+         */
         void handlePuzzleUpdate();
     }
 }

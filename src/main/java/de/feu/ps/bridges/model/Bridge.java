@@ -31,7 +31,7 @@ public interface Bridge {
     Island getIsland2();
 
     /**
-     * Indicates whether the this bridge is a double bridge.
+     * Indicates whether this bridge is a double bridge.
      * @return <code>true</code>, if this bridge is a double bridge, <code>false</code> otherwise.
      */
     boolean isDoubleBridge();
@@ -45,7 +45,7 @@ public interface Bridge {
 
     /**
      * Indicates whether this bridge is aligned vertically.
-     * The value returned by this method will always be complementary to the value returned by {@link #isHorizontal()} ()}.
+     * The value returned by this method will always be complementary to the value returned by {@link #isHorizontal()}.
      * @return <code>true</code>, if this bridge is aligned vertically, <code>false</code> otherwise.
      */
     boolean isVertical();

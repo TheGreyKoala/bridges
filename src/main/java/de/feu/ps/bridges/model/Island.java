@@ -12,7 +12,7 @@ public interface Island {
     /**
      * Get the actual amount of bridges of this island.
      * Despite {@link #getBridges()}.size() this method takes into account
-     * that {@link Bridge}es can be double bridges.
+     * that {@link Bridge}s can be double bridges.
      *
      * @return the actual amount of bridges of this island.
      */

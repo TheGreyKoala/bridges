@@ -28,6 +28,12 @@ public class GameState extends EventBroadcaster {
     private LinkedList<Bridge> addedBridges;
 
     /**
+     * Creates a new instance.
+     */
+    public GameState() {
+    }
+
+    /**
      * Set the {@link PuzzleToolkit}.
      * @param puzzleToolkit the puzzle toolkit.
      */

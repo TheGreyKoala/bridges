@@ -8,6 +8,9 @@ import de.feu.ps.bridges.model.Puzzle;
  */
 public final class PuzzleAnalyserFactory {
 
+    private PuzzleAnalyserFactory() {
+    }
+
     /**
      * Creates a new {@link PuzzleAnalyser} for the given puzzle.
      * @param puzzle the puzzle to be analysed.
