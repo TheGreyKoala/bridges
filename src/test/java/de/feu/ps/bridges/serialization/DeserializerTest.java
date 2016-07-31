@@ -4,9 +4,17 @@ import de.feu.ps.bridges.model.Bridge;
 import de.feu.ps.bridges.model.Island;
 import de.feu.ps.bridges.model.Position;
 import de.feu.ps.bridges.model.Puzzle;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.theories.DataPoints;
+import org.junit.experimental.theories.Theories;
+import org.junit.experimental.theories.Theory;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Set;
 
 import static org.junit.Assert.assertNotNull;
@@ -15,7 +23,18 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Tim Gremplewski
  */
+@RunWith(Theories.class)
 public class DeserializerTest {
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
+    @DataPoints("syntaxErrors")
+    public static File[] syntaxErrorPuzzles() throws URISyntaxException {
+        URI syntaxErrorsDirectoryUri = DeserializerTest.class.getResource("syntax_errors").toURI();
+        File syntaxErrorsDirectory = new File(syntaxErrorsDirectoryUri);
+        return syntaxErrorsDirectory.listFiles();
+    }
 
     private static Position[] islandPositions = {
         new Position(0, 0),
@@ -72,5 +91,11 @@ public class DeserializerTest {
             return positionsMatch && bridge.isDoubleBridge() == doubleBridge;
         });
         assertTrue("Expected bridge not found.", anyMatch);
+    }
+
+    @Theory
+    public void testSyntaxError(final File sourceFile) {
+        expectedException.expect(SerializationException.class);
+        Deserializer.loadPuzzle(sourceFile);
     }
 }
