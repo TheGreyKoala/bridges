@@ -74,7 +74,7 @@ public final class PuzzleGeneratorFactory {
         }
 
         if (islands < 2 || islands > columns * rows * 0.2) {
-            throw new IllegalArgumentException("Parameter 'islands' must be greater than or equal to columns * rows * 0.2");
+            throw new IllegalArgumentException("Parameter 'islands' must be between 2 and columns * rows * 0.2");
         }
     }
 }

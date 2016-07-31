@@ -14,6 +14,8 @@ public class PuzzleBuilder {
     private final ModifiablePuzzle puzzle;
 
     private PuzzleBuilder(final int columns, final int rows, final int islandsCount) {
+        // Some tests provided by the uni do not respect the bounds of islandsCount (e.g. bsp_5x5.bgs)
+        // Therefore do not validate islandsCount here.
         this.islandsCount = islandsCount;
         islands = new ArrayList<>(islandsCount);
         puzzle = ModifiablePuzzleFactory.createPuzzle(columns, rows);

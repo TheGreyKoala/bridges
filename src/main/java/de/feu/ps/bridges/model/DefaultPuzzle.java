@@ -17,12 +17,12 @@ class DefaultPuzzle implements ModifiablePuzzle {
     private final Set<ModifiableIsland> islands;
 
     DefaultPuzzle(final int columns, final int rows) {
-        if (columns < 1) {
-            throw new IllegalArgumentException("Parameter 'columns' must not be less than 1.");
+        if (columns < 4 || columns > 25) {
+            throw new IllegalArgumentException("Parameter 'columns' must be between 4 and 25.");
         }
 
-        if (rows < 1) {
-            throw new IllegalArgumentException("Parameter 'rows' must not be less than 1.");
+        if (rows < 4 || rows > 25) {
+            throw new IllegalArgumentException("Parameter 'rows' must be between 4 and 25.");
         }
 
         columnsCount = columns;

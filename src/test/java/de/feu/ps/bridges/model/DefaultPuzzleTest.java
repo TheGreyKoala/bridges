@@ -22,15 +22,29 @@ public class DefaultPuzzleTest {
     @Test
     public void testColumnsZero() {
         expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage(is("Parameter 'columns' must not be less than 1."));
+        expectedException.expectMessage(is("Parameter 'columns' must be between 4 and 25."));
         ModifiablePuzzleFactory.createPuzzle(0, 5);
+    }
+
+    @Test
+    public void testColumns26() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage(is("Parameter 'columns' must be between 4 and 25."));
+        ModifiablePuzzleFactory.createPuzzle(26, 5);
     }
 
     @Test
     public void testRowsZero() {
         expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage(is("Parameter 'rows' must not be less than 1."));
+        expectedException.expectMessage(is("Parameter 'rows' must be between 4 and 25."));
         ModifiablePuzzleFactory.createPuzzle(5, 0);
+    }
+
+    @Test
+    public void testRows26() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage(is("Parameter 'rows' must be between 4 and 25."));
+        ModifiablePuzzleFactory.createPuzzle(5, 26);
     }
 
     @Test
