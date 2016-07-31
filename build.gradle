@@ -1,9 +1,11 @@
 group 'de.feu.ps.bridges'
-version '0.0.1'
+version '1.0.0'
 
 apply plugin: 'java'
+apply plugin: 'application'
 
 sourceCompatibility = 1.8
+mainClassName = 'de.feu.ps.bridges.Main'
 
 repositories {
     mavenCentral()
