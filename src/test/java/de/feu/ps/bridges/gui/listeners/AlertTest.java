@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * @author Tim Gremplewski
  */
@@ -27,6 +29,17 @@ abstract class AlertTest {
 
     ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    void assertSingleAlert(final Alert.AlertType alertType, final String title, final String headerText, final String contentText) {
+        final List<DummyAlertWrapper> alerts = getAlerts();
+        assertEquals("Unexpected number of alerts.", 1, alerts.size());
+
+        final DummyAlertWrapper alert = alerts.get(0);
+        assertEquals("Unexpected alert type.", alertType, alert.getAlertType());
+        assertEquals("Unexpected title.", title, alert.getTitle());
+        assertEquals("Unexpected header text.", headerText, alert.getHeaderText());
+        assertEquals("Unexpected content text.", contentText, alert.getContentText());
     }
 
     class DummyAlertWrapper implements AlertWrapper {

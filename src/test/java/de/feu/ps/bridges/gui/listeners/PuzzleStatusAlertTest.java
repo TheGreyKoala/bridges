@@ -78,8 +78,6 @@ public class PuzzleStatusAlertTest extends AlertTest {
     }
 
     private void assertSingleAlert(final Alert.AlertType alertType, final PuzzleStatus status) {
-        assertEquals("Unexpected number of alerts", 1, getAlerts().size());
-        final DummyAlertWrapper alert = getAlerts().get(0);
         final ResourceBundle resourceBundle = getResourceBundle();
         final String title;
         final String headerText;
@@ -99,9 +97,6 @@ public class PuzzleStatusAlertTest extends AlertTest {
             contentText = resourceBundle.getString("autoSolveDialog.unsolvable.contentText");
         }
 
-        assertEquals("Unexpected alert type.", alertType, alert.getAlertType());
-        assertEquals("Unexpected title.", title, alert.getTitle());
-        assertEquals("Unexpected header text.", headerText, alert.getHeaderText());
-        assertEquals("Unexpected content text.", contentText, alert.getContentText());
+        assertSingleAlert(alertType, title, headerText, contentText);
     }
 }

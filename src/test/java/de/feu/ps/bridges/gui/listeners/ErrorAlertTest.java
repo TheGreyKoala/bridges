@@ -7,11 +7,9 @@ import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
-import java.util.List;
 import java.util.ResourceBundle;
 
 import static javafx.scene.control.Alert.AlertType.ERROR;
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author Tim Gremplewski
@@ -31,22 +29,10 @@ public class ErrorAlertTest extends AlertTest {
 
     private void assertSingleAlert(final ErrorEvent event) {
         final ResourceBundle resourceBundle = getResourceBundle();
-
-        final List<DummyAlertWrapper> alerts = getAlerts();
-        assertEquals("Unexpected number of alerts.", 1, alerts.size());
-
-        final DummyAlertWrapper alert = alerts.get(0);
-
-        assertEquals("Unexpected alert type.", ERROR, alert.getAlertType());
-
         final String expectedTitle = resourceBundle.getString("error.title");
-        assertEquals("Unexpected title.", expectedTitle, alert.getTitle());
-
         final String expectedHeaderText = getExpectedHeaderText(event);
-        assertEquals("Unexpected header text.", expectedHeaderText, alert.getHeaderText());
-
         final String expectedContentText = resourceBundle.getString("error.content.text");
-        assertEquals("Unexpected content text.", expectedContentText, alert.getContentText());
+        assertSingleAlert(ERROR, expectedTitle, expectedHeaderText, expectedContentText);
     }
 
     private String getExpectedHeaderText(final ErrorEvent event) {
