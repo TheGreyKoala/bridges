@@ -7,6 +7,7 @@ import de.feu.ps.bridges.model.Puzzle;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.theories.DataPoints;
+import org.junit.experimental.theories.FromDataPoints;
 import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.rules.ExpectedException;
@@ -31,9 +32,16 @@ public class DeserializerTest {
 
     @DataPoints("syntaxErrors")
     public static File[] syntaxErrorPuzzles() throws URISyntaxException {
-        URI syntaxErrorsDirectoryUri = DeserializerTest.class.getResource("syntax_errors").toURI();
-        File syntaxErrorsDirectory = new File(syntaxErrorsDirectoryUri);
+        final URI syntaxErrorsDirectoryUri = DeserializerTest.class.getResource("syntax_errors").toURI();
+        final File syntaxErrorsDirectory = new File(syntaxErrorsDirectoryUri);
         return syntaxErrorsDirectory.listFiles();
+    }
+
+    @DataPoints("semanticErrors")
+    public static File[] semanticErrorPuzzles() throws URISyntaxException {
+        final URI semanticErrorsDirectoryUri = DeserializerTest.class.getResource("semantic_errors").toURI();
+        final File semanticErrorsDirectory = new File(semanticErrorsDirectoryUri);
+        return semanticErrorsDirectory.listFiles();
     }
 
     private static Position[] islandPositions = {
@@ -94,7 +102,13 @@ public class DeserializerTest {
     }
 
     @Theory
-    public void testSyntaxError(final File sourceFile) {
+    public void testSyntaxError(@FromDataPoints("syntaxErrors") final File sourceFile) {
+        expectedException.expect(SerializationException.class);
+        Deserializer.loadPuzzle(sourceFile);
+    }
+
+    @Theory
+    public void testSemanticError(@FromDataPoints("semanticErrors") final File sourceFile) {
         expectedException.expect(SerializationException.class);
         Deserializer.loadPuzzle(sourceFile);
     }

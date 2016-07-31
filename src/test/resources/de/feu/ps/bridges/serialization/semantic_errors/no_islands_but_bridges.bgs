@@ -1,0 +1,5 @@
+FIELD
+11 x 8 | 0
+
+BRIDGES
+( 0, 1 | false )

@@ -1,0 +1,9 @@
+FIELD
+26 x 8 | 2
+
+ISLANDS
+( 0, 0 | 1 )
+( 0, 5 | 1 )
+
+BRIDGES
+( 0, 1 | false )

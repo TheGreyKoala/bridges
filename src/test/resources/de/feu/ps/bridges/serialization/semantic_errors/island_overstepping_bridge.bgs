@@ -1,0 +1,10 @@
+FIELD
+11 x 8 | 3
+
+ISLANDS
+( 0, 0 | 1 )
+( 0, 3 | 2 )
+( 0, 5 | 1 )
+
+BRIDGES
+( 0, 2 | false )
