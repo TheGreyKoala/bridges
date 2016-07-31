@@ -7,10 +7,12 @@ import de.feu.ps.bridges.gui.model.GameState;
 import javafx.scene.control.Alert;
 
 import java.util.ResourceBundle;
+import java.util.function.Function;
 
 import static de.feu.ps.bridges.analyser.PuzzleStatus.UNSOLVED;
 import static de.feu.ps.bridges.gui.events.AutomatedSolvingEvent.STARTED;
 import static de.feu.ps.bridges.gui.events.PuzzleEvent.PUZZLE_STATUS_CHANGED;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
 
 /**
  * Listener that shows an information dialog about the status of a puzzle, when appropriate.
@@ -18,6 +20,7 @@ import static de.feu.ps.bridges.gui.events.PuzzleEvent.PUZZLE_STATUS_CHANGED;
  */
 public class PuzzleStatusAlert implements AutomatedSolvingEventListener, PuzzleEventListener {
 
+    private final Function<Alert.AlertType, AlertWrapper> alertWrapperFactory;
     private final ResourceBundle resourceBundle;
     private final GameState gameState;
     private boolean automatedSolvingRunning;
@@ -28,9 +31,21 @@ public class PuzzleStatusAlert implements AutomatedSolvingEventListener, PuzzleE
      * @param resourceBundle {@link ResourceBundle} that will be used to localize the dialog.
      */
     public PuzzleStatusAlert(final GameState gameState, final ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
+        this(gameState, DefaultAlertWrapper::new, resourceBundle);
+    }
+
+    /**
+     * This constructor is needed for test purposes only.
+     * In tests we can not show an alert, so during tests we need to inject a dummy alert,
+     * that does not work on a real alert.
+     * @param gameState {@link GameState} to query the puzzle status.
+     * @param alertWrapperFactory {@link Function} that creates a new {@link AlertWrapper}.
+     * @param resourceBundle {@link ResourceBundle} that will be used to localize the dialog.
+     */
+    PuzzleStatusAlert(final GameState gameState, final Function<Alert.AlertType, AlertWrapper> alertWrapperFactory, final ResourceBundle resourceBundle) {
         this.gameState = gameState;
-        automatedSolvingRunning = false;
+        this.alertWrapperFactory = alertWrapperFactory;
+        this.resourceBundle = resourceBundle;
     }
 
     @Override
@@ -53,7 +68,7 @@ public class PuzzleStatusAlert implements AutomatedSolvingEventListener, PuzzleE
     }
 
     private void showPuzzleStatusAlert() {
-        final Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        final AlertWrapper alert = alertWrapperFactory.apply(INFORMATION);
         final PuzzleStatus puzzleStatus = gameState.getPuzzleStatus();
         switch (puzzleStatus) {
             case SOLVED:

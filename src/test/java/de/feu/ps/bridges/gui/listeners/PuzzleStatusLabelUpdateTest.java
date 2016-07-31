@@ -1,7 +1,6 @@
 package de.feu.ps.bridges.gui.listeners;
 
 import de.feu.ps.bridges.analyser.PuzzleStatus;
-import de.feu.ps.bridges.gui.model.GameState;
 import org.junit.experimental.theories.DataPoints;
 import org.junit.experimental.theories.FromDataPoints;
 import org.junit.experimental.theories.Theories;
@@ -30,18 +29,5 @@ public class PuzzleStatusLabelUpdateTest {
         final Consumer<String> consumer = (text) -> assertEquals("Unexpected label text.", expectedText, text);
         final PuzzleStatusLabelUpdate puzzleStatusLabelUpdate = new PuzzleStatusLabelUpdate(new DummyGameState(status), consumer, bundle);
         puzzleStatusLabelUpdate.handleEvent(PUZZLE_STATUS_CHANGED);
-    }
-
-    class DummyGameState extends GameState {
-        private final PuzzleStatus puzzleStatus;
-
-        DummyGameState(final PuzzleStatus puzzleStatus) {
-            this.puzzleStatus = puzzleStatus;
-        }
-
-        @Override
-        public PuzzleStatus getPuzzleStatus() {
-            return puzzleStatus;
-        }
     }
 }
