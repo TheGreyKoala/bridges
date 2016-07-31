@@ -120,7 +120,6 @@ public class Deserializer {
                 final int row = Integer.parseInt(match.group(2));
                 final int requiredBridges = Integer.parseInt(match.group(3));
 
-                // TODO: Test
                 final Position position = new Position(column, row);
                 if (puzzleAnalyser.isValidIslandPosition(position)) {
                     final Island island = puzzleBuilder.addIsland(position, requiredBridges);
@@ -134,10 +133,8 @@ public class Deserializer {
 
     private void parseBridgesSection(BufferedReader bufferedReader, PuzzleBuilder puzzleBuilder) throws IOException {
         final Pattern bridgePattern = Pattern.compile("^\\([ ]*(\\d+)[ ]*,[ ]*(\\d+)[ ]*\\|[ ]*(true|false)[ ]*\\)$");
-
-        // TODO: Test islandsCount != bridgesCount
-
         String line = getNextUncommentedLine(bufferedReader);
+
         while (!END_OF_FILE.equals(line)) {
             try (final Scanner scanner = new Scanner(line)) {
                 scanner.findInLine(bridgePattern);

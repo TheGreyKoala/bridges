@@ -80,6 +80,7 @@ public class GameState extends EventBroadcaster {
      * @return the status of the current puzzle.
      */
     public PuzzleStatus getPuzzleStatus() {
+        // TODO: Handle null in calling methods
         return puzzleStatus;
     }
 
@@ -146,7 +147,6 @@ public class GameState extends EventBroadcaster {
                 broadcastEvent(PUZZLE_STATUS_CHANGED);
             }
         } catch (final Exception e) {
-            // TODO: Handle null in calling methods
             LOGGER.log(Level.SEVERE, "Unexpected error while tearing down a bridge.", e);
             puzzleStatus = null;
         }

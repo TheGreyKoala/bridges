@@ -4,6 +4,8 @@ import de.feu.ps.bridges.model.Bridge;
 import de.feu.ps.bridges.model.Island;
 import de.feu.ps.bridges.model.Puzzle;
 
+import java.util.Objects;
+
 /**
  * Represents a save move for a puzzle.
  * The move can also be applied on the puzzle.
@@ -17,10 +19,9 @@ public class Move {
     private final Island island2;
 
     private Move(final Puzzle puzzle, final Island island1, final Island island2) {
-        // TODO: Test & Validation
-        this.puzzle = puzzle;
-        this.island1 = island1;
-        this.island2 = island2;
+        this.puzzle = Objects.requireNonNull(puzzle, "Parameter 'puzzle' must not be null.");
+        this.island1 = Objects.requireNonNull(island1, "Parameter 'island1' must not be null.");
+        this.island2 = Objects.requireNonNull(island2, "Parameter 'island2' must not be null.");
     }
 
     /**

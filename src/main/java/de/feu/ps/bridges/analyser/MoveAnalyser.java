@@ -115,8 +115,6 @@ class MoveAnalyser {
         Objects.requireNonNull(start, "Parameter 'start' must not be null.");
         Objects.requireNonNull(end, "Parameter 'end' must not be null.");
 
-        // TODO: TEST!
-
         final Point2D newBridgeStart = new Point2D.Double(start.getColumn(), start.getRow());
         final Point2D newBridgeEnd = new Point2D.Double(end.getColumn(), end.getRow());
 

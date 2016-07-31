@@ -60,7 +60,6 @@ public class Serializer {
 
     private static List<Island> sortIslands(final Set<Island> islands) {
         return islands.stream()
-                // TODO THIS NEEDS TO BE TESTED!
                 .sorted(Comparator.<Island>comparingInt(island -> island.getPosition().getColumn())
                         .thenComparing(island -> island.getPosition().getRow()))
                 .collect(Collectors.toList());
