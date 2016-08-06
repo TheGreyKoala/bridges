@@ -20,7 +20,7 @@ import java.util.Set;
  */
 public class PuzzleNodeFactory {
 
-    private static final int CELL_SIZE = 40;
+    private static final int CELL_SIZE = 50;
 
     /**
      * Half width and height of a cell containing an island.

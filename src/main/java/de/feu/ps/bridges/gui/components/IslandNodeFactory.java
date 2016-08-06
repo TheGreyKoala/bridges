@@ -21,7 +21,7 @@ class IslandNodeFactory {
     /**
      * The radius of an island.
      */
-    static final int ISLAND_RADIUS = 10;
+    static final int ISLAND_RADIUS = 15;
 
     private IslandNodeFactory() {
     }
