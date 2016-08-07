@@ -109,13 +109,19 @@ class AutomatedSolving {
 
         try {
             reentrantLock.lock();
-            Optional<Bridge> optionalBridge;
-            do {
-                optionalBridge = gameState.getPuzzleToolkit().nextMove();
-                if (optionalBridge.isPresent()) {
-                    gameState.addBridge(optionalBridge.get());
 
-                    if (gameState.getPuzzleStatus() == PuzzleStatus.UNSOLVED) {
+            /*
+             * A blocked thread may be cancelled before it could acquire the lock.
+             * In this case, it must not start solving the puzzle but just quit.
+             * Therefore check if the task has been cancelled.
+             */
+            if (!cancelledTasks.contains(taskId)) {
+                Optional<Bridge> optionalBridge;
+                do {
+                    optionalBridge = gameState.getPuzzleToolkit().nextMove();
+                    if (optionalBridge.isPresent()) {
+                        gameState.addBridge(optionalBridge.get());
+
                         /*
                          * We do not check if the task was cancelled,
                          * because a new thread may already wait to start solving the puzzle.
@@ -124,12 +130,14 @@ class AutomatedSolving {
                          * For the user there would not be a break between the added bridges.
                          * Therefore we always sleep when a new bridge was added.
                          */
-                        Thread.sleep(5000);
+                        if (gameState.getPuzzleStatus() == PuzzleStatus.UNSOLVED) {
+                            Thread.sleep(5000);
+                        }
+                    } else {
+                        gameState.broadcastEvent(FINISHED);
                     }
-                } else {
-                    gameState.broadcastEvent(FINISHED);
-                }
-            } while (optionalBridge.isPresent() && !cancelledTasks.contains(taskId));
+                } while (optionalBridge.isPresent() && !cancelledTasks.contains(taskId));
+            }
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while solving a puzzle.", e);
             gameState.broadcastEvent(SOLVING_FAILED);
