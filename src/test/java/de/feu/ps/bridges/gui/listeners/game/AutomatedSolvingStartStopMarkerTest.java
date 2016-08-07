@@ -1,4 +1,4 @@
-package de.feu.ps.bridges.gui.listeners;
+package de.feu.ps.bridges.gui.listeners.game;
 
 import de.feu.ps.bridges.gui.events.AutomatedSolvingEvent;
 import de.feu.ps.bridges.gui.events.ErrorEvent;
@@ -17,7 +17,7 @@ import static de.feu.ps.bridges.gui.events.AutomatedSolvingEvent.STARTED;
  * @author Tim Gremplewski
  */
 @RunWith(Theories.class)
-public class AutomatedSolvingStatusUpdateTest {
+public class AutomatedSolvingStartStopMarkerTest {
 
     @DataPoints("automatedSolvingEvents")
     public static AutomatedSolvingEvent[] automatedSolvingEvent = AutomatedSolvingEvent.values();
@@ -28,14 +28,14 @@ public class AutomatedSolvingStatusUpdateTest {
     @Theory
     public void testHandleAutomatedSolvingEvent(@FromDataPoints("automatedSolvingEvent") final AutomatedSolvingEvent event) throws Exception {
         Consumer<Boolean> consumer = event == STARTED ? Assert::assertTrue : Assert::assertFalse;
-        AutomatedSolvingStatusUpdate automatedSolvingStatusUpdate = new AutomatedSolvingStatusUpdate(consumer);
-        automatedSolvingStatusUpdate.handleEvent(event);
+        AutomatedSolvingStartStopMarker automatedSolvingStartStopMarker = new AutomatedSolvingStartStopMarker(consumer);
+        automatedSolvingStartStopMarker.handleEvent(event);
     }
 
     @Theory
     public void testHandleErrorEvent(@FromDataPoints("errorEvents") final ErrorEvent errorEvent) {
         Consumer<Boolean> consumer = Assert::assertFalse;
-        AutomatedSolvingStatusUpdate automatedSolvingStatusUpdate = new AutomatedSolvingStatusUpdate(consumer);
-        automatedSolvingStatusUpdate.handleEvent(errorEvent);
+        AutomatedSolvingStartStopMarker automatedSolvingStartStopMarker = new AutomatedSolvingStartStopMarker(consumer);
+        automatedSolvingStartStopMarker.handleEvent(errorEvent);
     }
 }

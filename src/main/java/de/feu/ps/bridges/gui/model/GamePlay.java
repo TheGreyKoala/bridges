@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static de.feu.ps.bridges.gui.events.ErrorEvent.*;
-import static de.feu.ps.bridges.gui.events.GamePlayEvent.INVALID_MOVE;
+import static de.feu.ps.bridges.gui.events.PuzzleEvent.INVALID_MOVE;
 
 /**
  * Helper class that offers operations to build or remove bridges.
@@ -51,7 +51,7 @@ class GamePlay {
             if (optionalBridge.isPresent()) {
                 gameState.addBridge(optionalBridge.get());
             } else {
-                gameState.broadcastEvent(INVALID_MOVE);
+                gameState.broadcastEvent(INVALID_MOVE, null);
             }
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while building a bridge.", e);

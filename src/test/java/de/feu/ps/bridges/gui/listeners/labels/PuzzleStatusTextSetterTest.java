@@ -1,4 +1,4 @@
-package de.feu.ps.bridges.gui.listeners;
+package de.feu.ps.bridges.gui.listeners.labels;
 
 import de.feu.ps.bridges.analyser.PuzzleStatus;
 import org.junit.experimental.theories.DataPoints;
@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
  * @author Tim Gremplewski
  */
 @RunWith(Theories.class)
-public class PuzzleStatusLabelUpdateTest {
+public class PuzzleStatusTextSetterTest {
 
     @DataPoints("puzzleStatus")
     public static PuzzleStatus[] status = PuzzleStatus.values();
@@ -27,7 +27,7 @@ public class PuzzleStatusLabelUpdateTest {
         final ResourceBundle bundle = ResourceBundle.getBundle("de.feu.ps.bridges.gui.bundles.Bridges");
         final String expectedText = bundle.getString("puzzle.status." + status.name().toLowerCase());
         final Consumer<String> consumer = (text) -> assertEquals("Unexpected label text.", expectedText, text);
-        final PuzzleStatusLabelUpdate puzzleStatusLabelUpdate = new PuzzleStatusLabelUpdate(new DummyGameState(status), consumer, bundle);
-        puzzleStatusLabelUpdate.handleEvent(PUZZLE_STATUS_CHANGED);
+        final PuzzleStatusTextSetter puzzleStatusTextSetter = new PuzzleStatusTextSetter(consumer, bundle);
+        puzzleStatusTextSetter.handleEvent(PUZZLE_STATUS_CHANGED, status);
     }
 }

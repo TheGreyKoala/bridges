@@ -18,7 +18,11 @@ public class BridgesTesterImpl implements BridgesTester {
     }
 
     @Override
-    public void testGeneratePuzzle(String filePath, int width, int height, int isles) {
+    public void testGeneratePuzzle(final String filePath, final int width, final int height, final int isles) {
+        if (new File(filePath).exists()) {
+            throw new IllegalArgumentException("Destination file must not exist.");
+        }
+
         final PuzzleToolkit puzzleToolkit = PuzzleToolkitFactory.createForGeneratedPuzzle(width, height, isles);
         puzzleToolkit.savePuzzle(new File(filePath));
     }

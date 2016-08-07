@@ -44,7 +44,7 @@
                 <CheckBox fx:id="showRemainingBridgesCheckBox" mnemonicParsing="false" text="%controls.showRemainingBridges" onAction="#showRemainingBridgesClicked"/>
                 <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <Button mnemonicParsing="false" prefWidth="1000.0" text="%controls.solve" onAction="#solve"/>
+                        <Button fx:id="automatedSolvingButton" mnemonicParsing="false" prefWidth="1000.0" text="%controls.solve.start" onAction="#solve"/>
                         <Button fx:id="nextMoveButton" mnemonicParsing="false" prefWidth="1000.0" text="%controls.nextMove" onAction="#nextMove"/>
                     </children>
                 </HBox>

@@ -1,4 +1,4 @@
-package de.feu.ps.bridges.gui.listeners;
+package de.feu.ps.bridges.gui.listeners.alerts;
 
 import de.feu.ps.bridges.analyser.PuzzleStatus;
 import javafx.scene.control.Alert;
@@ -12,8 +12,7 @@ import org.junit.runner.RunWith;
 import java.util.ResourceBundle;
 
 import static de.feu.ps.bridges.analyser.PuzzleStatus.*;
-import static de.feu.ps.bridges.gui.events.AutomatedSolvingEvent.FINISHED;
-import static de.feu.ps.bridges.gui.events.AutomatedSolvingEvent.STARTED;
+import static de.feu.ps.bridges.gui.events.AutomatedSolvingEvent.*;
 import static de.feu.ps.bridges.gui.events.PuzzleEvent.PUZZLE_CHANGED;
 import static de.feu.ps.bridges.gui.events.PuzzleEvent.PUZZLE_STATUS_CHANGED;
 import static javafx.scene.control.Alert.AlertType.INFORMATION;
@@ -30,51 +29,69 @@ public class PuzzleStatusAlertTest extends AlertTest {
 
     @Test
     public void testHandleStatusChangedToSolved() {
-        final PuzzleStatusAlert puzzleStatusAlert = createPuzzleStatusAlert(SOLVED);
-        puzzleStatusAlert.handleEvent(PUZZLE_STATUS_CHANGED);
+        final PuzzleStatusAlert puzzleStatusAlert = createPuzzleStatusAlert();
+        puzzleStatusAlert.handleEvent(PUZZLE_STATUS_CHANGED, SOLVED);
         assertSingleAlert(INFORMATION, SOLVED);
     }
 
     @Test
     public void testHandleStatusChangedToUnsolved() {
-        final PuzzleStatusAlert puzzleStatusAlert = createPuzzleStatusAlert(UNSOLVED);
-        puzzleStatusAlert.handleEvent(PUZZLE_STATUS_CHANGED);
+        final PuzzleStatusAlert puzzleStatusAlert = createPuzzleStatusAlert();
+        puzzleStatusAlert.handleEvent(PUZZLE_STATUS_CHANGED, UNSOLVED);
         assertEquals("Unexpected alert.", 0, getAlerts().size());
     }
 
     @Test
     public void testHandleStatusChangedToUnsolvable() {
-        final PuzzleStatusAlert puzzleStatusAlert = createPuzzleStatusAlert(UNSOLVABLE);
-        puzzleStatusAlert.handleEvent(PUZZLE_STATUS_CHANGED);
+        final PuzzleStatusAlert puzzleStatusAlert = createPuzzleStatusAlert();
+        puzzleStatusAlert.handleEvent(PUZZLE_STATUS_CHANGED, UNSOLVABLE);
         assertSingleAlert(INFORMATION, UNSOLVABLE);
     }
 
     @Theory
     public void testNoAlertDuringAutomatedSolving(@FromDataPoints("puzzleStatus") final PuzzleStatus status) {
-        final PuzzleStatusAlert puzzleStatusAlert = createPuzzleStatusAlert(status);
+        final PuzzleStatusAlert puzzleStatusAlert = createPuzzleStatusAlert();
         puzzleStatusAlert.handleEvent(STARTED);
-        puzzleStatusAlert.handleEvent(PUZZLE_STATUS_CHANGED);
+        puzzleStatusAlert.handleEvent(PUZZLE_STATUS_CHANGED, status);
         assertEquals("Unexpected alert.", 0, getAlerts().size());
     }
 
     @Theory
     public void testNoAlertWhenPuzzleChanges(@FromDataPoints("puzzleStatus") final PuzzleStatus status) {
-        final PuzzleStatusAlert puzzleStatusAlert = createPuzzleStatusAlert(status);
-        puzzleStatusAlert.handleEvent(PUZZLE_CHANGED);
+        final PuzzleStatusAlert puzzleStatusAlert = createPuzzleStatusAlert();
+        puzzleStatusAlert.handleEvent(PUZZLE_CHANGED, status);
         assertEquals("Unexpected alert.", 0, getAlerts().size());
     }
 
     @Theory
     public void testAlertAfterAutomatedSolvingFinished(@FromDataPoints("puzzleStatus") final PuzzleStatus status) {
-        final PuzzleStatusAlert puzzleStatusAlert = createPuzzleStatusAlert(status);
+        final PuzzleStatusAlert puzzleStatusAlert = createPuzzleStatusAlert();
         puzzleStatusAlert.handleEvent(STARTED);
+        puzzleStatusAlert.handleEvent(PUZZLE_STATUS_CHANGED, status);
         puzzleStatusAlert.handleEvent(FINISHED);
         assertSingleAlert(INFORMATION, status);
     }
 
-    private PuzzleStatusAlert createPuzzleStatusAlert(final PuzzleStatus puzzleStatus) {
-        final DummyGameState gameState = new DummyGameState(puzzleStatus);
-        return new PuzzleStatusAlert(gameState, DummyAlertWrapper::new, getResourceBundle());
+    @Theory
+    public void testAlertWhenNoNextMove(@FromDataPoints("puzzleStatus") final PuzzleStatus status) {
+        final PuzzleStatusAlert puzzleStatusAlert = createPuzzleStatusAlert();
+        puzzleStatusAlert.handleEvent(STARTED);
+        puzzleStatusAlert.handleEvent(PUZZLE_STATUS_CHANGED, status);
+        puzzleStatusAlert.handleEvent(NO_NEXT_MOVE);
+        assertSingleAlert(INFORMATION, status);
+    }
+
+    @Theory
+    public void testNoAlertWhenAutomatesSolvingCancelled(@FromDataPoints("puzzleStatus") final PuzzleStatus status) {
+        final PuzzleStatusAlert puzzleStatusAlert = createPuzzleStatusAlert();
+        puzzleStatusAlert.handleEvent(STARTED);
+        puzzleStatusAlert.handleEvent(PUZZLE_STATUS_CHANGED, status);
+        puzzleStatusAlert.handleEvent(CANCELLED_BY_USER);
+        assertEquals("Unexpected alert.", 0, getAlerts().size());
+    }
+
+    private PuzzleStatusAlert createPuzzleStatusAlert() {
+        return new PuzzleStatusAlert(DummyAlertWrapper::new, getResourceBundle());
     }
 
     private void assertSingleAlert(final Alert.AlertType alertType, final PuzzleStatus status) {

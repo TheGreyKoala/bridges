@@ -26,6 +26,9 @@ import static de.feu.ps.bridges.serialization.Keyword.*;
  */
 public class Deserializer {
 
+    private static final Pattern FIELD_PATTERN = Pattern.compile("^(\\d+)[ ]*x[ ]*(\\d+)[ ]*\\|[ ]*(\\d+)$");
+    private static final Pattern ISLAND_PATTERN = Pattern.compile("^\\([ ]*(\\d+)[ ]*,[ ]*(\\d+)[ ]*\\|[ ]*(\\d+)[ ]*\\)$");
+    private static final Pattern BRIDGE_PATTERN = Pattern.compile("^\\([ ]*(\\d+)[ ]*,[ ]*(\\d+)[ ]*\\|[ ]*(true|false)[ ]*\\)$");
     private static final String END_OF_FILE = "EOF";
     private final List<Island> createdIslands;
     private PuzzleBuilder puzzleBuilder;
@@ -93,7 +96,7 @@ public class Deserializer {
         final String line = getNextUncommentedLine(reader);
 
         try (final Scanner scanner = new Scanner(line)) {
-            scanner.findInLine("^(\\d+)[ ]*x[ ]*(\\d+)[ ]*\\|[ ]*(\\d+)$");
+            scanner.findInLine(FIELD_PATTERN);
             final MatchResult match = scanner.match();
 
             final int columns = Integer.parseInt(match.group(1));
@@ -107,13 +110,12 @@ public class Deserializer {
 
     private void parseIslandsSection(BufferedReader bufferedReader, final PuzzleBuilder puzzleBuilder) throws IOException {
         final int islandsCount = puzzleBuilder.getIslandsCount();
-        final Pattern islandPattern = Pattern.compile("^\\([ ]*(\\d+)[ ]*,[ ]*(\\d+)[ ]*\\|[ ]*(\\d+)[ ]*\\)$");
 
         for (int i = 0; i < islandsCount; i++) {
             final String line = getNextUncommentedLine(bufferedReader);
 
             try (final Scanner scanner = new Scanner(line)) {
-                scanner.findInLine(islandPattern);
+                scanner.findInLine(ISLAND_PATTERN);
                 final MatchResult match = scanner.match();
 
                 final int column = Integer.parseInt(match.group(1));
@@ -132,12 +134,11 @@ public class Deserializer {
     }
 
     private void parseBridgesSection(BufferedReader bufferedReader, PuzzleBuilder puzzleBuilder) throws IOException {
-        final Pattern bridgePattern = Pattern.compile("^\\([ ]*(\\d+)[ ]*,[ ]*(\\d+)[ ]*\\|[ ]*(true|false)[ ]*\\)$");
         String line = getNextUncommentedLine(bufferedReader);
 
         while (!END_OF_FILE.equals(line)) {
             try (final Scanner scanner = new Scanner(line)) {
-                scanner.findInLine(bridgePattern);
+                scanner.findInLine(BRIDGE_PATTERN);
                 final MatchResult match = scanner.match();
 
                 final Island island1 = createdIslands.get(Integer.parseInt(match.group(1)));

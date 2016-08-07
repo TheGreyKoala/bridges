@@ -32,10 +32,6 @@ public class Serializer {
         Objects.requireNonNull(puzzle, "Parameter 'puzzle' must not be null.");
         Objects.requireNonNull(destination, "Parameter 'destination' must not be null.");
 
-        if (destination.exists()) {
-            throw new IllegalArgumentException("Destination file must not exists.");
-        }
-
         final File destinationWithCorrectExtension = assureFileExtension(destination);
 
         try (final PrintWriter writer = new PrintWriter(destinationWithCorrectExtension)) {

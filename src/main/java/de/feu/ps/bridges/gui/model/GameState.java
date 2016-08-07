@@ -1,6 +1,7 @@
 package de.feu.ps.bridges.gui.model;
 
 import de.feu.ps.bridges.analyser.PuzzleStatus;
+import de.feu.ps.bridges.gui.events.PuzzleEvent;
 import de.feu.ps.bridges.model.Bridge;
 import de.feu.ps.bridges.model.Puzzle;
 import de.feu.ps.bridges.toolkit.PuzzleToolkit;
@@ -11,8 +12,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static de.feu.ps.bridges.gui.events.PuzzleEvent.PUZZLE_CHANGED;
-import static de.feu.ps.bridges.gui.events.PuzzleEvent.PUZZLE_STATUS_CHANGED;
+import static de.feu.ps.bridges.gui.events.PuzzleEvent.*;
 
 /**
  * Class that stores the current state of the game.
@@ -41,13 +41,13 @@ public class GameState extends EventBroadcaster {
         this.puzzleToolkit = puzzleToolkit;
         puzzle = puzzleToolkit.getPuzzle();
         addedBridges = new LinkedList<>();
-        clearAddedBridgesAndBroadcastEvents();
+        clearAddedBridgesAndBroadcastEvents(PUZZLE_CHANGED, puzzle);
     }
 
-    private void clearAddedBridgesAndBroadcastEvents() {
+    private void clearAddedBridgesAndBroadcastEvents(final PuzzleEvent puzzleEvent, final Object eventParameter) {
         addedBridges.clear();
         refreshPuzzleStatus();
-        broadcastEvent(PUZZLE_CHANGED);
+        broadcastEvent(puzzleEvent, eventParameter);
     }
 
     /**
@@ -79,7 +79,7 @@ public class GameState extends EventBroadcaster {
      * Get the status of the current puzzle.
      * @return the status of the current puzzle.
      */
-    public PuzzleStatus getPuzzleStatus() {
+    PuzzleStatus getPuzzleStatus() {
         // TODO: Handle null in calling methods
         return puzzleStatus;
     }
@@ -101,12 +101,11 @@ public class GameState extends EventBroadcaster {
     }
 
     /**
-     * Indicates if the given bridge is the last one that was added to the current puzzle.
-     * @param bridge {@link Bridge} to check.
-     * @return true, if the given {@link Bridge} is the last one that was added to the puzzle, false otherwise.
+     * Get the latest bridge that was added to the puzzle.
+     * @return the latest bridge that was added to the puzzle.
      */
-    public boolean isLatestBridge(final Bridge bridge) {
-        return !addedBridges.isEmpty() && addedBridges.getLast().equals(bridge);
+    public Optional<Bridge> getLatestBridge() {
+        return addedBridges.isEmpty() ? Optional.empty() : Optional.ofNullable(addedBridges.getLast());
     }
 
     /**
@@ -116,7 +115,7 @@ public class GameState extends EventBroadcaster {
         if (getPuzzle().isPresent()) {
             puzzle.removeAllBridges();
         }
-        clearAddedBridgesAndBroadcastEvents();
+        clearAddedBridgesAndBroadcastEvents(PUZZLE_RESET, null);
     }
 
     /**
@@ -125,7 +124,7 @@ public class GameState extends EventBroadcaster {
      */
     void addBridge(final Bridge bridge) {
         addedBridges.add(bridge);
-        broadcastEvent(PUZZLE_CHANGED);
+        broadcastEvent(BRIDGE_ADDED, bridge);
         refreshPuzzleStatus();
     }
 
@@ -135,7 +134,7 @@ public class GameState extends EventBroadcaster {
      */
     void removeBridge(final Bridge bridge) {
         addedBridges.removeLastOccurrence(bridge);
-        broadcastEvent(PUZZLE_CHANGED);
+        broadcastEvent(BRIDGE_REMOVED, bridge);
         refreshPuzzleStatus();
     }
 
@@ -144,7 +143,7 @@ public class GameState extends EventBroadcaster {
             final PuzzleStatus oldPuzzleStatus = puzzleStatus;
             puzzleStatus = puzzleToolkit.getPuzzleStatus();
             if (puzzleStatus != null && oldPuzzleStatus != puzzleStatus) {
-                broadcastEvent(PUZZLE_STATUS_CHANGED);
+                broadcastEvent(PUZZLE_STATUS_CHANGED, puzzleStatus);
             }
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while tearing down a bridge.", e);

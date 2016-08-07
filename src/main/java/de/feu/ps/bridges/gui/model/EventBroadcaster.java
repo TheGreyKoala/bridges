@@ -17,7 +17,7 @@ class EventBroadcaster {
     private final Set<AutomatedSolvingEventListener> automatedSolvingEventListeners;
     private final Set<ErrorEventListener> errorEventListeners;
     private final Set<PuzzleEventListener> puzzleEventListeners;
-    private final Set<GamePlayEventListener> gamePlayEventListeners;
+    private final Set<SettingsEventListener> settingsEventListeners;
 
     /**
      * Creates a new instance.
@@ -26,7 +26,7 @@ class EventBroadcaster {
         automatedSolvingEventListeners = new LinkedHashSet<>();
         errorEventListeners = new LinkedHashSet<>();
         puzzleEventListeners = new LinkedHashSet<>();
-        gamePlayEventListeners = new LinkedHashSet<>();
+        settingsEventListeners = new LinkedHashSet<>();
     }
 
     /**
@@ -48,21 +48,21 @@ class EventBroadcaster {
     }
 
     /**
-     * Register a new {@link GamePlayEventListener}.
-     * @param listener listener to register.
-     */
-    public void addGamePlayEventListener(final GamePlayEventListener listener) {
-        Objects.requireNonNull(listener, "Parameter 'listener' must not be null.");
-        gamePlayEventListeners.add(listener);
-    }
-
-    /**
      * Register a new {@link PuzzleEventListener}.
      * @param listener listener to register.
      */
     public void addPuzzleEventListener(final PuzzleEventListener listener) {
         Objects.requireNonNull(listener, "Parameter 'listener' must not be null.");
         puzzleEventListeners.add(listener);
+    }
+
+    /**
+     * Register a new {@link SettingsEventListener}.
+     * @param listener listener to register.
+     */
+    public void addSettingsEventListener(final SettingsEventListener listener) {
+        Objects.requireNonNull(listener, "Parameter 'listener' must not be null.");
+        settingsEventListeners.add(listener);
     }
 
     /**
@@ -82,18 +82,20 @@ class EventBroadcaster {
     }
 
     /**
-     * Broadcast the given {@link GamePlayEvent}.
+     * Broadcast the given {@link PuzzleEvent}.
      * @param event event to broadcast.
+     * @param eventParameter Additional parameter that will be passed with the event.
      */
-    void broadcastEvent(final GamePlayEvent event) {
-        Platform.runLater(() -> gamePlayEventListeners.forEach(listener -> listener.handleEvent(event)));
+    void broadcastEvent(final PuzzleEvent event, Object eventParameter) {
+        Platform.runLater(() -> puzzleEventListeners.forEach(listener -> listener.handleEvent(event, eventParameter)));
     }
 
     /**
-     * Broadcast the given {@link PuzzleEvent}.
+     * Broadcast the given {@link SettingsEvent}.
      * @param event event to broadcast.
+     * @param eventParameter Additional parameter that will be passed with the event.
      */
-    void broadcastEvent(final PuzzleEvent event) {
-        Platform.runLater(() -> puzzleEventListeners.forEach(listener -> listener.handleEvent(event)));
+    public void broadcastEvent(final SettingsEvent event, final Object eventParameter) {
+        Platform.runLater(() -> settingsEventListeners.forEach(listener -> listener.handleEvent(event, eventParameter)));
     }
 }

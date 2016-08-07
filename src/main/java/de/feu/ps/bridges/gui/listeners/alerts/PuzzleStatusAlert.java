@@ -1,15 +1,18 @@
-package de.feu.ps.bridges.gui.listeners;
+package de.feu.ps.bridges.gui.listeners.alerts;
 
 import de.feu.ps.bridges.analyser.PuzzleStatus;
 import de.feu.ps.bridges.gui.events.AutomatedSolvingEvent;
 import de.feu.ps.bridges.gui.events.PuzzleEvent;
-import de.feu.ps.bridges.gui.model.GameState;
+import de.feu.ps.bridges.gui.listeners.AutomatedSolvingEventListener;
+import de.feu.ps.bridges.gui.listeners.PuzzleEventListener;
 import javafx.scene.control.Alert;
 
 import java.util.ResourceBundle;
 import java.util.function.Function;
 
 import static de.feu.ps.bridges.analyser.PuzzleStatus.UNSOLVED;
+import static de.feu.ps.bridges.gui.events.AutomatedSolvingEvent.FINISHED;
+import static de.feu.ps.bridges.gui.events.AutomatedSolvingEvent.NO_NEXT_MOVE;
 import static de.feu.ps.bridges.gui.events.AutomatedSolvingEvent.STARTED;
 import static de.feu.ps.bridges.gui.events.PuzzleEvent.PUZZLE_STATUS_CHANGED;
 import static javafx.scene.control.Alert.AlertType.INFORMATION;
@@ -22,28 +25,26 @@ public class PuzzleStatusAlert implements AutomatedSolvingEventListener, PuzzleE
 
     private final Function<Alert.AlertType, AlertWrapper> alertWrapperFactory;
     private final ResourceBundle resourceBundle;
-    private final GameState gameState;
+
     private boolean automatedSolvingRunning;
+    private PuzzleStatus currentStatus;
 
     /**
-     * Create a new instance that uses the given {@link GameState} to query the puzzle status.
-     * @param gameState {@link GameState} to query the puzzle status.
+     * Create a new instance.
      * @param resourceBundle {@link ResourceBundle} that will be used to localize the dialog.
      */
-    public PuzzleStatusAlert(final GameState gameState, final ResourceBundle resourceBundle) {
-        this(gameState, DefaultAlertWrapper::new, resourceBundle);
+    public PuzzleStatusAlert(final ResourceBundle resourceBundle) {
+        this(DefaultAlertWrapper::new, resourceBundle);
     }
 
     /**
      * This constructor is needed for test purposes only.
      * In tests we can not show an alert, so during tests we need to inject a dummy alert,
      * that does not work on a real alert.
-     * @param gameState {@link GameState} to query the puzzle status.
      * @param alertWrapperFactory {@link Function} that creates a new {@link AlertWrapper}.
      * @param resourceBundle {@link ResourceBundle} that will be used to localize the dialog.
      */
-    PuzzleStatusAlert(final GameState gameState, final Function<Alert.AlertType, AlertWrapper> alertWrapperFactory, final ResourceBundle resourceBundle) {
-        this.gameState = gameState;
+    PuzzleStatusAlert(final Function<Alert.AlertType, AlertWrapper> alertWrapperFactory, final ResourceBundle resourceBundle) {
         this.alertWrapperFactory = alertWrapperFactory;
         this.resourceBundle = resourceBundle;
     }
@@ -51,26 +52,24 @@ public class PuzzleStatusAlert implements AutomatedSolvingEventListener, PuzzleE
     @Override
     public void handleEvent(final AutomatedSolvingEvent event) {
         automatedSolvingRunning = event == STARTED;
-        if (event != STARTED) {
-            // Show an alert showing the puzzle status when the automated solving was finished or cancelled
+        if (event == FINISHED || event == NO_NEXT_MOVE) {
             showPuzzleStatusAlert();
         }
     }
 
     @Override
-    public void handleEvent(final PuzzleEvent event) {
-        if (event == PUZZLE_STATUS_CHANGED
-            && !automatedSolvingRunning
-            && gameState.getPuzzleStatus() != UNSOLVED) {
-
-            showPuzzleStatusAlert();
+    public void handleEvent(final PuzzleEvent event, final Object eventParameter) {
+        if (event == PUZZLE_STATUS_CHANGED) {
+            currentStatus = (PuzzleStatus) eventParameter;
+            if (!automatedSolvingRunning && currentStatus != UNSOLVED) {
+                showPuzzleStatusAlert();
+            }
         }
     }
 
     private void showPuzzleStatusAlert() {
         final AlertWrapper alert = alertWrapperFactory.apply(INFORMATION);
-        final PuzzleStatus puzzleStatus = gameState.getPuzzleStatus();
-        switch (puzzleStatus) {
+        switch (currentStatus) {
             case SOLVED:
                 alert.setTitle(resourceBundle.getString("autoSolveDialog.solved.title"));
                 alert.setHeaderText(resourceBundle.getString("autoSolveDialog.solved.title"));

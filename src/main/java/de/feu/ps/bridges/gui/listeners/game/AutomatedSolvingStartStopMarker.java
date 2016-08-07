@@ -1,18 +1,19 @@
-package de.feu.ps.bridges.gui.listeners;
+package de.feu.ps.bridges.gui.listeners.game;
 
 import de.feu.ps.bridges.gui.events.AutomatedSolvingEvent;
 import de.feu.ps.bridges.gui.events.ErrorEvent;
+import de.feu.ps.bridges.gui.listeners.AutomatedSolvingEventListener;
+import de.feu.ps.bridges.gui.listeners.ErrorEventListener;
 
 import java.util.function.Consumer;
 
 import static de.feu.ps.bridges.gui.events.AutomatedSolvingEvent.STARTED;
 
 /**
- * Listener that tells a given client,
- * when the complete automated solving of a puzzle has been started or ended.
+ * Listener that notifies a given client when the automated solving of the puzzle has started or ended.
  * @author Tim Gremplewski
  */
-public class AutomatedSolvingStatusUpdate implements AutomatedSolvingEventListener, ErrorEventListener {
+public class AutomatedSolvingStartStopMarker implements AutomatedSolvingEventListener, ErrorEventListener {
 
     private final Consumer<Boolean> consumer;
 
@@ -24,7 +25,7 @@ public class AutomatedSolvingStatusUpdate implements AutomatedSolvingEventListen
      *
      * @param consumer the {@link Consumer} to inform.
      */
-    public AutomatedSolvingStatusUpdate(final Consumer<Boolean> consumer) {
+    public AutomatedSolvingStartStopMarker(final Consumer<Boolean> consumer) {
         this.consumer = consumer;
     }
 

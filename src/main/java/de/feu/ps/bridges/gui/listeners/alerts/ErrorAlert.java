@@ -1,6 +1,7 @@
-package de.feu.ps.bridges.gui.listeners;
+package de.feu.ps.bridges.gui.listeners.alerts;
 
 import de.feu.ps.bridges.gui.events.ErrorEvent;
+import de.feu.ps.bridges.gui.listeners.ErrorEventListener;
 import javafx.scene.control.Alert;
 
 import java.util.ResourceBundle;

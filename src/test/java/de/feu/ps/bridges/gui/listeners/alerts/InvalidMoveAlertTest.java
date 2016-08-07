@@ -1,21 +1,21 @@
-package de.feu.ps.bridges.gui.listeners;
+package de.feu.ps.bridges.gui.listeners.alerts;
 
 import org.junit.Test;
 
 import java.util.ResourceBundle;
 
-import static de.feu.ps.bridges.gui.events.GamePlayEvent.INVALID_MOVE;
+import static de.feu.ps.bridges.gui.events.PuzzleEvent.INVALID_MOVE;
 import static javafx.scene.control.Alert.AlertType.WARNING;
 
 /**
  * @author Tim Gremplewski
  */
-public class GamePlayAlertTest extends AlertTest {
+public class InvalidMoveAlertTest extends AlertTest {
 
     @Test
     public void testInvalidMoveEvent() {
-        final GamePlayAlert gamePlayAlert = new GamePlayAlert(DummyAlertWrapper::new, getResourceBundle());
-        gamePlayAlert.handleEvent(INVALID_MOVE);
+        final InvalidMoveAlert invalidMoveAlert = new InvalidMoveAlert(DummyAlertWrapper::new, getResourceBundle());
+        invalidMoveAlert.handleEvent(INVALID_MOVE, null);
 
         final ResourceBundle resourceBundle = getResourceBundle();
         final String expectedTitle = resourceBundle.getString("warning.title");

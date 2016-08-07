@@ -1,4 +1,4 @@
-package de.feu.ps.bridges.gui.listeners;
+package de.feu.ps.bridges.gui.listeners.alerts;
 
 import de.feu.ps.bridges.gui.events.ErrorEvent;
 import org.junit.experimental.theories.DataPoints;

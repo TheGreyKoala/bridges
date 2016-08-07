@@ -1,14 +1,12 @@
 package de.feu.ps.bridges.gui.controller;
 
-import de.feu.ps.bridges.gui.components.PuzzleNodeFactory;
+import de.feu.ps.bridges.gui.components.Puzzle;
 import de.feu.ps.bridges.gui.model.Model;
-import de.feu.ps.bridges.model.Puzzle;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -24,6 +22,8 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import static de.feu.ps.bridges.gui.events.SettingsEvent.SHOW_REMAINING_BRIDGES_CHANGED;
 
 /**
  * Controller for the main panel.
@@ -49,10 +49,15 @@ public class MainController implements Initializable {
     @FXML
     private ScrollPane scrollPane;
 
-    private ResourceBundle bundle;
-    private FileChooser fileChooser;
+    @FXML
+    private Button automatedSolvingButton;
+
     private final Model model;
     private final Stage stage;
+
+    private ResourceBundle bundle;
+    private FileChooser fileChooser;
+    private Puzzle puzzle;
 
     /**
      * Creates a new instance.
@@ -66,7 +71,7 @@ public class MainController implements Initializable {
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(final URL location, final ResourceBundle resources) {
         bundle = ResourceBundle.getBundle("de.feu.ps.bridges.gui.bundles.Bridges");
         fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(bundle.getString("puzzleExtensionFilter.description"), "*.bgs"));
@@ -160,19 +165,7 @@ public class MainController implements Initializable {
      * @param actionEvent the event.
      */
     public void showRemainingBridgesClicked(final ActionEvent actionEvent) {
-        drawPuzzle();
-    }
-
-    /**
-     * Redraw the puzzle.
-     */
-    public void drawPuzzle() {
-        mainPanel.getChildren().clear();
-        Optional<Puzzle> puzzle = model.getGameState().getPuzzle();
-        if (puzzle.isPresent()) {
-            Node puzzleNode = PuzzleNodeFactory.createPuzzle(puzzle.get(), model, showRemainingBridgesCheckBox.isSelected());
-            mainPanel.getChildren().add(puzzleNode);
-        }
+        model.getGameState().broadcastEvent(SHOW_REMAINING_BRIDGES_CHANGED, showRemainingBridgesCheckBox.isSelected());
     }
 
     /**
@@ -192,11 +185,29 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Set the label text of the status bar.
-     * @param statusBarLabel new text for the status bar.
+     * Set the puzzle that is displayed in the panel managed by this controller.
+     * @param puzzle puzzle to display.
      */
-    public void setStatusBarLabel(final String statusBarLabel) {
-        statusLabel.setText(statusBarLabel);
+    public void setPuzzle(final Puzzle puzzle) {
+        this.puzzle = puzzle;
+        mainPanel.getChildren().clear();
+        mainPanel.getChildren().add(puzzle);
+    }
+
+    /**
+     * Get the puzzle that is currently displayed in the panel managed by this controller.
+     * @return the puzzle that is currently displayed.
+     */
+    public Optional<Puzzle> getPuzzle() {
+        return Optional.ofNullable(puzzle);
+    }
+
+    /**
+     * Set the label text of the status bar.
+     * @param text new text for the status bar.
+     */
+    public void setStatusBarText(final String text) {
+        statusLabel.setText(text);
     }
 
     /**
@@ -205,7 +216,15 @@ public class MainController implements Initializable {
      * @param setDisabled if true, the components will be disabled, otherwise they will be enabled.
      */
     public void setNonAutomatedSolvingControlsDisabled(final boolean setDisabled) {
-        Arrays.asList(menuBar, showRemainingBridgesCheckBox, nextMoveButton, mainPanel)
+        Arrays.asList(menuBar, nextMoveButton, mainPanel)
                 .forEach(component -> component.setDisable(setDisabled));
+    }
+
+    /**
+     * Set the text of the start/stop automated solving button.
+     * @param text text to display in the button.
+     */
+    public void setAutomatedSolvingButtonText(final String text) {
+        automatedSolvingButton.setText(text);
     }
 }

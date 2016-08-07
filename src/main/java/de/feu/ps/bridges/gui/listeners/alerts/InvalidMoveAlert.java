@@ -1,19 +1,20 @@
-package de.feu.ps.bridges.gui.listeners;
+package de.feu.ps.bridges.gui.listeners.alerts;
 
-import de.feu.ps.bridges.gui.events.GamePlayEvent;
+import de.feu.ps.bridges.gui.events.PuzzleEvent;
+import de.feu.ps.bridges.gui.listeners.PuzzleEventListener;
 import javafx.scene.control.Alert;
 
 import java.util.ResourceBundle;
 import java.util.function.Function;
 
-import static de.feu.ps.bridges.gui.events.GamePlayEvent.INVALID_MOVE;
+import static de.feu.ps.bridges.gui.events.PuzzleEvent.INVALID_MOVE;
 import static javafx.scene.control.Alert.AlertType.WARNING;
 
 /**
- * Listener that shows information dialogs when game play events occur.
+ * Listener that shows information dialogs when the user tries to apply an invalid move.
  * @author Tim Gremplewski
  */
-public class GamePlayAlert implements GamePlayEventListener {
+public class InvalidMoveAlert implements PuzzleEventListener {
 
     private final Function<Alert.AlertType, AlertWrapper> alertWrapperFactory;
     private final ResourceBundle resourceBundle;
@@ -22,7 +23,7 @@ public class GamePlayAlert implements GamePlayEventListener {
      * Create a new instance that uses the given {@link ResourceBundle} to localize the dialog.
      * @param resourceBundle {@link ResourceBundle} that will be used to localize the dialog.
      */
-    public GamePlayAlert(final ResourceBundle resourceBundle) {
+    public InvalidMoveAlert(final ResourceBundle resourceBundle) {
         this(DefaultAlertWrapper::new, resourceBundle);
     }
 
@@ -33,13 +34,13 @@ public class GamePlayAlert implements GamePlayEventListener {
      * @param alertWrapperFactory {@link Function} that creates a new {@link AlertWrapper}.
      * @param resourceBundle {@link ResourceBundle} that will be used to localize the dialog.
      */
-    GamePlayAlert(final Function<Alert.AlertType, AlertWrapper> alertWrapperFactory, final ResourceBundle resourceBundle) {
+    InvalidMoveAlert(final Function<Alert.AlertType, AlertWrapper> alertWrapperFactory, final ResourceBundle resourceBundle) {
         this.alertWrapperFactory = alertWrapperFactory;
         this.resourceBundle = resourceBundle;
     }
 
     @Override
-    public void handleEvent(final GamePlayEvent event) {
+    public void handleEvent(final PuzzleEvent event, final Object eventParameter) {
         if (event == INVALID_MOVE) {
             final AlertWrapper alert = alertWrapperFactory.apply(WARNING);
             alert.setTitle(resourceBundle.getString("warning.title"));

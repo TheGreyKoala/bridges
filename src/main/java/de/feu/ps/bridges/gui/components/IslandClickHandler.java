@@ -11,7 +11,8 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 
-import static de.feu.ps.bridges.gui.components.PuzzleNodeFactory.HALF_CELL_SIZE;
+import static de.feu.ps.bridges.gui.components.Board.HALF_CELL_SIZE;
+
 
 /**
  * {@link EventHandler} for click events on an island.
@@ -20,6 +21,7 @@ import static de.feu.ps.bridges.gui.components.PuzzleNodeFactory.HALF_CELL_SIZE;
  * @author Tim Gremplewski
  */
 class IslandClickHandler implements EventHandler<MouseEvent> {
+
     private static final Rotate ROTATE_45_DEGREES_CLOCKWISE = Transform.rotate(45, 0, 0);
     private static final Translate TRANSLATE_ORIGIN_TO_CIRCLE_CENTER = Transform.translate(-HALF_CELL_SIZE, -HALF_CELL_SIZE);
 
