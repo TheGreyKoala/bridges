@@ -6,6 +6,8 @@ package de.feu.ps.bridges.generator;
  */
 class GenerationException extends RuntimeException {
 
+    private static final long serialVersionUID = -412419486599123423L;
+
     /**
      * Create a new exception.
      * @param message Message of the exception.

@@ -131,10 +131,12 @@ public class MainController implements Initializable {
      * @param actionEvent the event.
      */
     public void savePuzzle(final ActionEvent actionEvent) {
-        if (model.getGameState().isPuzzleSourceFileKnown()) {
-            model.savePuzzle();
-        } else {
-            savePuzzleAs(actionEvent);
+        if (model.getGameState().getPuzzle().isPresent()) {
+            if (model.getGameState().isPuzzleSourceFileKnown()) {
+                model.savePuzzle();
+            } else {
+                savePuzzleAs(actionEvent);
+            }
         }
     }
 
@@ -143,12 +145,14 @@ public class MainController implements Initializable {
      * @param actionEvent the event.
      */
     public void savePuzzleAs(ActionEvent actionEvent) {
-        fileChooser.setTitle(bundle.getString("saveAsDialog.title"));
-        File destinationFile = fileChooser.showSaveDialog(mainPanel.getScene().getWindow());
+        if (model.getGameState().getPuzzle().isPresent()) {
+            fileChooser.setTitle(bundle.getString("saveAsDialog.title"));
+            File destinationFile = fileChooser.showSaveDialog(mainPanel.getScene().getWindow());
 
-        if (destinationFile != null) {
-            model.savePuzzleAs(destinationFile);
-            fileChooser.setInitialDirectory(destinationFile.getParentFile());
+            if (destinationFile != null) {
+                model.savePuzzleAs(destinationFile);
+                fileChooser.setInitialDirectory(destinationFile.getParentFile());
+            }
         }
     }
 

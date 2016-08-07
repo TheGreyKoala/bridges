@@ -6,6 +6,8 @@ package de.feu.ps.bridges.serialization;
  */
 class SerializationException extends RuntimeException {
 
+    private static final long serialVersionUID = -246088052209364227L;
+
     /**
      * Create a new exception.
      * @param message Message of the exception.

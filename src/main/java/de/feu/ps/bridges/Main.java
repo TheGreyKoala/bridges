@@ -59,7 +59,7 @@ public class Main extends Application {
         registerEventListeners(model, gameState, mainController, bundle);
 
         final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui/MainFrame.fxml"), bundle);
-        fxmlLoader.<MainController>setController(mainController);
+        fxmlLoader.setController(mainController);
 
         final Parent root = fxmlLoader.load();
         primaryStage.setTitle(bundle.getString("mainFrame.title"));

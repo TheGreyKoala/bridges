@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -49,7 +50,8 @@ public abstract class BridgesTest {
 
     private static String getDataDir() {
         try {
-            return BridgesTest.class.getResource("data").toURI().getPath();
+            final URI dataDirectoryUri = BridgesTest.class.getResource("data").toURI();
+            return Paths.get(dataDirectoryUri).toString();
         } catch (URISyntaxException e) {
             return "";
         }

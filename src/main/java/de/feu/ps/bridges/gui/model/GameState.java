@@ -114,8 +114,8 @@ public class GameState extends EventBroadcaster {
     void removeAllBridges() {
         if (getPuzzle().isPresent()) {
             puzzle.removeAllBridges();
+            clearAddedBridgesAndBroadcastEvents(PUZZLE_RESET, null);
         }
-        clearAddedBridgesAndBroadcastEvents(PUZZLE_RESET, null);
     }
 
     /**
