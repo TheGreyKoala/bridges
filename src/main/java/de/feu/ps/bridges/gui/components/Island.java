@@ -17,7 +17,7 @@ class Island extends StackPane {
     /**
      * Radius of a visualized island.
      */
-    static final int ISLAND_RADIUS = 15;
+    static final int ISLAND_RADIUS = 6;
 
     private final de.feu.ps.bridges.model.Island island;
     private final Circle circle;
@@ -49,7 +49,7 @@ class Island extends StackPane {
 
     private Text createText() {
         final Text text = new Text(String.valueOf(island.getRequiredBridges()));
-        text.setFont(new Font(12));
+        text.setFont(new Font(10));
         text.setBoundsType(TextBoundsType.VISUAL);
         text.setFill(Color.WHITE);
         return text;
