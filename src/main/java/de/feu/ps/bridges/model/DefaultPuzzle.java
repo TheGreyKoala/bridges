@@ -165,4 +165,30 @@ class DefaultPuzzle implements ModifiablePuzzle {
         }
         return Optional.empty();
     }
+
+    @Override
+    public Island getRightAndUppermostIsland() {
+        for (int i = columns.length - 1; i >= 0; i--) {
+            if (columns[i] != null) {
+                Optional<Island> firstIsland = columns[i].getFirstUnfinishedIsland(Direction.EAST);
+                if (firstIsland.isPresent()) {
+                    return firstIsland.get();
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Island getLeftAndUppermostIsland() {
+        for (int i = 0; i < columns.length; i++) {
+            if (columns[i] != null) {
+                Optional<Island> firstIsland = columns[i].getFirstUnfinishedIsland(Direction.WEST);
+                if (firstIsland.isPresent()) {
+                    return firstIsland.get();
+                }
+            }
+        }
+        return null;
+    }
 }

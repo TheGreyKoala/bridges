@@ -1,5 +1,7 @@
 package de.feu.ps.bridges.generator;
 
+import de.feu.ps.bridges.model.Puzzle;
+
 /**
  * Factory class that creates a new {@link PuzzleGenerator}.
  * @author Tim Gremplewski
@@ -76,5 +78,9 @@ public final class PuzzleGeneratorFactory {
         if (islands < 2 || islands > columns * rows * 0.2) {
             throw new IllegalArgumentException("Parameter 'islands' must be between 2 and columns * rows * 0.2");
         }
+    }
+
+    public static Puzzle composePuzzles(Puzzle puzzle1, Puzzle puzzle2) {
+        return new PuzzleComposer(puzzle1, puzzle2).compose();
     }
 }

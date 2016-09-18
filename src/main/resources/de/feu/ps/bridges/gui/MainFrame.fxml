@@ -21,6 +21,7 @@
                 <Menu mnemonicParsing="false" text="%menus.file">
                     <items>
                         <MenuItem mnemonicParsing="false" text="%menus.file.newPuzzle" onAction="#newPuzzle"/>
+                        <MenuItem mnemonicParsing="false" text="Neues Puzzle aus zwei bestehenden Rätseln" onAction="#composePuzzles"/>
                         <MenuItem mnemonicParsing="false" text="%menus.file.restartPuzzle" onAction="#restartPuzzle"/>
                         <MenuItem mnemonicParsing="false" text="%menus.file.loadPuzzle" onAction="#loadPuzzle"/>
                         <MenuItem mnemonicParsing="false" text="%menus.file.savePuzzle" onAction="#savePuzzle"/>

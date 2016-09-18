@@ -44,5 +44,7 @@ public enum ErrorEvent {
     /**
      * Tearing down a bridge failed.
      */
-    TEARING_DOWN_BRIDGE_FAILED
+    TEARING_DOWN_BRIDGE_FAILED,
+
+    COMPOSING_PUZZLES_TOO_BIG
 }

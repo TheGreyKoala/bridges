@@ -80,4 +80,17 @@ abstract class SortedIslandContainer {
     Set<Island> getIslands() {
         return new HashSet<>(islands);
     }
+
+    public Optional<Island> getFirstUnfinishedIsland(Direction direction) {
+        if (islands.isEmpty()) {
+            return Optional.empty();
+        } else {
+            for (ModifiableIsland island : islands) {
+                if (island.getRequiredBridges() < 8 && !island.getNeighbour(direction).isPresent()) {
+                    return Optional.of(island);
+                }
+            }
+        }
+        return Optional.empty();
+    }
 }

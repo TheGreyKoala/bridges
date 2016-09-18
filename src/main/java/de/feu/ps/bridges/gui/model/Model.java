@@ -123,4 +123,8 @@ public class Model {
     public void applyNextMove() {
         automatedSolving.applyNextMove();
     }
+
+    public void composePuzzles(File sourceFile1, File sourceFile2) {
+        puzzleGeneration.generateComposedPuzzle(sourceFile1, sourceFile2);
+    }
 }

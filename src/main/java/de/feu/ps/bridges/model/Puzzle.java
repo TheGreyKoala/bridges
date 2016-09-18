@@ -61,4 +61,8 @@ public interface Puzzle {
      * @throws IllegalArgumentException if <code>island1</code> or <code>island2</code> does not belong to this puzzle.
      */
     Optional<Bridge> tearDownBridge(Island island1, Island island2);
+
+    Island getRightAndUppermostIsland();
+
+    Island getLeftAndUppermostIsland();
 }

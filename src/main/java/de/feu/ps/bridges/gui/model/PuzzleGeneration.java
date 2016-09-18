@@ -1,10 +1,13 @@
 package de.feu.ps.bridges.gui.model;
 
+import de.feu.ps.bridges.toolkit.IllegalSizeException;
 import de.feu.ps.bridges.toolkit.PuzzleToolkitFactory;
 
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static de.feu.ps.bridges.gui.events.ErrorEvent.COMPOSING_PUZZLES_TOO_BIG;
 import static de.feu.ps.bridges.gui.events.ErrorEvent.GENERATING_PUZZLE_FAILED;
 
 /**
@@ -59,6 +62,17 @@ class PuzzleGeneration {
     void newPuzzle(final int columns, final int rows, final int islands) {
         try {
             gameState.setPuzzleToolkit(PuzzleToolkitFactory.createForGeneratedPuzzle(columns, rows, islands));
+        } catch (final Exception e) {
+            LOGGER.log(Level.SEVERE, "Unexpected error while generating a random puzzle.", e);
+            gameState.broadcastEvent(GENERATING_PUZZLE_FAILED);
+        }
+    }
+
+    void generateComposedPuzzle(final File sourceFile1, final File sourceFile2) {
+        try {
+            gameState.setPuzzleToolkit(PuzzleToolkitFactory.createForComposedPuzzle(sourceFile1, sourceFile2));
+        } catch (final IllegalSizeException e) {
+            gameState.broadcastEvent(COMPOSING_PUZZLES_TOO_BIG);
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error while generating a random puzzle.", e);
             gameState.broadcastEvent(GENERATING_PUZZLE_FAILED);

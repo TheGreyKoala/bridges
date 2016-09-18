@@ -62,16 +62,22 @@ public class ErrorAlert implements ErrorEventListener {
                 return getErrorAlert(resourceBundle.getString("buildBridge.failed"));
             case TEARING_DOWN_BRIDGE_FAILED:
                 return getErrorAlert(resourceBundle.getString("tearDownBridge.failed"));
+            case COMPOSING_PUZZLES_TOO_BIG:
+                return getErrorAlert("Puzzle Komposition", "Komposition fehlgeschlagen", "Die Puzzles sind zu groß.");
             default:
                 return getErrorAlert("");
         }
     }
 
     private AlertWrapper getErrorAlert(final String headerText) {
+        return getErrorAlert(resourceBundle.getString("error.title"), headerText, resourceBundle.getString("error.content.text"));
+    }
+
+    private AlertWrapper getErrorAlert(final String title, final String headerText, final String contentText) {
         final AlertWrapper alert = alertWrapperFactory.apply(ERROR);
-        alert.setTitle(resourceBundle.getString("error.title"));
+        alert.setTitle(title);
         alert.setHeaderText(headerText);
-        alert.setContentText(resourceBundle.getString("error.content.text"));
+        alert.setContentText(contentText);
         return alert;
     }
 }

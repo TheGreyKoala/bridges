@@ -65,4 +65,15 @@ public final class PuzzleToolkitFactory {
         Puzzle puzzle = PuzzleGeneratorFactory.createPuzzleGenerator(columns, rows, islands).generate();
         return createFor(puzzle);
     }
+
+    public static PuzzleToolkit createForComposedPuzzle(final File sourceFile1, final File sourceFile2) {
+        final Puzzle puzzle1 = Deserializer.loadPuzzle(sourceFile1);
+        final Puzzle puzzle2 = Deserializer.loadPuzzle(sourceFile2);
+
+        if (puzzle1.getColumnsCount() + puzzle2.getColumnsCount() > 25 || puzzle1.getRowsCount() + puzzle2.getRowsCount() > 25) {
+            throw new IllegalSizeException("Puzzles are too big");
+        }
+
+        return createFor(PuzzleGeneratorFactory.composePuzzles(puzzle1, puzzle2));
+    }
 }

@@ -104,6 +104,20 @@ public class MainController implements Initializable {
         dialogStage.showAndWait();
     }
 
+    public void composePuzzles(final ActionEvent actionEvent) {
+        File sourceFile1 = fileChooser.showOpenDialog(mainPanel.getScene().getWindow());
+
+        if(sourceFile1 != null) {
+            fileChooser.setInitialDirectory(sourceFile1.getParentFile());
+
+            File sourceFile2 = fileChooser.showOpenDialog(mainPanel.getScene().getWindow());
+            if (sourceFile2 != null) {
+                model.composePuzzles(sourceFile1, sourceFile2);
+                fileChooser.setInitialDirectory(sourceFile2.getParentFile());
+            }
+        }
+    }
+
     /**
      * Invoked when the user clicks the restart puzzle menu item.
      * @param actionEvent the event.
