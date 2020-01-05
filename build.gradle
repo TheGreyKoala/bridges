@@ -1,11 +1,20 @@
+plugins {
+    id "application"
+    id "java"
+    id 'org.openjfx.javafxplugin' version '0.0.8'
+}
+
 group 'de.feu.ps.bridges'
 version '1.0.0'
 
-apply plugin: 'java'
-apply plugin: 'application'
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
 
-sourceCompatibility = 1.8
-mainClassName = 'de.feu.ps.bridges.Main'
+application {
+    mainClassName = 'de.feu.ps.bridges.Main'
+}
 
 repositories {
     mavenCentral()
@@ -13,4 +22,9 @@ repositories {
 
 dependencies {
     testCompile 'junit:junit:4.12'
+}
+
+javafx {
+    version = "13"
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
