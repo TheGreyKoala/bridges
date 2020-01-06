@@ -7,3 +7,9 @@ If you wonder why I didn't use any libraries: The implementation was rated after
 
 # System Requirements
 This application requires the Java Runtime Environment version 13.
+
+# Building and running the application
+```
+./gradlew jlink
+build/image/bin/Bridges
+```
