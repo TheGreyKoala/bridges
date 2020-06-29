@@ -15,7 +15,7 @@ import java.util.Map;
  */
 class Board extends GridPane {
 
-    private static final int CELL_SIZE = 23;
+    private static final int CELL_SIZE = 50;
 
     /**
      * Half width and height of a cell containing an island.
